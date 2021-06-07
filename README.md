@@ -14,6 +14,6 @@ is a game I am working on, which aims to replicate Spry Fox's old game Leap Day.
 
 is a tool I made to help my sister teach complex analysis concepts to middle school students. It is also a fun place to play around distorting images.
 
-### [TI30-Xa](http://aldenmb.github.io/calculator_emulator)
+### [TI-30Xa](http://aldenmb.github.io/calculator_emulator)
 
-is a javascript simulation of my favorite pocket calculator, the TI30-Xa.
+is a javascript simulation of my favorite pocket calculator, the TI-30Xa.
