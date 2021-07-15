@@ -17,3 +17,7 @@ is a tool I made to help my sister teach complex analysis concepts to middle sch
 ### [TI-30Xa](http://aldenmb.github.io/calculator_emulator)
 
 is a javascript simulation of my favorite pocket calculator, the TI-30Xa.
+
+### [Slide Rule Practice](https://aldenmb.github.io/SlideRulePractice/)
+
+is a tool I made to practice computing with the slide rule.
