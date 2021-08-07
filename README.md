@@ -21,3 +21,7 @@ is a javascript simulation of my favorite pocket calculator, the TI-30Xa.
 ### [Slide Rule Practice](https://aldenmb.github.io/SlideRulePractice/)
 
 is a tool I made to practice computing with the slide rule.
+
+### [Apollo](https://aldenmb.github.io/Apollo/)
+
+will help you to make pretty drawings of Apollonian gaskets.
