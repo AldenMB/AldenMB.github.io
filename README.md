@@ -1,4 +1,4 @@
-## welcome to my github homepage
+## welcome to my homepage
 
 here are some links to other pages which I control:
 
