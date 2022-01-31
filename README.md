@@ -1,4 +1,11 @@
+# Alden Bradford
+
 ## welcome to my homepage
+
+> When some people ask, "When am I ever going to use this?" what they are really asking is "When am I ever going to value this?" Thery're equating math's value with utility because they haven't seen that they can value anything more. A grander, more purposeful vision of mathematics would tap into the desires that can entice us to do mathematics as well as the virtues that mathematics can build.
+> 
+> — Francis Su, *Mathematics for Human Flourishing*, 2020
+
 
 here are some links to other pages which I control:
 
