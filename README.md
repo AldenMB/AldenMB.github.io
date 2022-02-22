@@ -32,3 +32,7 @@ is a tool I made to practice computing with the slide rule.
 ### [Apollo](https://aldenmb.github.io/Apollo/)
 
 will help you to make pretty drawings of Apollonian gaskets.
+
+### [Pinball Science](pinball_science)
+
+is a game I enjoyed playing as a child. This page shares what I know about how it can be installed.
