@@ -46,7 +46,7 @@ There's not much online about Pinball Science, but there is even less about the 
  - There is [a CD-ROM version] released in 1994, which features animations and quizzes as well as text from the book. The idea seems to have been a children's digital encyclopedia, in the style of Encarta.
  - In 1998 an updated version of the book is released, The New Way Things Work, featuring material about digital electronics. Separately, an updated version of the CD-ROM encyclopedia is sold, in a box set together with Pinball Science.
 
-I remember having a copy of The New Way Things Work around when I was little, but I don't remember anything about its contents. It must not have been too much fun, at least in comparison with Pinball Science. In any case, I have also preserved [an ISO of this disk](https://github.com/AldenMB/AldenMB.github.io/releases/tag/Pinball_Science) along with the scans below.
+I remember having a copy of The New Way Things Work around when I was little, but I don't remember anything about its contents. It must not have been too much fun, at least in comparison with Pinball Science. In any case, I have also preserved [an ISO of this disk](https://github.com/AldenMB/AldenMB.github.io/releases/tag/Pinball_Science) along with the scans below. When loaded in Windows, the name of the disk reads as DKTNWTW.
 
  - Case: ![case photo](way_things_work_case.jpg)
  - Disk: ![disk photo](way_things_work_disk.jpg)
