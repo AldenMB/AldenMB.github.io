@@ -35,5 +35,22 @@ This one is more recent, as some of its files have a modification date of May 15
  - Case: ![case photo](global_case.jpg)
  - Disk: ![disk photo](global_disk.jpg)
  - Front: ![front scan](global_front.png)
- - Back: ![back_scan](global_back.png)
+ - Back: ![back scan](global_back.png)
  - Inside: ![inside scan](global_inside.png)
+
+### The New Way Things Work
+
+There's not much online about Pinball Science, but there is even less about the companion disk The New Way things Work. Perhaps it would be more accurate to say Pinball Science was the companion disk. Here's how the parentage seems to go:
+
+ - There is a book [The Way Things Work](https://en.wikipedia.org/wiki/The_Way_Things_Work) released in 1988
+ - There is [a CD-ROM version] released in 1994, which features animations and quizzes as well as text from the book. The idea seems to have been a children's digital encyclopedia, in the style of Encarta.
+ - In 1998 an updated version of the book is released, The New Way Things Work, featuring material about digital electronics. Separately, an updated version of the CD-ROM encyclopedia is sold, in a box set together with Pinball Science.
+
+I remember having a copy of The New Way Things Work around when I was little, but I don't remember anything about its contents. It must not have been too much fun, at least in comparison with Pinball Science. In any case, I have also preserved [an ISO of this disk](https://github.com/AldenMB/AldenMB.github.io/releases/tag/Pinball_Science) along with the scans below.
+
+ - Case: ![case photo](way_things_work_case.jpg)
+ - Disk: ![disk photo](way_things_work_disk.jpg)
+ - Front: ![front scan](way_things_work_front.png)
+ - Back: ![back scan](way_things_work_back.png)
+ - Inside: ![inside scan](way_things_work_inside.png)
+ - Inside back: ![inside back scan](way_things_work_back_inside.png)
