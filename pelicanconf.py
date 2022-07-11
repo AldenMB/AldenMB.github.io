@@ -6,7 +6,6 @@ SITENAME = 'Alden Bradford'
 SITEURL = ''
 
 PATH = 'content'
-STATIC_PATHS = ['CNAME']
 
 TIMEZONE = 'US/Eastern'
 
