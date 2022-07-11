@@ -1,7 +1,7 @@
 Title: Pinball Science
 Date: 2022-02-22
 Modified: 2022-04-19
-Category: misc
+Category: Blog
 Tags: Abandonware, Preservation
 Slug: pinball_science
 Summary: an old game I enjoyed as a kid, which is now hard to install.
@@ -25,23 +25,23 @@ I have found at least two versions of the installation disk, and I believe there
 
 This seems to be the earlier one; all the files on it have a modification date of 1998 or earlier. When loaded on Windows, the name of the disk reads as DKMMTWSW.
 
- - Case: ![case photo]({attach}scholastic_case.jpg)
- - Disk: ![disk photo]({attach}scholastic_disk.jpg)
- - Front: ![front scan]({attach}scholastic_front.png)
- - Back: ![back scan]({attach}scholastic_back.png)
- - Inside: ![inside scan]({attach}scholastic_inside.png)
- - Inside back: ![inside back scan]({attach}scholastic_back_inside.png)
+ - Case: ![case photo]({attach}scholastic_case.jpg){:width=300px}
+ - Disk: ![disk photo]({attach}scholastic_disk.jpg){:width=300px}
+ - Front: ![front scan]({attach}scholastic_front.png){:width=300px}
+ - Back: ![back scan]({attach}scholastic_back.png){:width=300px}
+ - Inside: ![inside scan]({attach}scholastic_inside.png){:width=300px}
+ - Inside back: ![inside back scan]({attach}scholastic_back_inside.png){:width=300px}
 
 ## Global Software Publishing
 
 This one is more recent, as some of its files have a modification date of May 15 2002. Since XP Service Pack 1 would not be released until November of that year, it seems unlikely that this would have the service pack 1 patch. Notably, it appears to have dropped support for MacOS, presumably because OS X came out the previous year and would be incompatible with this game, which was written with System 7 in mind. When you load this in Windows, the name of the disk reads as Dkmmtwsw.
 
 
- - Case: ![case photo]({attach}global_case.jpg)
- - Disk: ![disk photo]({attach}global_disk.jpg)
- - Front: ![front scan]({attach}global_front.png)
- - Back: ![back scan]({attach}global_back.png)
- - Inside: ![inside scan]({attach}global_inside.png)
+ - Case: ![case photo]({attach}global_case.jpg){:width=300px}
+ - Disk: ![disk photo]({attach}global_disk.jpg){:width=300px}
+ - Front: ![front scan]({attach}global_front.png){:width=300px}
+ - Back: ![back scan]({attach}global_back.png){:width=300px}
+ - Inside: ![inside scan]({attach}global_inside.png){:width=300px}
 
 ## The New Way Things Work
 
@@ -53,9 +53,9 @@ There's not much online about Pinball Science, but there is even less about the 
 
 I remember having a copy of The New Way Things Work around when I was little, but I don't remember anything about its contents. It must not have been too much fun, at least in comparison with Pinball Science. In any case, I have also preserved [an ISO of this disk](https://github.com/AldenMB/AldenMB.github.io/releases/tag/Pinball_Science) along with the scans below. When loaded in Windows, the name of the disk reads as DKTNWTW.
 
- - Case: ![case photo]({attach}way_things_work_case.jpg)
- - Disk: ![disk photo]({attach}way_things_work_disk.jpg)
- - Front: ![front scan]({attach}way_things_work_front.png)
- - Back: ![back scan]({attach}way_things_work_back.png)
- - Inside: ![inside scan]({attach}way_things_work_inside.png)
- - Inside back: ![inside back scan]({attach}way_things_work_back_inside.png)
+ - Case: ![case photo]({attach}way_things_work_case.jpg){:width=300px}
+ - Disk: ![disk photo]({attach}way_things_work_disk.jpg){:width=300px}
+ - Front: ![front scan]({attach}way_things_work_front.png){:width=300px}
+ - Back: ![back scan]({attach}way_things_work_back.png){:width=300px}
+ - Inside: ![inside scan]({attach}way_things_work_inside.png){:width=300px}
+ - Inside back: ![inside back scan]({attach}way_things_work_back_inside.png){:width=300px}
