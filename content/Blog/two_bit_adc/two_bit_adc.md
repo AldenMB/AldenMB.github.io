@@ -17,7 +17,7 @@ We only need two bits of information to distinguish between the four voltage lev
 
 ## Disadvantages
 
-- It's power-hungry, both from the power rails and from the the data signals. An LCD driver usually has to put out basically zero current, and a low-end ADCs might consume a noticeable amount, possibly more than the LCD driver is comfortable supplying.
+- It's power-hungry, both from the power rails and from the the data signals. An LCD driver usually has to put out basically zero current, and a low-end ADC might consume a noticeable amount, possibly more than the LCD driver is comfortable supplying.
 
 - It's noisy, since it puts a time-varying load on the signal wires.
 
@@ -57,7 +57,7 @@ A better solution is to wire up our own 2-bit ADC. A traditional way to do this 
 
 - Uses an odd number of components. Comparators are usually available in packages of two or four, and this uses three.
 
-- The output requires processing. We could take a digital output straight from the comparators, but then we would be using three wires to send two bits. We need additional logic chips to get the output to bring it down to two, which adds to the complexity. A repeatable unit of these on a board would necessarily process multiple signals and include several ICs.
+- The output requires processing. We could take a digital output straight from the comparators, but then we would be using three wires to send two bits. We need those some additional logic chips to bring it down to two, which adds to the complexity. A repeatable unit of these on a board would necessarily process multiple signals and include several ICs so as to make use of every available gate.
 
 # A creative solution
 
