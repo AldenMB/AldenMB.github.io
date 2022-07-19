@@ -1,10 +1,8 @@
 Title: Reflections on wiring a calculator
-Date: 
+Date: 7-19-2022
 Category: Blog
 Tags: electronics, soldering
-Slug: wiring_a_calculator
 Summary: Some thoughts on soldering, connectors, circuit repair, and test setups.
-Status: draft
 
 This past weekend I sat down to solder some connectors onto a TI-30Xa calculator, which will be used in an upcoming project to validate [the emulator I have written](aldenbradford.com/calculator_emulator). This stirred up some thoughts which might be helpful to anyone who is beginning in electronics, as I once was. In no particular order, I will share those thoughts here.
 
@@ -12,7 +10,7 @@ This past weekend I sat down to solder some connectors onto a TI-30Xa calculator
 
 The most direct way to get electrical access to a circuit is with probes -- the pointy things which come with most multimeters or oscilloscopes. In fact, that's what I used at first, to begin understanding the circuit I am dealing with. Looking at the circuit board before modification, we can see some handy labeled test points. Those are the black circles without holes in them.
 
-![a picture of the inside of the calculator before it was modified]({attach}inside_before.jpg){:width=800}
+![a picture of the inside of the calculator before it was modified]({attach}inside_before.jpg){:width=600}
 
 You can also see the same black material up at the top, where the ribbon for the LCD is glued on. This material is electrically conductive, so we can just push a probe into it to find the signal we wish to measure.
 
@@ -40,9 +38,21 @@ I have grown to like IDC connectors from prototyping, since they have the 0.1 in
 
 2. The calculator is just a bit narrower than the 50 pin header is long. Using this connector would threaten the structural integrity of the case.
 
-I opted to use a 40 pin IDC cable, which fits nicely in the space where a solar panel would go in the school edition of the calculator. These headers and cables are also much cheaper. The down side is that I need to find a space for ten more pins. There is a common 10 pin IDC cable, but there is not enough room in the calculator for it. Two more rows of pins would spill over the top of the calculator. There is a 10 pin JST connector available which is keyed and has all 10 pins in a single row, but it is expensive in small quantities. That's why for these 10 additional pins I chose to just use a row of bare headers affixed to the case with hot glue. Not perfectly elegant, but compact and flexible enough for this project.
+I opted to use a 40 pin IDC cable, which fits nicely in the space where a solar panel would go in the school edition of the calculator. These headers and cables are also much cheaper. The down side is that I need to find a space for ten more pins. There is a common 10 pin IDC cable, but there is not enough room in the calculator for it. Two more rows of pins would spill over the top of the calculator. There is a 10 pin JST connector available which is keyed and has all 10 pins in a single row, but it is expensive in small quantities. That's why for these 10 additional pins I chose to just use a row of bare headers affixed to the case with hot glue. Not perfectly elegant, but compact and flexible enough for this project. Here you can see how it all fit together, inside and out.
+
+![a picture of the inside of the calculator after it was modified]({attach}inside_after.jpg){:width=600}
+![a picture of the outside of the calculator after it was modified]({attach}outside_after.jpg){:width=600}
 
 If I had an unlimited budget, I think the best solution would be a DB50 D-sub connector. Since these put the pins in three offset rows they can be a lot more compact, and they are available in panel mount configurations so we could get a secure connection to the calculator case. They strike a good balance between being small enough to fit the space I have and large enough to still be able to solder individual wires. At $10 a connector and $30 a cable, the price is too much.
+
+Because it would be unpleasant to have to trace out all the connections I just made by hand, I will relay them here in a table. Here is what each pin connects to, as viewed form the outside.
+
+| -   | -  | -  | -  | - | RESET | B6 | B5 | B4 | B3 | A7 | A6 | A5 | A4 | A3 | -  | -  | -  | -  | -  |
+| -   | -  | -  | -  | - | -     | -  | -  | -  | -  | -  | -  | -  | -  | -  | -  | -  | -  | -  | -  |
+| B+  | B2 | B1 | B0 | 1 | 3     | 5  | 7  | 9  | 11 | 13 | 15 | 17 | 19 | 21 | 23 | 25 | 27 | 29 | 31 |
+| GND | A2 | A1 | A0 | 2 | 4     | 6  | 8  | 10 | 12 | 14 | 16 | 18 | 20 | 22 | 24 | 26 | 28 | 30 | 32 |
+
+B0 through B6 and A0 through A7 are the traces for the keypad matrix, matching the labels on the test pads. I have also copied the labels on the test pads for B+, GND, and RESET. I have chosen to number the traces going to the LCD in increasing order, starting from the trace nearest to the battery.
 
 # Soldering thoughts
 
