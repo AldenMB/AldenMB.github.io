@@ -54,6 +54,8 @@ Because it would be unpleasant to have to trace out all the connections I just m
 
 B0 through B6 and A0 through A7 are the traces for the keypad matrix, matching the labels on the test pads. I have also copied the labels on the test pads for B+, GND, and RESET. I have chosen to number the traces going to the LCD in increasing order, starting from the trace nearest to the battery.
 
+Notice I also removed the battery. The calculator would still work with the battery, and I could even read values from it with the battery installed. It would save me from having to make an external 1.5 volt source. I chose to remove the battery because it is a pain to open the calculator up, even more so now that there is delicate wiring throughout. If I left the battery in, one day I would have to open this up again to remove it, because dead batteries can leak. It is better to power it externally for the duration of this project. If in the future I want to use this as a normal calculator again then I can simply put the battery back in.
+
 # Soldering thoughts
 
 I am not sure what the black conductive coating on the test points in this circuit are. In most circuit boards the test points and through holes are plated with a zinc alloy to make it easier to solder onto them. This board has no through hole components, so I am guessing they skipped the plating step altogether. I am guessing the coating they used is ideal for the membrane keypad on the other side of the circuit board.
