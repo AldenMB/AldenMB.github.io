@@ -2,6 +2,8 @@ Title: Welcome
 URL: 
 save_as: index.html
 
+![a picture of me]({attach}portrait.jpg){:height=400, style="float: right;"}
+
 My name is Alden Bradford. I am currently wrapping up a PhD in applied mathematics at Purdue university. I am looking for a job programming computers and analyzing data starting in the Fall of 2023. If you are hiring, [please send me an email](mailto:aldenbradford@gmail.com). 
 
 Below are links to a few projects which I have created which I am particularly proud of.
