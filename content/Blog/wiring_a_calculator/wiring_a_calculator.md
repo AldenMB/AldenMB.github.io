@@ -45,7 +45,7 @@ I opted to use a 40 pin IDC cable, which fits nicely in the space where a solar 
 
 If I had an unlimited budget, I think the best solution would be a DB50 D-sub connector. Since these put the pins in three offset rows they can be a lot more compact, and they are available in panel mount configurations so we could get a secure connection to the calculator case. They strike a good balance between being small enough to fit the space I have and large enough to still be able to solder individual wires. At $10 a connector and $30 a cable, the price is too much.
 
-Because it would be unpleasant to have to trace out all the connections I just made by hand, I will relay them here in a table. Here is what each pin connects to, as viewed form the outside.
+Because it would be unpleasant to have to trace out all the connections I just made by hand, I will relay them here in a table. Here is what each pin connects to, as viewed from the outside.
 
 | -   | -  | -  | -  | - | RESET | B6 | B5 | B4 | B3 | A7 | A6 | A5 | A4 | A3 | -  | -  | -  | -  | -  |
 | -   | -  | -  | -  | - | -     | -  | -  | -  | -  | -  | -  | -  | -  | -  | -  | -  | -  | -  | -  |
