@@ -1,7 +1,7 @@
 Title: Reflections on wiring a calculator
 Date: 7-19-2022
 Category: Blog
-Tags: electronics, soldering
+Tags: electronics, soldering, Xanthippe
 Summary: Some thoughts on soldering, connectors, circuit repair, and test setups.
 
 This past weekend I sat down to solder some connectors onto a TI-30Xa calculator, which will be used in an upcoming project to validate [the emulator I have written](aldenbradford.com/calculator_emulator). This stirred up some thoughts which might be helpful to anyone who is beginning in electronics, as I once was. In no particular order, I will share those thoughts here.
@@ -10,7 +10,7 @@ This past weekend I sat down to solder some connectors onto a TI-30Xa calculator
 
 The most direct way to get electrical access to a circuit is with probes -- the pointy things which come with most multimeters or oscilloscopes. In fact, that's what I used at first, to begin understanding the circuit I am dealing with. Looking at the circuit board before modification, we can see some handy labeled test points. Those are the black circles without holes in them.
 
-![a picture of the inside of the calculator before it was modified]({attach}inside_before.jpg){:width=600}
+![a picture of the inside of the calculator before it was modified](/images/calculator/inside_before.jpg){:width=600}
 
 You can also see the same black material up at the top, where the ribbon for the LCD is glued on. This material is electrically conductive, so we can just push a probe into it to find the signal we wish to measure.
 
