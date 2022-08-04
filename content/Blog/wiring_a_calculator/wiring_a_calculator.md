@@ -4,7 +4,7 @@ Category: Blog
 Tags: electronics, soldering, Xanthippe
 Summary: Some thoughts on soldering, connectors, circuit repair, and test setups.
 
-This past weekend I sat down to solder some connectors onto a TI-30Xa calculator, which will be used in an upcoming project to validate [the emulator I have written](aldenbradford.com/calculator_emulator). This stirred up some thoughts which might be helpful to anyone who is beginning in electronics, as I once was. In no particular order, I will share those thoughts here.
+This past weekend I sat down to solder some connectors onto a TI-30Xa calculator, which will be used in an upcoming project to validate [the emulator I have written](/calculator_emulator). This stirred up some thoughts which might be helpful to anyone who is beginning in electronics, as I once was. In no particular order, I will share those thoughts here.
 
 # Why use connectors?
 
