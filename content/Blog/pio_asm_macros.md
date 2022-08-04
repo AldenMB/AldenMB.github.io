@@ -1,8 +1,8 @@
-Title: A 3D-printed Planimeter For Use In Classrooms
+Title: A trick for PIO assembly
 Category: Blog
 Status: draft
 Tags: electronics, Python
-Summary: A simple 3D-printable design for a planimeter, suitable for making a class set.
+Summary: A more concise and readable way to unroll loops in PIOASM
 
 I am learning how to use the PIO feature of the Raspberry Pi Pico. This gives access to eight independent state machines, which can run in parallel to your main program, manipulating the GPIO very fast and with precise timing. A program for a PIO state machine is tiny, consisting of at most 32 instructions. There are only 9 two-byte instructions to choose from in PIO assembly, all specialized to doing input/output tasks.
 
