@@ -1,2 +1,3 @@
 Markdown
 pelican[markdown]
+pelican-render-math
