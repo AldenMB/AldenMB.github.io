@@ -82,8 +82,6 @@ def get_primitive_bends(n):
 for n in range(10):
     for bend in get_primitive_bends(n):
         print(bend)
-
-assert [b for n in range(10) for b in get_primitive_bends(n)] == true_bends
 ```
 
 This gives us exactly [the list on Wikipedia](https://en.wikipedia.org/wiki/Apollonian_gasket#Integral_Apollonian_circle_packings).
