@@ -7,9 +7,9 @@ Slug: battleship
 
 Particularly in grad school it can feel like your life is standing still. Because you are always learning new things, pushing yourself outside of your comfort zone, it can seem like you have not mastered anything. This is an illusion. To prove this, all you need to do is look at something you made before and feel the cringe. If you cringe at the way you solved a problem before, that is a sure sign that you know better now than you did then.
 
-I am in the midst of refreshing my math department webpage, removing what is out-of-date and preserving what deserves to be preserved. Four years ago, I was teaching myself Javascript. I was also frequently playing Battleship over the phone with my then-girlfriend, now-wife. I made a quick tool to generate ship placements for me. last year I heard from an old friend that they had actually found the tool on a search, and that it had been useful. For that reason, I think it's worth preserving. I have copied it below.
+I am in the midst of refreshing my math department webpage, removing what is out-of-date and preserving what deserves to be preserved. Four years ago, I was teaching myself Javascript. I was also frequently playing Battleship over the phone with my then-girlfriend, now-wife. I made a quick tool to generate ship placements for me. Last year I heard from an old friend that they had actually found the tool on a search, and that it had been useful. For that reason, I think it's worth preserving. I have copied it below.
 
-I know better than to jump back in to a completed project. The tool I made works, and it works well. To redo it would be a wasted effort. However, the power of cringe is strong. I feel compelled to at least comment on the bad parts of the code, if nothing else that to reassure myself that I have indeed grown.
+I know better than to jump back in to a completed project. The tool I made works, and it works well. To redo it would be a wasted effort. However, the power of cringe is strong. I feel compelled to at least comment on the bad parts of the code, if only to reassure myself that I have indeed grown.
 
 # The tool
 
