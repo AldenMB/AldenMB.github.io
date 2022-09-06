@@ -6,7 +6,7 @@ Summary: An original, intuitive proof of the Descartes circle theorem.
 
 I have been a little obsessed with the Descartes circle theorem for a bit over a year now, ever since I came across it when looking for fun fractals to draw. The theorem is essential for quickly computing the circles in an Apollonian gasket. As a reminder, it says that when you have four circles which are pairwise tangent, their radii satisfy
 $$
-\left(\frac{1}{r_1}+\frac{1}{r_2}+\frac{1}{r_3}+\frac{1}{r_4}\right)
+\left(\frac{1}{r_1}+\frac{1}{r_2}+\frac{1}{r_3}+\frac{1}{r_4}\right)^2
 =
 2\left(\frac{1}{r_1^2}+\frac{1}{r_2^2}+\frac{1}{r_3^2}+\frac{1}{r_4^2}\right),
 $$
