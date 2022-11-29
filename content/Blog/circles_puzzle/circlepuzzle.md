@@ -1,0 +1,1 @@
+Title: Another little puzzleDate: Nov 29 2022Category: BlogTags: geometry, puzzleSummary: A little puzzle involving nesteed circlesHere is another little puzzle. Should be short. Have fun!![the puzzle]({attach}circles.svg)
