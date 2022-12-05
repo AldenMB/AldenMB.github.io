@@ -4,7 +4,7 @@ save_as: index.html
 
 ![a picture of me]({attach}portrait.jpg){:height=400, style="float: right;"}
 
-My name is Alden Bradford. I am currently wrapping up a PhD in applied mathematics at Purdue university. <a rel="me" href="https://mastodon.social/@AldenB"></a>
+My name is Alden Bradford. I am currently wrapping up a PhD in applied mathematics at Purdue university. <a rel="me" href="https://types.pl/@Alden"></a>
 
 Below are links to a few projects which I have created which I am particularly proud of.
 
