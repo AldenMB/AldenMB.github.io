@@ -36,7 +36,7 @@ To avoid filling the whole screen with tables, I will include the full table her
 | |  32| 31| 30| 29| 28| 27| 26|25| 24|23| 22|21| 20|19| 18|17
 |-|----|---|---|---|---|---|---|--|---|--|---|--|---|--|---|--
 |A|STAT|R  |K  |E0D|() |E1D|0DP|0D|1DP|1D|2DP|2D|3DP|3D|4DP|4D
-|B|DE  |X  |E0C|E0E|E0C|E1E|0C |0E|1C |1E|2C |2E|3C |3E|4C |4E
+|B|DE  |X  |E0C|E0E|E1C|E1E|0C |0E|1C |1E|2C |2E|3C |3E|4C |4E
 |C|G   |RAD|E0B|E0G|E1B|E1G|0B |0G|1B |1G|2B |2G|3B |3G|4B |4G
 |D|FIX |E2G|E0A|E0F|E1A|E1F|0A |0F|1A |1F|2A |2F|3A |3F|4A |4F
 
