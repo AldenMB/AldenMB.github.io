@@ -21,7 +21,7 @@ This puzzle had me stumped for a few days. I did eventually get a solution which
 The main idea is to consider the area of the triangle. We are given an altitude, after all, and altitudes are good for finding areas. We will compute the area of $\triangle ABC$ in two different ways. First, using the given altitude, the area must be $\frac{1}{2}\overline{AH}\overline{BC}$. Second, by partitioning $\triangle ABC$ along its angle bisectors (into $\triangle ABI$, $\triangle BCI$, and $\triangle CAI$) we find another formula for the area, $\frac{1}{2}r(\overline{AB}+\overline{BC}+\overline{AC})$. That is,
 
 \begin{equation}
-r(\overline{AB}+\overline{BC}+\overline{AB})=\overline{AH}\overline{BC}.\tag{I}
+r(\overline{AB}+\overline{BC}+\overline{AC})=\overline{AH}\overline{BC}.\tag{I}
 \end{equation}
 
 
@@ -75,12 +75,12 @@ Inspired by the difference-of-squares formula, let's manipulate $\text{(II)}$ si
 
 Do the same with $\text(I)$,
 \begin{equation}
-r(\overline{AB}+\overline{BC})=\overline{BC}(\overline{AH}-r).\tag{VIII}
+r(\overline{AC}+\overline{AB})=\overline{BC}(\overline{AH}-r).\tag{VIII}
 \end{equation}
 
 Difference of squares takes us home, and $\text{(V)}$ lays the problem to rest.
 \begin{align*}
-r(\overline{AC}^2-\overline{AB}^2) &= r(\overline{AB}+\overline{BC})(\overline{AB}-\overline{BC})\\
+r(\overline{AC}^2-\overline{AB}^2) &= r(\overline{AC}+\overline{AB})(\overline{AC}-\overline{AB})\\
 2r\overline{BC}\overline{MH} &= \overline{BC}(\overline{AH}-r)2\overline{MD}\\
 r\overline{MH} &= (\overline{AH}-r)\overline{MD}\\
 \overline{KH}\overline{MD} &= (\overline{AH}-r)\overline{MD}\\
