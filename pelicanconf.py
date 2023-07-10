@@ -20,11 +20,9 @@ AUTHOR_FEED_RSS = None
 
 # Blogroll
 LINKS = (('My GitHub', 'https://github.com/AldenMB'),
-         ('My Purdue website', 'https://math.purdue.edu/~bradfoa/'),
          ('My wife', 'https://nt-tl.net/'),
          ('My sister', 'https://laurestine.github.io/'),
          ('My brother', 'https://www.clintonbradford.com/'),
-         ('My PhD advisor', 'https://engineering.purdue.edu/~mboutin/'),
          )
 
 # Social widget
