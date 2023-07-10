@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="english">
+<head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta name="generator" content="Pelican" />
+        <title>Alden Bradford - Interpolation</title>
+        <link rel="stylesheet" href="https://aldenbradford.com/theme/css/main.css" />
+        <link href="https://aldenbradford.com/feeds/all.atom.xml" type="application/atom+xml" rel="alternate" title="Alden Bradford Atom Feed" />
+</head>
+
+<body id="index" class="home">
+        <header id="banner" class="body">
+                <h1><a href="https://aldenbradford.com/">Alden Bradford</a></h1>
+                <nav><ul>
+                    <li><a href="https://aldenbradford.com/">Welcome</a></li>
+                    <li><a href="https://aldenbradford.com/category/blog.html">Blog</a></li>
+                </ul></nav>
+        </header><!-- /#banner -->
+
+            <aside id="featured" class="body">
+                <article>
+                    <h1 class="entry-title"><a href="https://aldenbradford.com/a-cubic-spline-for-animation.html">A Cubic Spline for Animation</a></h1>
+<footer class="post-info">
+        <abbr class="published" title="2022-09-09T00:00:00-04:00">
+                Published: Fri 09 September 2022
+        </abbr>
+
+        <address class="vcard author">
+                By                         <a class="url fn" href="https://aldenbradford.com/author/alden-bradford.html">Alden Bradford</a>
+        </address>
+<p>In <a href="https://aldenbradford.com/category/blog.html">Blog</a>.</p>
+<p>tags: <a href="https://aldenbradford.com/tag/interpolation.html">Interpolation</a> <a href="https://aldenbradford.com/tag/neopixels.html">Neopixels</a> <a href="https://aldenbradford.com/tag/animation.html">Animation</a> </p>
+</footer><!-- /.post-info --><p>I am designing <a href="https://github.com/AldenMB/addressable_led_patterns">animations for a string of addressable LEDs</a>. Deterministic patterns generally have a nice regularity to them, but their visual interest diminishes after a while. Random patterns can have a bit more visual interest, since they are different every time. If we just assign a random value to each pixel, the result is very busy, loud, disjointed. It would be better to have something changing in a random way, but with a smooth, regular structure so that the eye can actually take it all in.</p>
+<p>One nice way to get a smooth, organic-feeling function is to use a polynomial spline. We can specify values to achieve at certain times (in animation these are called "key frames") and use a polynomial to interpolate between them. By choosing the spline carefully, we can get a motion which is not only continuous, but smooth in both time and space. It will have no jumps, and no times or places where the color suddenly starts changing in a different way. In this post we will walk through a procedure for generating those splines using linear algebra.</p>
+<h1>The setting</h1>
+<p>We have a one-dimensional string of LEDs. We can specify the location of each LED by a number on an interval. To make the numbers work out nice, let's put them on the interval <span class="math">\([0, 3]\)</span>. For symmetry, let's describe time in the same way, as an interval <span class="math">\([0, 3]\)</span>. For reasons which will become clear, we will focus on the time subinterval <span class="math">\([1, 2]\)</span>. We will put the key frames at <span class="math">\(t=0\)</span>, <span class="math">\(t=1\)</span>, <span class="math">\(t=2\)</span>, and <span class="math">\(t=3\)</span>.  We will specify each key frame by the values at <span class="math">\(s=0\)</span>, <span class="math">\(s=1\)</span>, <span class="math">\(s=2\)</span>, and <span class="math">\(s=3\)</span>. That is, we begin with a function defined on <span class="math">\(\{0, 1, 2, 3\}\times\{0, 1, 2, 3\}\)</span>, and we wish to extend it to a function on <span class="math">\([1, 2]\times[0, 3]\)</span>.</p>
+<p>Why use this specific number of key values? I want to make a cubic polynomial, which we can write as <span class="math">\(f(t, s) = \sum_{i, j=0}^3 A_{ij}t^i s^j\)</span>. This has sixteen degrees of freedom. By specifying the function at sixteen points, we can make a system which is neither over-constrained nor under-constrained.</p>
+<p>Why go for a cubic function? I want to get a curve which is smooth in time and space. On a given interval, I want it to hit the key frames, but I also want it to be smooth at both ends. That makes four constraints, so a third degree polynomial is just right.</p>
+<p>Why look at times between 1 and 2? I want to think of time as starting at 1, and proceeding to 2. When the time hits 2, we can extend <span class="math">\(f\)</span> by defining <span class="math">\(f(t, s) = g(t-1, s)\)</span> for <span class="math">\(t\in\{1\}\cup[2,3]\)</span>. In this way, <span class="math">\(g\)</span> has the same form as <span class="math">\(f\)</span>, with values of <span class="math">\(g(t)\)</span> specified for <span class="math">\(t\in \{0, 1, 2\}\)</span>. By dropping the values of <span class="math">\(f\)</span> at <span class="math">\(t=0\)</span> and making new values for <span class="math">\(g\)</span> at <span class="math">\(t=3\)</span>, the program repeats with <span class="math">\(g\)</span> taking the role of <span class="math">\(f\)</span>.</p>
+<h1>The clever bit</h1>
+<p>When we restrict <span class="math">\(f\)</span> to <span class="math">\(t=2\)</span>, we get a polynomial in <span class="math">\(s\)</span>. Since it interpolates four values at <span class="math">\(s=0, 1, 2, 3\)</span>, it is completely specified. Since <span class="math">\(g\)</span> restricted to <span class="math">\(t=1\)</span> is also a cubic interpolant, we can see that <span class="math">\(f\)</span> is continuous not only at <span class="math">\(\{2\}\times \{0, 1, 2, 3\}\)</span> but on all of <span class="math">\(\{2\}\times [0, 3]\)</span>. If we are clever about how we specify <span class="math">\(f\)</span>, we can do even better. Notice that <span class="math">\(f_t\)</span> is also a cubic polynomial in <span class="math">\(s\)</span> when restricted to <span class="math">\(t=2\)</span>. If we can specify <span class="math">\(f_t(2, s)=g_t(1, s)\)</span> then we can make <span class="math">\(f'\)</span> continuous as well!</p>
+<p>How to do this? Since <span class="math">\(f\)</span> is never directly evaluated at <span class="math">\(t=3\)</span>, we will use the funciton values there to instead specify <span class="math">\(f_t\)</span> at <span class="math">\(t=2\)</span>. That is, we will enforce <span class="math">\(f_t(2, s) = (1-c) (f(3, s)-f(1, s))/2\)</span>, where <span class="math">\(c\)</span> is a "tension" term allowing us to tweak the behavior of the interpolant. By assigning the same rule for <span class="math">\(g\)</span>, that is, <span class="math">\(g_t(1, s) = (1-c)(f(3, s)-f(1, s))/2\)</span>, we get a function which is continuous and smooth.</p>
+<h1>Computing it</h1>
+<p>We began by writing <span class="math">\(f(t, s)=\sum_{i, j=0}^3 A_{ij}t^i s^j\)</span>. We can write this as a matrix product, 
+</p>
+<div class="math">$$
+f(t, s) = 
+\begin{bmatrix}
+1 \\ t \\ t^2 \\ t^3
+\end{bmatrix}^T
+A
+\begin{bmatrix}
+1 \\ s \\ s^2 \\ s^3
+\end{bmatrix}.
+$$</div>
+<p>
+to keep things tidy, let's define <span class="math">\(P_x = [1, x, x^2, x^3]^T\)</span>. Then we can write this as <span class="math">\(f(t, s)=P_t^T A P_s\)</span>. The goal then is to specify the matrix <span class="math">\(A\)</span>, in terms of the data, the key-frame values of <span class="math">\(f\)</span> on <span class="math">\(\{0, 1, 2, 3\}^2\)</span>. Write <span class="math">\(F=[f(i, j)]_{i, j=0}^3\)</span>, so we are looking for how to write <span class="math">\(A\)</span> in terms of <span class="math">\(F\)</span>.</p>
+<h2>Continuity</h2>
+<p>We use the values at <span class="math">\(t=1, 2\)</span> to enforce the continuity of the spline. This is straightforward: we want <span class="math">\(P_1^TAP_s = F_{1s}\)</span> for <span class="math">\(s=0, 1, 2, 3\)</span>. Writing <span class="math">\(P_S = [P_0P_1P_2P_3]\)</span> we can write this more compactly as <span class="math">\(P_1^TAP_S = F_1\)</span>. Similarly, we want <span class="math">\(P_2^TAP_S = F_2\)</span>. Together, these give </p>
+<div class="math">$$
+[P_1, P_2]^T A P_S = \begin{bmatrix} 0 &amp; 1 &amp; 0 &amp; 0 \\ 0 &amp; 0 &amp; 1 &amp; 0 \end{bmatrix} F.
+$$</div>
+<p>Not enough to solve for <span class="math">\(A\)</span> yet, but we have not used smoothness yet.</p>
+<h2>Smoothness</h2>
+<p>Differentiation yields</p>
+<div class="math">$$
+f_t(t, s) = 
+\begin{bmatrix}
+0 \\ 1 \\ 2t \\ 3t^2
+\end{bmatrix}^T
+A
+\begin{bmatrix}
+1 \\ s \\ s^2 \\ s^3
+\end{bmatrix}.
+$$</div>
+<p>Write <span class="math">\(D_x=\frac{d}{dx} P_x\)</span>, so we can write this as <span class="math">\(f_t = D_t^T A P_s\)</span>. We want <span class="math">\(f(1, s) = \frac{1-c}{2}(f(2, s) - f(0, s))\)</span>. As a matrix equation, this becomes</p>
+<div class="math">$$
+D_1^T A P_S = \frac{1-c}{2} \begin{bmatrix}-1 &amp; 0 &amp; 1 &amp; 0\end{bmatrix}F.
+$$</div>
+<p>Repeating for the <span class="math">\(t=2\)</span> case yields</p>
+<div class="math">$$
+[D_1, D_2]^T A P_S = \frac{1-c}{2}\begin{bmatrix}-1&amp;0&amp;1&amp;0\\0&amp;-1&amp;0&amp;1\end{bmatrix}F.
+$$</div>
+<p>Writing it this way shows how to combine with the continuity equation,</p>
+<div class="math">$$
+[P_1, P_2, D_1, D_2]^T A P_S = \frac{1}{2}\left(
+\begin{bmatrix}
+0 &amp; 2 &amp; 0 &amp; 0\\
+0 &amp; 0 &amp; 2 &amp; 0\\
+-1&amp; 0 &amp; 1 &amp; 0\\
+0 &amp;-1 &amp; 0 &amp; 1
+\end{bmatrix}
++c\begin{bmatrix}
+0 &amp; 0 &amp; 0 &amp; 0\\
+0 &amp; 0 &amp; 0 &amp; 0\\
+1 &amp; 0 &amp;-1 &amp; 0\\
+0 &amp; 1 &amp; 0 &amp;-1
+\end{bmatrix}
+\right)F.
+$$</div>
+<h2>Solving for <span class="math">\(A\)</span></h2>
+<p>Now all the matrices are square, so we are in business. We have enough to solve for <span class="math">\(A\)</span>. Writing <span class="math">\(U=[P_1,P_2,D_1,D_2]^T\)</span> we find
+</p>
+<div class="math">$$
+U^{-1}
+=
+\begin{bmatrix}-4 &amp; 5 &amp; -4 &amp; -2\\12 &amp; -12 &amp; 8 &amp; 5\\-9 &amp; 9 &amp; -5 &amp; -4\\2 &amp; -2 &amp; 1 &amp; 1\end{bmatrix}.
+$$</div>
+<p>
+We can also compute 
+</p>
+<div class="math">$$
+P_S^{-1} = \begin{bmatrix}1 &amp; 1 &amp; 1 &amp; 1\\0 &amp; 1 &amp; 2 &amp; 3\\0 &amp; 1 &amp; 4 &amp; 9\\0 &amp; 1 &amp; 8 &amp; 27\end{bmatrix}^{-1}
+=\frac{1}{6} \begin{bmatrix}6 &amp; -11 &amp; 6 &amp; -1\\0 &amp; 18 &amp; -15 &amp; 3\\0 &amp; -9 &amp; 12 &amp; -3\\0 &amp; 2 &amp; -3 &amp; 1\end{bmatrix}.
+$$</div>
+<p>
+Multiplying on both sides yields</p>
+<div class="math">$$
+A = \frac{1}{12} \left(\begin{bmatrix}4 &amp; -6 &amp; 6 &amp; -2\\-8 &amp; 19 &amp; -16 &amp; 5\\5 &amp; -14 &amp; 13 &amp; -4\\-1 &amp; 3 &amp; -3 &amp; 1\end{bmatrix} + c \begin{bmatrix}-4 &amp; -2 &amp; 4 &amp; 2\\8 &amp; 5 &amp; -8 &amp; -5\\-5 &amp; -4 &amp; 5 &amp; 4\\1 &amp; 1 &amp; -1 &amp; -1\end{bmatrix} \right)
+F \begin{bmatrix}-4 &amp; 5 &amp; -4 &amp; -2\\12 &amp; -12 &amp; 8 &amp; 5\\-9 &amp; 9 &amp; -5 &amp; -4\\2 &amp; -2 &amp; 1 &amp; 1\end{bmatrix}.
+$$</div>
+<h2>Applying the formula</h2>
+<p>Now that we have a formula for <span class="math">\(f(t, s)=P_t^TAP_s\)</span>, we will want to apply it to our light string, which is discrete. Choose some discrete times <span class="math">\(T = [1, 1+\Delta t, 1+2\Delta t, \dots, 2]\)</span> and string positions <span class="math">\(S=[0,\Delta s, 2\Delta s, ..., 3]\)</span>. Form them into polynomials <span class="math">\(P_T\)</span> and <span class="math">\(P_S\)</span> as before, then multiply them on the outside in advance; the coefficient matrices we derived above will not change, only F will change. This can save us a lot of multiplication, since much of it can be done in advance.</p>
+<h1>Conclusion</h1>
+<p>I won't belabor this any further here. You can see how this algorithm is implemented <a href="https://github.com/AldenMB/addressable_led_patterns">in the repository I have shared</a>. I think this shows how linear algebra allows us to express some pretty complicated formulas quite compactly, which lets us think about more-complicated things than would otherwise be possible.</p>
+<script type="text/javascript">if (!document.getElementById('mathjaxscript_pelican_#%@#$@#')) {
+    var align = "center",
+        indent = "0em",
+        linebreak = "false";
+
+    if (false) {
+        align = (screen.width < 768) ? "left" : align;
+        indent = (screen.width < 768) ? "0em" : indent;
+        linebreak = (screen.width < 768) ? 'true' : linebreak;
+    }
+
+    var mathjaxscript = document.createElement('script');
+    mathjaxscript.id = 'mathjaxscript_pelican_#%@#$@#';
+    mathjaxscript.type = 'text/javascript';
+    mathjaxscript.src = 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.3/latest.js?config=TeX-AMS-MML_HTMLorMML';
+
+    var configscript = document.createElement('script');
+    configscript.type = 'text/x-mathjax-config';
+    configscript[(window.opera ? "innerHTML" : "text")] =
+        "MathJax.Hub.Config({" +
+        "    config: ['MMLorHTML.js']," +
+        "    TeX: { extensions: ['AMSmath.js','AMSsymbols.js','noErrors.js','noUndefined.js'], equationNumbers: { autoNumber: 'none' } }," +
+        "    jax: ['input/TeX','input/MathML','output/HTML-CSS']," +
+        "    extensions: ['tex2jax.js','mml2jax.js','MathMenu.js','MathZoom.js']," +
+        "    displayAlign: '"+ align +"'," +
+        "    displayIndent: '"+ indent +"'," +
+        "    showMathMenu: true," +
+        "    messageStyle: 'normal'," +
+        "    tex2jax: { " +
+        "        inlineMath: [ ['\\\\(','\\\\)'] ], " +
+        "        displayMath: [ ['$$','$$'] ]," +
+        "        processEscapes: true," +
+        "        preview: 'TeX'," +
+        "    }, " +
+        "    'HTML-CSS': { " +
+        "        availableFonts: ['STIX', 'TeX']," +
+        "        preferredFont: 'STIX'," +
+        "        styles: { '.MathJax_Display, .MathJax .mo, .MathJax .mi, .MathJax .mn': {color: 'inherit ! important'} }," +
+        "        linebreaks: { automatic: "+ linebreak +", width: '90% container' }," +
+        "    }, " +
+        "}); " +
+        "if ('default' !== 'default') {" +
+            "MathJax.Hub.Register.StartupHook('HTML-CSS Jax Ready',function () {" +
+                "var VARIANT = MathJax.OutputJax['HTML-CSS'].FONTDATA.VARIANT;" +
+                "VARIANT['normal'].fonts.unshift('MathJax_default');" +
+                "VARIANT['bold'].fonts.unshift('MathJax_default-bold');" +
+                "VARIANT['italic'].fonts.unshift('MathJax_default-italic');" +
+                "VARIANT['-tex-mathit'].fonts.unshift('MathJax_default-italic');" +
+            "});" +
+            "MathJax.Hub.Register.StartupHook('SVG Jax Ready',function () {" +
+                "var VARIANT = MathJax.OutputJax.SVG.FONTDATA.VARIANT;" +
+                "VARIANT['normal'].fonts.unshift('MathJax_default');" +
+                "VARIANT['bold'].fonts.unshift('MathJax_default-bold');" +
+                "VARIANT['italic'].fonts.unshift('MathJax_default-italic');" +
+                "VARIANT['-tex-mathit'].fonts.unshift('MathJax_default-italic');" +
+            "});" +
+        "}";
+
+    (document.body || document.getElementsByTagName('head')[0]).appendChild(configscript);
+    (document.body || document.getElementsByTagName('head')[0]).appendChild(mathjaxscript);
+}
+</script>                </article>
+            </aside><!-- /#featured -->
+        <section id="extras" class="body">
+                <div class="blogroll">
+                        <h2>links</h2>
+                        <ul>
+                            <li><a href="https://github.com/AldenMB">My GitHub</a></li>
+                            <li><a href="https://nt-tl.net/">My wife</a></li>
+                            <li><a href="https://laurestine.github.io/">My sister</a></li>
+                            <li><a href="https://www.clintonbradford.com/">My brother</a></li>
+                        </ul>
+                </div><!-- /.blogroll -->
+                <div class="social">
+                        <h2>social</h2>
+                        <ul>
+                            <li><a href="https://aldenbradford.com/feeds/all.atom.xml" type="application/atom+xml" rel="alternate">atom feed</a></li>
+
+                        </ul>
+                </div><!-- /.social -->
+        </section><!-- /#extras -->
+
+        <footer id="contentinfo" class="body">
+                <address id="about" class="vcard body">
+                Proudly powered by <a href="https://getpelican.com/">Pelican</a>, which takes great advantage of <a href="https://www.python.org/">Python</a>.
+                </address><!-- /#about -->
+
+                <p>The theme is by <a href="https://www.smashingmagazine.com/2009/08/designing-a-html-5-layout-from-scratch/">Smashing Magazine</a>, thanks!</p>
+        </footer><!-- /#contentinfo -->
+
+</body>
+</html>
