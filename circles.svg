@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   width="400"
+   height="400"
+   viewBox="-65 -65 130 130"
+   version="1.1"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+	
+
+<circle r="60" stroke="black" fill="grey"/>
+<circle r="20" stroke="black" fill="white"/>
+<line x2="20" stroke="black"/>
+<text x="8" y="-2" font-size="10">1</text>
+<circle r="20" cx="40" stroke="black" fill="white"/>
+<line x1="40" x2="60" stroke="black"/>
+<text x="48" y="-2" font-size="10">1</text>
+<circle r="20" cx="-40" stroke="black" fill="white"/>
+<circle r="20" cy="40" stroke="black" fill="white"/>
+<circle r="20" cy="-40" stroke="black" fill="white"/>
+
+<!-- 20 * (9 - 3 sqrt(2))/7  = 13.59 -->
+<!-- (60 - 13.59) / sqrt(2) = 32.8 -->
+
+<circle cx="32.8" cy="-32.8" r="13.59" stroke="black" fill="white"/>
+<line x1="32.8" y1="-32.8" x2="42.4" y2="-42.4" stroke="black"/>
+<text x="39" y="-33" font-size="10">x</text>
+
+
+<circle cx="-32.8" cy="-32.8" r="13.59" stroke="black" fill="white"/>
+<circle cx="32.8" cy="32.8" r="13.59" stroke="black" fill="white"/>
+<circle cx="-32.8" cy="32.8" r="13.59" stroke="black" fill="white"/>
+
+</svg>
