@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="english">
+<head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta name="generator" content="Pelican" />
+        <title>Reverse-Engineering a Matrix Keypad</title>
+        <link rel="stylesheet" href="https://aldenbradford.com/theme/css/main.css" />
+        <link href="https://aldenbradford.com/feeds/all.atom.xml" type="application/atom+xml" rel="alternate" title="Alden Bradford Atom Feed" />
+        <meta name="description" content="The process of figuring out the layout of a keypad without looking at it directly." />
+</head>
+
+<body id="index" class="home">
+        <header id="banner" class="body">
+                <h1><a href="https://aldenbradford.com/">Alden Bradford</a></h1>
+                <nav><ul>
+                    <li><a href="https://aldenbradford.com/">Welcome</a></li>
+                    <li class="active"><a href="https://aldenbradford.com/category/blog.html">Blog</a></li>
+                </ul></nav>
+        </header><!-- /#banner -->
+<section id="content" class="body">
+  <article>
+    <header>
+      <h1 class="entry-title">
+        <a href="https://aldenbradford.com/reverse-engineering-a-matrix-keypad.html" rel="bookmark"
+           title="Permalink to Reverse-Engineering a Matrix Keypad">Reverse-Engineering a Matrix Keypad</a></h1>
+    </header>
+
+    <div class="entry-content">
+<footer class="post-info">
+        <abbr class="published" title="2022-07-21T00:00:00-04:00">
+                Published: Thu 21 July 2022
+        </abbr>
+
+        <address class="vcard author">
+                By                         <a class="url fn" href="https://aldenbradford.com/author/alden-bradford.html">Alden Bradford</a>
+        </address>
+<p>In <a href="https://aldenbradford.com/category/blog.html">Blog</a>.</p>
+<p>tags: <a href="https://aldenbradford.com/tag/electronics.html">electronics</a> <a href="https://aldenbradford.com/tag/xanthippe.html">Xanthippe</a> </p>
+</footer><!-- /.post-info -->      <p>In order to improve <a href="/calculator_emulator">my calculator emulator</a>, I am reverse-engineering a TI-30Xa. I want to be able to send key presses electrically from a microcontroller. This requires knowing the layout of the keypad matrix, i.e. what wires connect to what buttons. Unfortunately, the circuit board is riveted down with plastic. I don't have direct access to the far side of the circuit board because I want to keep the calculator in a working state.</p>
+<p><img alt="a picture of the inside of the calculator before it was modified" src="/images/calculator/inside_before.jpg" width="600"></p>
+<p>There are a couple ways I could still get access to the other side of the circuit board.</p>
+<ul>
+<li>
+<p>I could get the thing x-rayed. That would be expensive. It would be way more cost-effective to just buy another calculator to disassemble.</p>
+</li>
+<li>
+<p>I could drill out the rivets and replace them with appropriate screws. I'm not sure if the right screws would be a common size, so this might also get expensive. Besides, I would rather not have to take the thing apart again.</p>
+</li>
+</ul>
+<p>Instead, I used an indirect method. Since I have electrical access to all the test points, I can just connect an ohmmeter between an A wire and a B wire, then look for a button press which changes the measured resistance. In theory there should be one button for every pair of wires in the matrix.</p>
+<p>Here is the result, after measuring every pair.</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>A0</th>
+<th>A1</th>
+<th>A2</th>
+<th>A3</th>
+<th>A4</th>
+<th>A5</th>
+<th>A6</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>B0</td>
+<td>+/-</td>
+<td>2nd</td>
+<td>+</td>
+<td>0</td>
+<td>.</td>
+<td>SIN</td>
+<td>1/x</td>
+</tr>
+<tr>
+<td>B1</td>
+<td>y^x</td>
+<td>HYP</td>
+<td>-</td>
+<td>1</td>
+<td>5</td>
+<td>COS</td>
+<td>x^2</td>
+</tr>
+<tr>
+<td>B2</td>
+<td>OFF</td>
+<td>pi</td>
+<td>X</td>
+<td>2</td>
+<td>6</td>
+<td>TAN</td>
+<td>sqrt</td>
+</tr>
+<tr>
+<td>B3</td>
+<td></td>
+<td>Sigma+</td>
+<td>/</td>
+<td>3</td>
+<td>7</td>
+<td>DRG</td>
+<td>EE</td>
+</tr>
+<tr>
+<td>B4</td>
+<td></td>
+<td>STO</td>
+<td>=</td>
+<td>4</td>
+<td>8</td>
+<td>LOG</td>
+<td>(</td>
+</tr>
+<tr>
+<td>B5</td>
+<td></td>
+<td>RCL</td>
+<td>ab/c</td>
+<td>&lt;-</td>
+<td>9</td>
+<td>LN</td>
+<td>)</td>
+</tr>
+</tbody>
+</table>
+<p>There are a few things about this layout that surprised me.</p>
+<ol>
+<li>
+<p>There are only 39 of the 40 keys represented here, even though there are three unused connections in the A0 spot. Further probing shows that the ON key pulls the RESET pin to ground, which we can see from the visible traces has an external pullup to B+. It makes sense in retrospect that ON would have its own pin, since they would want to activate it from an interrupt, not with the active polling that a matrix keypad requires.</p>
+</li>
+<li>
+<p>B6 and A7 don't seem to be connected to the rest of the matrix. We can see on the circuit board that they are connected to either side of the RESET pad, which (if we believe what's written on the board) should put the calculator in a stable state after power loss. It's strange that this would use two pins, when the same effect could be done with a pullup and a ground. Perhaps this has something to do with wanting the RESET pad to work even if the calculator is in an off state, so that whoever is changing the battery does not need to turn the board over while it is disassembled. I don't have an explanation, it is still a mystery to me.</p>
+</li>
+</ol>
+<p>Since each key has two coordinates which range from 0 to 7, it seems natural to represent each key with a single byte. Three bits for A, three bits for B. That leaves two bits left over, which could be used to signal the special values ON and RESET, though of course we could also use them for something else, since we have so many of the 64 places in the table unoccupied. I am getting ahead of myself here.</p>
+<p>Now that I know a bit more about what the wires on this calculator do, it is interesting to compare a previous revision which I have also photographed but have not probed.</p>
+<p><img alt="a picture of the inside of an older revision of the calculator" src="/images/calculator/older_inside.jpg" width="600"></p>
+<p>A few differences are obvious -- it runs at 3 volts instead of 1.5, all the soldering was done by hand, there are six screws instead of four. If you look at the display from the front you can see it has all the same segments, though they are a bit smaller and slightly different in shape. It also has 32 wires going to the LCD, so I imagine it is driving them in the same 28x4 manner. Some of the LCD wires are also going elsewhere using vias, for example you can see S2 in the lower left. What's it doing there? Are some of the LCD wires doubling as keypad timing signals? There are only seven traces leading to the microcontroller which don't also touch the LCD, so I suppose it must be using those 15 LCD wires with vias to poll buttons some of the time.</p>
+<p>We have the familiar A1 through A6 and B1 though B6, though no A0 or B0 so I expect they are counting from 1 in this model. There is a big A7 printed in the middle, but it doesn't seem to be associated with any one trace or pad. Most puzzling of all are the pads labeled K1 through K4. What could they be doing? Maybe in this version only 36 of the buttons are in a matrix, and the other four use pads K1 through K4.</p>
+<p>Those questions will have to wait for another day. For now it is enough to see that in the modern revision we now have a correspondence between traces and buttons, without having to disassemble it any further.</p>
+    </div><!-- /.entry-content -->
+
+  </article>
+</section>
+        <section id="extras" class="body">
+                <div class="blogroll">
+                        <h2>links</h2>
+                        <ul>
+                            <li><a href="https://github.com/AldenMB">My GitHub</a></li>
+                            <li><a href="https://nt-tl.net/">My wife</a></li>
+                            <li><a href="https://laurestine.github.io/">My sister</a></li>
+                            <li><a href="https://www.clintonbradford.com/">My brother</a></li>
+                        </ul>
+                </div><!-- /.blogroll -->
+                <div class="social">
+                        <h2>social</h2>
+                        <ul>
+                            <li><a href="https://aldenbradford.com/feeds/all.atom.xml" type="application/atom+xml" rel="alternate">atom feed</a></li>
+
+                        </ul>
+                </div><!-- /.social -->
+        </section><!-- /#extras -->
+
+        <footer id="contentinfo" class="body">
+                <address id="about" class="vcard body">
+                Proudly powered by <a href="https://getpelican.com/">Pelican</a>, which takes great advantage of <a href="https://www.python.org/">Python</a>.
+                </address><!-- /#about -->
+
+                <p>The theme is by <a href="https://www.smashingmagazine.com/2009/08/designing-a-html-5-layout-from-scratch/">Smashing Magazine</a>, thanks!</p>
+        </footer><!-- /#contentinfo -->
+
+</body>
+</html>

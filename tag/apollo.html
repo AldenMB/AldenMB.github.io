@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="english">
+<head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta name="generator" content="Pelican" />
+        <title>Alden Bradford - Apollo</title>
+        <link rel="stylesheet" href="https://aldenbradford.com/theme/css/main.css" />
+        <link href="https://aldenbradford.com/feeds/all.atom.xml" type="application/atom+xml" rel="alternate" title="Alden Bradford Atom Feed" />
+</head>
+
+<body id="index" class="home">
+        <header id="banner" class="body">
+                <h1><a href="https://aldenbradford.com/">Alden Bradford</a></h1>
+                <nav><ul>
+                    <li><a href="https://aldenbradford.com/">Welcome</a></li>
+                    <li><a href="https://aldenbradford.com/category/blog.html">Blog</a></li>
+                </ul></nav>
+        </header><!-- /#banner -->
+
+            <aside id="featured" class="body">
+                <article>
+                    <h1 class="entry-title"><a href="https://aldenbradford.com/an-intuitive-proof-of-the-descartes-circle-theorem.html">An intuitive proof of the Descartes circle theorem</a></h1>
+<footer class="post-info">
+        <abbr class="published" title="2022-09-01T00:00:00-04:00">
+                Published: Thu 01 September 2022
+        </abbr>
+
+        <address class="vcard author">
+                By                         <a class="url fn" href="https://aldenbradford.com/author/alden-bradford.html">Alden Bradford</a>
+        </address>
+<p>In <a href="https://aldenbradford.com/category/blog.html">Blog</a>.</p>
+<p>tags: <a href="https://aldenbradford.com/tag/descartes-circle-theorem.html">Descartes Circle Theorem</a> <a href="https://aldenbradford.com/tag/apollo.html">Apollo</a> <a href="https://aldenbradford.com/tag/metric-geometry.html">Metric Geometry</a> </p>
+</footer><!-- /.post-info --><p>I have been a little obsessed with the Descartes circle theorem for a bit over a year now, ever since I came across it when looking for fun fractals to draw. The theorem is essential for quickly computing the circles in an Apollonian gasket. As a reminder, it says that when you have four circles which are pairwise tangent, their radii satisfy
+</p>
+<div class="math">$$
+\left(\frac{1}{r_1}+\frac{1}{r_2}+\frac{1}{r_3}+\frac{1}{r_4}\right)^2
+=
+2\left(\frac{1}{r_1^2}+\frac{1}{r_2^2}+\frac{1}{r_3^2}+\frac{1}{r_4^2}\right),
+$$</div>
+<p>
+where the radius is taken to be negative if the corresponding circle encloses the others. This convention allows us to say <span class="math">\(d_{12} = r_1 + r_2\)</span> where <span class="math">\(d_{12}\)</span> is the distance between the centers of circles 1 and 2.</p>
+<p>I have come up with a proof for this theorem which I like. People have been coming up with proofs of this theorem for centuries, some of them quite elaborate. The most elegant one I have found is due to Jerzy Kocik. It treats the generalized version of the theorem which was <a href="https://arxiv.org/abs/math/0101066">discovered in 2001</a>, which gives a similar relation between the centers of the circles treating them as complex numbers. Kocik's proof is <a href="https://arxiv.org/abs/1910.09174">available on arXiv</a>.</p>
+<p>The following proof does not treat the generalized version of the theorem, but it does a better job of giving the intuitive reason for the theorem than any other proof I have seen. It is certainly shorter than any proof I have seen elsewhere.</p>
+<h1>Heron's formula and the Cayley-Menger determinant</h1>
+<p>Most people who have studied any geometry have at least heard of Heron's formula. There are many ways to state it. Here is one of them. It states that for any triangle with area <span class="math">\(A\)</span> and side lengths <span class="math">\(a\)</span>, <span class="math">\(b\)</span>, and <span class="math">\(c\)</span>, we have the equation</p>
+<div class="math">$$
+4A^2 = (a^2+b^2+c^2)^2 - 2(a^4+b^4+c^4).
+$$</div>
+<p>Perhaps this way of writing it already has stirred some inspiration in you; it certainly bears a passing resemblance to the form in the Descartes theorem. As I say, there are many ways to write Heron's formula. Here is another.</p>
+<div class="math">$$
+-16A^2 = 
+\begin{vmatrix}
+0 &amp; 1 &amp; 1 &amp; 1\\
+1 &amp; 0 &amp; c^2 &amp; b^2\\
+1 &amp; c^2 &amp; 0 &amp; a^2\\
+1 &amp; b^2 &amp; a^2 &amp; 0
+\end{vmatrix}.
+$$</div>
+<p>For this proof I prefer this form because it generalizes nicely to higher dimensions. This is the <a href="https://en.wikipedia.org/wiki/Cayley%E2%80%93Menger_determinant">Cayley-Menger determinant</a> which gives a formula for the volume of an <span class="math">\(n\)</span>-dimensional simplex in terms of its edge lengths. For our proof we will use the formula for the volume of the tetrahedron,</p>
+<div class="math">$$
+288V^2= \begin{vmatrix}
+0&amp;1&amp;1&amp;1&amp;1\\
+1&amp;0&amp;d_{12}^{2}&amp;d_{13}^{2}&amp;d_{14}^{2}\\
+1&amp;d_{21}^{2}&amp;0&amp;d_{23}^{2}&amp;d_{24}^{2}\\
+1&amp;d_{31}^{2}&amp;d_{32}^{2}&amp;0&amp;d_{34}^{2}\\
+1&amp;d_{42}^{2}&amp;d_{42}^{2}&amp;d_{43}^{2}&amp;0\\
+\end{vmatrix}.
+$$</div>
+<h1>The proof</h1>
+<p>Begin with four pairwise-tangent spheres with radii <span class="math">\(r_1\)</span>, <span class="math">\(r_2\)</span>, <span class="math">\(r_3\)</span>, and <span class="math">\(r_4\)</span>. The centers of these spheres define a tetrahedron, and the Cayley-Menger determinant formula gives us the volume of that tetrahedron in terms of <span class="math">\(d_{ij}=r_i+r_j\)</span>. After simplification, we are left with the tidy formula</p>
+<div class="math">$$
+V^2 = \left(\frac{r_1r_2r_3r_4}{3}\right)^2\left[\left(\frac{1}{r_1}+\frac{1}{r_2}+\frac{1}{r_3}+\frac{1}{r_4}\right)^2 -2\left(\frac{1}{r_1^2}+\frac{1}{r_2^2}+\frac{1}{r_3^2}+\frac{1}{r_4^2}\right)\right].
+$$</div>
+<p>Now we just observe that if the four centers lie in a plane, their tetrahedron must have volume zero. If all the radii are nonzero, the term <span class="math">\(r_1r_2r_3r_4\)</span> cannot be zero, so that leaves</p>
+<div class="math">$$
+\left(\frac{1}{r_1}+\frac{1}{r_2}+\frac{1}{r_3}+\frac{1}{r_4}\right)^2 -2\left(\frac{1}{r_1^2}+\frac{1}{r_2^2}+\frac{1}{r_3^2}+\frac{1}{r_4^2}\right)=0
+$$</div>
+<p>and the proof is complete.</p>
+<h1>The details</h1>
+<p>I should really justify the volume formula I gave above, since it is not obvious and it is essential to the proof. It really is a "follow your nose" kind of derivation, starting with the Cayley-Menger determinant and performing straightforward simplifications. We use these common determinant simplification rules.</p>
+<ul>
+<li>Adding (or subtracting) one row or column to another does not change the determinant.</li>
+<li>Multiplying a row or column by a constant scales the determinant by that multiplicative factor.</li>
+<li>When <span class="math">\(D\)</span> is invertible, the block determinant <div class="math">$$\begin{vmatrix}A&amp;B\\ C&amp;D\end{vmatrix}$$</div> can be computed as <span class="math">\(\left| D\right | \left| A - B D^{-1} C\right|\)</span>.</li>
+</ul>
+<p>Since I write out the entire matrix on each line this fills a lot of space, but there are really very few steps involved. Without further ado, the algebra.</p>
+<div class="math">\begin{align*}
+288V^2
+&amp;= \begin{vmatrix}
+0&amp;1&amp;1&amp;1&amp;1\\
+1&amp;0&amp;d_{12}^{2}&amp;d_{13}^{2}&amp;d_{14}^{2}\\
+1&amp;d_{21}^{2}&amp;0&amp;d_{23}^{2}&amp;d_{24}^{2}\\
+1&amp;d_{31}^{2}&amp;d_{32}^{2}&amp;0&amp;d_{34}^{2}\\
+1&amp;d_{42}^{2}&amp;d_{42}^{2}&amp;d_{43}^{2}&amp;0\\
+\end{vmatrix}\\
+&amp;= \begin{vmatrix}
+0&amp;1&amp;1&amp;1&amp;1\\
+1&amp;0&amp;(r_1+r_2)^2&amp;(r_1+r_3)^2&amp;(r_1+r_4)^2\\
+1&amp;(r_2+r_1)^2&amp;0&amp;(r_2+r_3)^2&amp;(r_2+r_4)^2\\
+1&amp;(r_3+r_1)^2&amp;(r_3+r_2)^2&amp;0&amp;(r_3+r_4)^2\\
+1&amp;(r_4+r_1)^2&amp;(r_4+r_2)^2&amp;(r_4+r_3)^2&amp;0\\
+\end{vmatrix}\\
+\frac{288V^2}{(r_1r_2r_3r_4)^4}&amp;= \begin{vmatrix}
+0&amp;\frac{1}{r_1^2}&amp;\frac{1}{r_2^2}&amp;\frac{1}{r_3^2}&amp;\frac{1}{r_4^2}\\
+\frac{1}{r_1^2}&amp;0&amp;(\frac{1}{r_1}+\frac{1}{r_2})^2&amp;(\frac{1}{r_1}+\frac{1}{r_3})^2&amp;(\frac{1}{r_1}+\frac{1}{r_4})^2\\
+\frac{1}{r_2^2}&amp;(\frac{1}{r_2}+\frac{1}{r_1})^2&amp;0&amp;(\frac{1}{r_2}+\frac{1}{r_3})^2&amp;(\frac{1}{r_2}+\frac{1}{r_4})^2\\
+\frac{1}{r_3^2}&amp;(\frac{1}{r_3}+\frac{1}{r_1})^2&amp;(\frac{1}{r_3}+\frac{1}{r_2})^2&amp;0&amp;(\frac{1}{r_3}+\frac{1}{r_4})^2\\
+\frac{1}{r_4^2}&amp;(\frac{1}{r_4}+\frac{1}{r_1})^2&amp;(\frac{1}{r_4}+\frac{1}{r_2})^2&amp;(\frac{1}{r_4}+\frac{1}{r_3})^2&amp;0\\
+\end{vmatrix}\\
+&amp;= \begin{vmatrix}
+0&amp;\frac{1}{r_1^2}&amp;\frac{1}{r_2^2}&amp;\frac{1}{r_3^2}&amp;\frac{1}{r_4^2}\\
+\frac{1}{r_1^2}&amp;0&amp;\frac{1}{r_1^2}+\frac{2}{r_1r_2}+\frac{1}{r_2^2}&amp;\frac{1}{r_1^2}+\frac{2}{r_1r_3}+\frac{1}{r_3^2}&amp;\frac{1}{r_1^2}+\frac{2}{r_1r_4}+\frac{1}{r_4^2}\\
+\frac{1}{r_2^2}&amp;\frac{1}{r_2^2}+\frac{2}{r_2r_1}+\frac{1}{r_1^2}&amp;0&amp;\frac{1}{r_2^2}+\frac{2}{r_2r_3}+\frac{1}{r_3^2}&amp;\frac{1}{r_2^2}+\frac{2}{r_2r_4}+\frac{1}{r_4^2}\\
+\frac{1}{r_3^2}&amp;\frac{1}{r_3^2}+\frac{2}{r_3r_1}+\frac{1}{r_1^2}&amp;\frac{1}{r_3^2}+\frac{2}{r_3r_2}+\frac{1}{r_2^2}&amp;0&amp;\frac{1}{r_3^2}+\frac{2}{r_3r_4}+\frac{1}{r_4^2}\\
+\frac{1}{r_4^2}&amp;\frac{1}{r_4^2}+\frac{2}{r_4r_1}+\frac{1}{r_1^2}&amp;\frac{1}{r_4^2}+\frac{2}{r_4r_2}+\frac{1}{r_2^2}&amp;\frac{1}{r_4^2}+\frac{2}{r_4r_3}+\frac{1}{r_3^2}&amp;0\\
+\end{vmatrix}\\
+&amp;= \begin{vmatrix}
+0&amp;\frac{1}{r_1^2}&amp;\frac{1}{r_2^2}&amp;\frac{1}{r_3^2}&amp;\frac{1}{r_4^2}\\
+\frac{1}{r_1^2}&amp;\frac{-2}{r_1^2}&amp;\frac{2}{r_1r_2}&amp;\frac{2}{r_1r_3}&amp;\frac{2}{r_1r_4}\\
+\frac{1}{r_2^2}&amp;\frac{2}{r_2r_1}&amp;\frac{-2}{r_2^2}&amp;\frac{2}{r_2r_3}&amp;\frac{2}{r_2r_4}\\
+\frac{1}{r_3^2}&amp;\frac{2}{r_3r_1}&amp;\frac{2}{r_3r_2}&amp;\frac{-2}{r_3^2}&amp;\frac{2}{r_3r_4}\\
+\frac{1}{r_4^2}&amp;\frac{2}{r_4r_1}&amp;\frac{2}{r_4r_2}&amp;\frac{2}{r_4r_3}&amp;\frac{-2}{r_4^2}\\
+\end{vmatrix}\\
+\frac{288V^2}{(r_1r_2r_3r_4)^2}&amp;= \begin{vmatrix}
+0&amp;\frac{1}{r_1}&amp;\frac{1}{r_2}&amp;\frac{1}{r_3}&amp;\frac{1}{r_4}\\
+\frac{1}{r_1}&amp;-2&amp;2&amp;2&amp;2\\
+\frac{1}{r_2}&amp;2&amp;-2&amp;2&amp;2\\
+\frac{1}{r_3}&amp;2&amp;2&amp;-2&amp;2\\
+\frac{1}{r_4}&amp;2&amp;2&amp;2&amp;-2
+\end{vmatrix}\\
+\frac{288V^2}{8(r_1r_2r_3r_4)^2}&amp;= \begin{vmatrix}
+0&amp;\frac{1}{r_1}&amp;\frac{1}{r_2}&amp;\frac{1}{r_3}&amp;\frac{1}{r_4}\\
+\frac{1}{r_1}&amp;-1&amp;1&amp;1&amp;1\\
+\frac{1}{r_2}&amp;1&amp;-1&amp;1&amp;1\\
+\frac{1}{r_3}&amp;1&amp;1&amp;-1&amp;1\\
+\frac{1}{r_4}&amp;1&amp;1&amp;1&amp;-1
+\end{vmatrix}\\
+&amp;=-\begin{vmatrix}
+-1&amp;1&amp;1&amp;1\\
+1&amp;-1&amp;1&amp;1\\
+1&amp;1&amp;-1&amp;1\\
+1&amp;1&amp;1&amp;-1
+\end{vmatrix}
+\begin{bmatrix} 1/r_1 \\ 1/r_2 \\ 1/r_3 \\ 1/r_4 \end{bmatrix}^T
+\begin{bmatrix}
+-1&amp;1&amp;1&amp;1\\
+1&amp;-1&amp;1&amp;1\\
+1&amp;1&amp;-1&amp;1\\
+1&amp;1&amp;1&amp;-1
+\end{bmatrix}^{-1}
+\begin{bmatrix} 1/r_1 \\ 1/r_2 \\ 1/r_3 \\ 1/r_4 \end{bmatrix}
+\end{align*}</div>
+<p>Notice the matrix 
+</p>
+<div class="math">$$
+D=\begin{bmatrix}
+-1&amp;1&amp;1&amp;1\\
+1&amp;-1&amp;1&amp;1\\
+1&amp;1&amp;-1&amp;1\\
+1&amp;1&amp;1&amp;-1
+\end{bmatrix}
+$$</div>
+<p>
+satisfies <span class="math">\(D^2=4I\)</span>. Thus, <span class="math">\(D^{-1} = \frac{1}{4}D\)</span>. We can also compute <span class="math">\(|D| = -16\)</span>. Just a couple more lines and we are done with the algebra.</p>
+<div class="math">\begin{align*}
+\frac{288V^2}{32(r_1r_2r_3r_4)^2}
+&amp;=
+\begin{bmatrix} 1/r_1 \\ 1/r_2 \\ 1/r_3 \\ 1/r_4 \end{bmatrix}^T
+\begin{bmatrix}
+-1&amp;1&amp;1&amp;1\\
+1&amp;-1&amp;1&amp;1\\
+1&amp;1&amp;-1&amp;1\\
+1&amp;1&amp;1&amp;-1
+\end{bmatrix}
+\begin{bmatrix} 1/r_1 \\ 1/r_2 \\ 1/r_3 \\ 1/r_4 \end{bmatrix}\\
+\frac{9V^2}{(r_1r_2r_3r_4)^2}
+&amp;=
+\begin{bmatrix} 1/r_1 \\ 1/r_2 \\ 1/r_3 \\ 1/r_4 \end{bmatrix}^T
+\begin{bmatrix}
+1&amp;1&amp;1&amp;1\\
+1&amp;1&amp;1&amp;1\\
+1&amp;1&amp;1&amp;1\\
+1&amp;1&amp;1&amp;1
+\end{bmatrix}
+\begin{bmatrix} 1/r_1 \\ 1/r_2 \\ 1/r_3 \\ 1/r_4 \end{bmatrix}
+-2\begin{bmatrix} 1/r_1 \\ 1/r_2 \\ 1/r_3 \\ 1/r_4 \end{bmatrix}^T
+\begin{bmatrix}
+1&amp;0&amp;0&amp;0\\
+0&amp;1&amp;0&amp;0\\
+0&amp;0&amp;1&amp;0\\
+0&amp;0&amp;0&amp;1
+\end{bmatrix}
+\begin{bmatrix} 1/r_1 \\ 1/r_2 \\ 1/r_3 \\ 1/r_4 \end{bmatrix}\\
+&amp;=\left(\frac{1}{r_1}+\frac{1}{r_2}+\frac{1}{r_3}+\frac{1}{r_4}\right)^2 -2\left(\frac{1}{r_1^2}+\frac{1}{r_2^2}+\frac{1}{r_3^2}+\frac{1}{r_4^2}\right)
+\end{align*}</div>
+<script type="text/javascript">if (!document.getElementById('mathjaxscript_pelican_#%@#$@#')) {
+    var align = "center",
+        indent = "0em",
+        linebreak = "false";
+
+    if (false) {
+        align = (screen.width < 768) ? "left" : align;
+        indent = (screen.width < 768) ? "0em" : indent;
+        linebreak = (screen.width < 768) ? 'true' : linebreak;
+    }
+
+    var mathjaxscript = document.createElement('script');
+    mathjaxscript.id = 'mathjaxscript_pelican_#%@#$@#';
+    mathjaxscript.type = 'text/javascript';
+    mathjaxscript.src = 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.3/latest.js?config=TeX-AMS-MML_HTMLorMML';
+
+    var configscript = document.createElement('script');
+    configscript.type = 'text/x-mathjax-config';
+    configscript[(window.opera ? "innerHTML" : "text")] =
+        "MathJax.Hub.Config({" +
+        "    config: ['MMLorHTML.js']," +
+        "    TeX: { extensions: ['AMSmath.js','AMSsymbols.js','noErrors.js','noUndefined.js'], equationNumbers: { autoNumber: 'none' } }," +
+        "    jax: ['input/TeX','input/MathML','output/HTML-CSS']," +
+        "    extensions: ['tex2jax.js','mml2jax.js','MathMenu.js','MathZoom.js']," +
+        "    displayAlign: '"+ align +"'," +
+        "    displayIndent: '"+ indent +"'," +
+        "    showMathMenu: true," +
+        "    messageStyle: 'normal'," +
+        "    tex2jax: { " +
+        "        inlineMath: [ ['\\\\(','\\\\)'] ], " +
+        "        displayMath: [ ['$$','$$'] ]," +
+        "        processEscapes: true," +
+        "        preview: 'TeX'," +
+        "    }, " +
+        "    'HTML-CSS': { " +
+        "        availableFonts: ['STIX', 'TeX']," +
+        "        preferredFont: 'STIX'," +
+        "        styles: { '.MathJax_Display, .MathJax .mo, .MathJax .mi, .MathJax .mn': {color: 'inherit ! important'} }," +
+        "        linebreaks: { automatic: "+ linebreak +", width: '90% container' }," +
+        "    }, " +
+        "}); " +
+        "if ('default' !== 'default') {" +
+            "MathJax.Hub.Register.StartupHook('HTML-CSS Jax Ready',function () {" +
+                "var VARIANT = MathJax.OutputJax['HTML-CSS'].FONTDATA.VARIANT;" +
+                "VARIANT['normal'].fonts.unshift('MathJax_default');" +
+                "VARIANT['bold'].fonts.unshift('MathJax_default-bold');" +
+                "VARIANT['italic'].fonts.unshift('MathJax_default-italic');" +
+                "VARIANT['-tex-mathit'].fonts.unshift('MathJax_default-italic');" +
+            "});" +
+            "MathJax.Hub.Register.StartupHook('SVG Jax Ready',function () {" +
+                "var VARIANT = MathJax.OutputJax.SVG.FONTDATA.VARIANT;" +
+                "VARIANT['normal'].fonts.unshift('MathJax_default');" +
+                "VARIANT['bold'].fonts.unshift('MathJax_default-bold');" +
+                "VARIANT['italic'].fonts.unshift('MathJax_default-italic');" +
+                "VARIANT['-tex-mathit'].fonts.unshift('MathJax_default-italic');" +
+            "});" +
+        "}";
+
+    (document.body || document.getElementsByTagName('head')[0]).appendChild(configscript);
+    (document.body || document.getElementsByTagName('head')[0]).appendChild(mathjaxscript);
+}
+</script>                </article>
+            </aside><!-- /#featured -->
+                <section id="content" class="body">
+                    <h1>Other articles</h1>
+                    <hr />
+                    <ol id="posts-list" class="hfeed">
+
+            <li><article class="hentry">
+                <header>
+                    <h1><a href="https://aldenbradford.com/revisiting-apollonian-gaskets.html" rel="bookmark"
+                           title="Permalink to Revisiting Apollonian gaskets">Revisiting Apollonian gaskets</a></h1>
+                </header>
+
+                <div class="entry-content">
+<footer class="post-info">
+        <abbr class="published" title="2022-08-06T00:00:00-04:00">
+                Published: Sat 06 August 2022
+        </abbr>
+
+        <address class="vcard author">
+                By                         <a class="url fn" href="https://aldenbradford.com/author/alden-bradford.html">Alden Bradford</a>
+        </address>
+<p>In <a href="https://aldenbradford.com/category/blog.html">Blog</a>.</p>
+<p>tags: <a href="https://aldenbradford.com/tag/number-theory.html">number theory</a> <a href="https://aldenbradford.com/tag/apollo.html">Apollo</a> <a href="https://aldenbradford.com/tag/apollonian-circle-packings.html">Apollonian circle packings</a> </p>
+</footer><!-- /.post-info -->                <p>A better way of generating Apollonian gaskets.</p>
+                <a class="readmore" href="https://aldenbradford.com/revisiting-apollonian-gaskets.html">read more</a>
+                </div><!-- /.entry-content -->
+            </article></li>
+                </ol><!-- /#posts-list -->
+                </section><!-- /#content -->
+        <section id="extras" class="body">
+                <div class="blogroll">
+                        <h2>links</h2>
+                        <ul>
+                            <li><a href="https://github.com/AldenMB">My GitHub</a></li>
+                            <li><a href="https://nt-tl.net/">My wife</a></li>
+                            <li><a href="https://laurestine.github.io/">My sister</a></li>
+                            <li><a href="https://www.clintonbradford.com/">My brother</a></li>
+                        </ul>
+                </div><!-- /.blogroll -->
+                <div class="social">
+                        <h2>social</h2>
+                        <ul>
+                            <li><a href="https://aldenbradford.com/feeds/all.atom.xml" type="application/atom+xml" rel="alternate">atom feed</a></li>
+
+                        </ul>
+                </div><!-- /.social -->
+        </section><!-- /#extras -->
+
+        <footer id="contentinfo" class="body">
+                <address id="about" class="vcard body">
+                Proudly powered by <a href="https://getpelican.com/">Pelican</a>, which takes great advantage of <a href="https://www.python.org/">Python</a>.
+                </address><!-- /#about -->
+
+                <p>The theme is by <a href="https://www.smashingmagazine.com/2009/08/designing-a-html-5-layout-from-scratch/">Smashing Magazine</a>, thanks!</p>
+        </footer><!-- /#contentinfo -->
+
+</body>
+</html>

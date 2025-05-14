@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="english">
+<head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta name="generator" content="Pelican" />
+        <title>We should all use OpenIntro Statistics</title>
+        <link rel="stylesheet" href="https://aldenbradford.com/theme/css/main.css" />
+        <link href="https://aldenbradford.com/feeds/all.atom.xml" type="application/atom+xml" rel="alternate" title="Alden Bradford Atom Feed" />
+        <meta name="description" content="My argument for switching textbooks" />
+</head>
+
+<body id="index" class="home">
+        <header id="banner" class="body">
+                <h1><a href="https://aldenbradford.com/">Alden Bradford</a></h1>
+                <nav><ul>
+                    <li><a href="https://aldenbradford.com/">Welcome</a></li>
+                    <li class="active"><a href="https://aldenbradford.com/category/blog.html">Blog</a></li>
+                </ul></nav>
+        </header><!-- /#banner -->
+<section id="content" class="body">
+  <article>
+    <header>
+      <h1 class="entry-title">
+        <a href="https://aldenbradford.com/we-should-all-use-openintro-statistics.html" rel="bookmark"
+           title="Permalink to We should all use OpenIntro Statistics">We should all use OpenIntro Statistics</a></h1>
+    </header>
+
+    <div class="entry-content">
+<footer class="post-info">
+        <abbr class="published" title="2025-05-14T00:00:00-04:00">
+                Published: Wed 14 May 2025
+        </abbr>
+
+        <address class="vcard author">
+                By                         <a class="url fn" href="https://aldenbradford.com/author/alden-bradford.html">Alden Bradford</a>
+        </address>
+<p>In <a href="https://aldenbradford.com/category/blog.html">Blog</a>.</p>
+<p>tags: <a href="https://aldenbradford.com/tag/oer.html">OER</a> <a href="https://aldenbradford.com/tag/statistics.html">Statistics</a> <a href="https://aldenbradford.com/tag/teaching.html">Teaching</a> </p>
+</footer><!-- /.post-info -->      <h1>Background</h1>
+<p>In Washington State, we teach a unified statistics curriculum across all the community colleges. The course is called Math&amp;146, and our rule for what goes into it is the American Statistical Association's <a href="https://www.amstat.org/education/guidelines-for-assessment-and-instruction-in-statistics-education-(gaise)-reports">Guidelines for Assessment and Instruction in Statistics Education</a> (GAISE) College Report. Currently, most instructors at Olympic College use the OER textbook <a href="https://openstax.org/details/books/introductory-statistics-2e">Introductory Statistics</a> published by OpenStax. I believe we should transition away from the OpenStax textbook, and instead adopt a different OER textbook, published by a different group with a similar name: <a href="https://openintro.org/book/os/">OpenIntro</a>.</p>
+<p>Introductory Statistics, published by OpenStax, has two primary authors and eight contributing authors. The primary authors were professors at De Anza College, a community college in Cupertino California. They are both now retired. One of them has a master's degree in statistics and a PhD in education, and the other has a master's degree in applied mathematics. Out of the eight other contributing authors, one has a master's degree in statistics. The rest have degrees in mathematics or related disciplines.</p>
+<!---
+Barbara Illowsky: MS Statistics, Wharton at University of Pennsylvania. PhD Education, Capella University.
+Susan Dean: MS Applied Mathematics, Santa Clara University.
+http://nebula2.deanza.edu/~kathyplum/story.html
+
+Daniel Birmajer: PhD mathematics
+Bryan Blount: MA education
+Sheri Boyd: PhD mathematics
+Matthew Einsohn: MA Environmental Studies
+James Helmreich: BA Bowdoin College (Mathematics, Economics) MA University of Maryland (Mathematical Logic) PhD University of Maryland (Mathematical Logic) MS SUNY at Albany (Statistics)
+Lynette Kenyon: math professor
+Sheldon Lee: PhD mathematics
+Jeffrey Taub: MS logistics
+-->
+
+<p>OpenIntro Statistics was created by three PhD students at UCLA, each of whom completed their PhD in statistics. Two of them later did postdocs in statistics, one of them is now a statistics professor at Duke University. It is currently in its fourth edition, with a fifth on the way. This is a mature textbook, the first edition being published in 2011. Also, unlike the OpenStax book, OpenIntro has the approval of the American Institute of Mathematics <a href="https://textbooks.aimath.org/">Open Textbook Initiative</a>.</p>
+<!---
+Mine Çetinkaya-Rundel: MS and PhD in Stats, UCLA. Prof. at Duke University in Stats.
+David Diez: PhD in Stats, UCLA. Postdoc at Harvard. Works at YouTube.
+Chris Barr: PhD in Stats, UCLA. Postdoc at Johns Hopkins.
+-->
+
+<p>I have a few different reasons I think we should switch, and it amounts to more than just a matter of personal preference. On a couple key topics, the exposition given in OpenStax is arguably incorrect from a statistical point of view. More broadly, OpenIntro has better alignment with the standards laid out in GAISE, in ways I will explain below. I think this difference can mostly be attributed to the different backgrounds of the authors. The OpenStax book was written by mostly mathematicians, while the OpenIntro book was written entirely by statisticians. Particularly since we have more mathematical expertise than statistical expertise among the faculty here at Olympic College, it would be better for us to use the book with a stronger statistical bent.</p>
+<h1>Necessary improvements</h1>
+<p>We could argue about preferences indefinitely and never reach a conclusion. There are lots of stylistic, pacing, and presentation choices which matter a lot for textbooks. There is no one best way to write a book. That's why I want to start with a couple of things which are not just preferences. There are two major areas where OpenIntro Statistics is right, and OpenStax is wrong. Even if you do not switch to OpenIntro, you should be aware of these problems so as to limit the spread of false statistics information.</p>
+<h2>Retrospective One-Tailed Tests</h2>
+<p>There is a fundamental issue with how OpenStax structures the hypothesis testing chapter. Consider the <a href="https://openstax.org/books/introductory-statistics-2e/pages/9-5-additional-information-and-full-hypothesis-test-examples">Try It example 9.19 from the OpenStax text</a>:</p>
+<blockquote>
+<p>A car soap gets rid of 30% of stains on the car. After adding a new compound to the soap, the soap is used on a car and found to wash 20 stains out of the 50 stains on the car. With the level of significance being 10%, find out if adding the new compound to soap is beneficial.</p>
+</blockquote>
+<p>We know that 40% of stains in the sample were removed, we want to know if that difference is statistically significant. I will set aside concerns about whether the stains are really independent events. On problems like this, the OpenStax text instructs you to do a one-tailed test. Using the null hypothesis value of <span class="math">\(p=30\%\)</span> we would expect to see samples where at least 20 stains are removed about 8.5% of the time. That's less than our rejection threshold of <span class="math">\(\alpha=10\%\)</span>, so we reject the null hypothesis and conclude the new soap is beneficial.</p>
+<p>That's the solution OpenStax expects. That solution is also wrong.</p>
+<p>To understand the error, let's see what would have happened if instead of 20 stains, the soap managed to get rid of 10 stains. If this had happened, we would have asked: with a significance level of 10%, is the new compound detrimental? Again, using <span class="math">\(p=30\%\)</span>, we would expect to see samples where at most 10 stains are removed about 7.9% of the time.  That's less than the threshold of <span class="math">\(\alpha=10\%\)</span>, so we reject the null hypothesis and conclude the new soap is detrimental.</p>
+<p>I hope the error is becoming clearer. The problem has us inspecting the data before we decide what test to use. Following the OpenStax procedure, we end up rejecting the null hypothesis <span class="math">\(8.5\%+7.9\%=16.4\%\)</span> of the time, assuming the null hypothesis is true. That should not be possible with the significance level chosen. <span class="math">\(\alpha\)</span> is meant to be the probability of rejecting the null hypothesis assuming the null hypothesis is correct. We should have done a 2-tailed test, and we should not have rejected the null hypothesis at all.</p>
+<p>Some of the problems in OpenStax are more carefully worded, and make it clear that the researcher picked the test to use before inspecting the data. Not all of the questions are so careful. Any time we inspect the data before deciding on which direction of test to use, we must do a 2-tailed test. Otherwise, we end up doubling our <span class="math">\(\alpha\)</span> value by mistake.</p>
+<p>For this reason, the OpenIntro book defers one-tailed tests to a special topic. Most of the book avoids one-tailed tests.</p>
+<p>It is true that there are cases where a one-tailed test is appropriate. For example, when you try a new treatment against the null hypothesis of "this does no better than the best currently established treatment", it makes perfect sense to do a one-tailed test. You will get a little more statistical power that way. However, for almost every case our students are likely to encounter, it is safer to just do a 2-tailed test every time. Some disciplines have banned one-tailed tests entirely, because they are so often misapplied. When I teach Math&amp;146, I do not cover one-tailed tests. The consequence is that the rules for students to learn are simpler, and the students' results are more accurate. That's a win!</p>
+<p>For a nuanced discussion of this issue, see <a href="https://biology.sdsu.edu/pub/stuart/2009MisprescriptionOneTailed.pdf">Misprescription and misuse of one-tailed tests (2009)</a>, <a href="https://besjournals.onlinelibrary.wiley.com/doi/full/10.1111/j.2041-210X.2010.00014.x">When should we use one-tailed hypothesis testing? (2010)</a> and <a href="https://pubmed.ncbi.nlm.nih.gov/37917504/">One-tailed tests: Let's do this (responsibly) (2024)</a>.</p>
+<h2>T test or Z test</h2>
+<p>There are several places in statistics where a z-test is always the right test to do. For example, when we are computing a population proportion confidence interval, we are safe to use a z-score whenever <span class="math">\(np\geq 10\)</span> and <span class="math">\(n(1-p)\geq 10\)</span> because the central limit theorem kicks in very fast for the binomial distribution. Since we use the binomial distribution formula to compute the standard deviation, we don't need the small-sample correction that Student's T distribution provides. One of the improvements of the OpenIntro text is that it starts the inferential statistics section looking only at sample proportions. With only the normal distribution to compare against, students have more energy to pay attention to the hypothesis testing framework -- terms like standard error, point estimate, confidence interval, and p value. Later on, once students are used to the framework, we introduce the t-test.</p>
+<p>When I was first taught statistics, I was taught to use a t-distribution for sample sizes less than 30. For larger samples, we were told to use the z-distribution since the t-distribution converges asymptotically to a standard normal distribution when the sample size is larger. This is the strategy taught by OpenStax. When I was a kid, this made sense -- the textbook only had t-tables for sample sizes up to 30. These days, most people are not looking up values in a table, they are using computer software to find the t-scores. When you have a computer on hand, it does not make sense to deal with a special case for large samples. It is much simpler to just use the t-distribution for anything where you are using the sample variance. The CDF is a hypergeometric function, which is one of the fastest types of special function to compute by machine. The OpenIntro book teaches students to use a t-score regardless of sample size. This method is easier to remember, less prone to error, and gives slightly more accurate results. That's a win!</p>
+<p>As an aside, I will note one other case where OpenStax advises students to use a z-test. That's in the case where the population standard deviation is known, but the population mean is unknown. From a mathematical standpoint, this approach is sound. From a statistical standpoint, it is unfounded. There are almost no cases in practice where you would know the standard deviation of a population but you would not know the mean. This case has some merit as a teaching tool, a stepping stone, emphasizing the reason why the t-test is necessary. I believe this would be a worthwhile special topic in a more advanced probability class, particularly one where students will derive the t-test for themselves. It does not belong in an introductory stats class. OpenIntro does without it.</p>
+<p><img alt="A comparison of decision trees used by each textbook for hypothesis testing" src="https://aldenbradford.com/decision_tree.svg"></p>
+<h1>Technology</h1>
+<p>Modern statistics is not done without computers. GAISE exhorts us to</p>
+<blockquote>
+<p>-5. Use technology to explore concepts and analyze data.</p>
+</blockquote>
+<p>Two of the Goals for Students in Introductory Statistics Courses are</p>
+<blockquote>
+<p>-3. Students should be able to produce graphical displays and numerical summaries and interpret what graphs do and do not reveal.</p>
+<p>-8. Students should be able to interpret and draw conclusions from standard output from
+statistical software packages.</p>
+</blockquote>
+<p>OpenIntro and OpenStax are built around different computer tools. My philosophy for choosing a tool is that it should have a low floor and a high ceiling.</p>
+<p>A low floor means that students should be able to get useful results after just one 50-minute lesson using the tool. This precludes a general-purpose programming language like Python. In my experience, it takes at least two lessons in Python before students are comfortable enough with the syntax to be able to import the required libraries and use the relevant functions.</p>
+<p>A high ceiling means that students should be able to continue to use the tool throughout their education and career. The tools that we teach should be powerful enough that students will not have to abandon them when their next course, or next job, comes along.</p>
+<h2>The TI-84</h2>
+<p>Every problem in the OpenStax book can be solved using the TI-84. There are even helpful guides sprinkled throughout, explaining exactly which buttons to press. This tool definitely meets our low floor criterion. Many, possibly most, of our students have used a similar calculator in high school. Students can often get useful results without any new instruction on our part. Unfortunately, the TI-84 does not have a very high ceiling. It is hard to load data onto it. It is not practical to export the graphics it creates. Even as we teach Math&amp;146 now, we often supplement with web applets that do much better than the TI-84 at specific tasks. There was a period in the 80s and 90s when it would have been an acceptable tool for a professional context, but that time has long since passed.</p>
+<p>Why does OpenStax use the TI-84? I believe this can be traced back to Texas Instruments' educational outreach division. In order to maintain their market dominance in the high school education space, TI has produced excellent educational resources to help high school teachers prepare their students for standardized tests, notably the AP Stats exam. The authors of the OpenStax book made an effort to incorporate the TI-84 emulator into their curriculum, which Texas Instruments made free for anyone to use, as a way to promote the use of the calculator. Using those educational resources was an economical way to get technology into the curriculum, helping OpenStax get established quickly.</p>
+<p>I am a fan of Texas Instruments. Their calculators are excellent. They are the makers of my personal favorite calculator, the <a href="https://aldenbradford.com/calculator_emulator/">TI-30Xa</a>. I still think the TI-84 is the wrong tool to teach college statistics.</p>
+<h2>Spreadsheets</h2>
+<p>By far the most common statistical tool used in industry is the humble spreadsheet. No matter what our students end up studying, no matter where they work, they will have access to spreadsheet software. Lots of tasks in intro statistics can be handled with a spreadsheet alone: means, medians, quartiles, standard deviations, even some chi squared tests can be done without leaving the spreadsheet. Students don't need much instruction to get underway with a spreadsheet because many of them have used spreadsheets in other contexts. The graphical interface means spreadsheets certainly meet our low floor criterion. Some people make whole careers out of spreadsheet wizardry, so it also has a high ceiling.</p>
+<p>I teach my students to use spreadsheets for data acquisition, data cleaning, and basic summary statistics. I teach them using LibreOffice Calc, which is a free spreadsheet program available on every operating system. The skills are transferable to other spreadsheet programs.</p>
+<p>I don't leave it there. Once students know how to format their data correctly, I proceed quickly to R.</p>
+<h2>R</h2>
+<p>R is a completely free, open-source statistics and data visualization package which has been around since 1993, based closely on its predecessor S which was created at Bell Laboratories in 1976. Unlike Python, it is not meant as a general-purpose programming language. Rather, it is designed specifically to simplify routine statistics tasks. All interaction in R can be done through a command line, and the commands are simple enough that my students rarely have trouble formatting them correctly. Here is an example of an R session a student might use to answer a homework problem.</p>
+<div class="highlight"><pre><span></span><code><span class="o">&gt;</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">c</span><span class="p">(</span><span class="m">1</span><span class="p">,</span><span class="w"> </span><span class="m">1</span><span class="p">,</span><span class="w"> </span><span class="m">2</span><span class="p">,</span><span class="w"> </span><span class="m">2</span><span class="p">,</span><span class="w"> </span><span class="m">3</span><span class="p">,</span><span class="w"> </span><span class="m">5</span><span class="p">,</span><span class="w"> </span><span class="m">7</span><span class="p">,</span><span class="w"> </span><span class="m">10</span><span class="p">)</span>
+<span class="o">&gt;</span><span class="w"> </span><span class="nf">summary</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+<span class="w">   </span><span class="n">Min.</span><span class="w"> </span><span class="m">1</span><span class="n">st</span><span class="w"> </span><span class="n">Qu.</span><span class="w">  </span><span class="n">Median</span><span class="w">    </span><span class="n">Mean</span><span class="w"> </span><span class="m">3</span><span class="n">rd</span><span class="w"> </span><span class="n">Qu.</span><span class="w">    </span><span class="n">Max.</span><span class="w"> </span>
+<span class="w">  </span><span class="m">1.000</span><span class="w">   </span><span class="m">1.750</span><span class="w">   </span><span class="m">2.500</span><span class="w">   </span><span class="m">3.875</span><span class="w">   </span><span class="m">5.500</span><span class="w">  </span><span class="m">10.000</span><span class="w"> </span>
+<span class="o">&gt;</span><span class="w"> </span><span class="nf">sd</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+<span class="p">[</span><span class="m">1</span><span class="p">]</span><span class="w"> </span><span class="m">3.226564</span>
+<span class="o">&gt;</span><span class="w"> </span><span class="nf">boxplot</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+</code></pre></div>
+
+<p><img alt="the boxplot produced by R" src="https://aldenbradford.com/boxplot.png"></p>
+<p>Unlike many simple applets, R will correctly terminate the whiskers at <span class="math">\(1.5\times IQR\)</span> away from the quartiles. This is how it behaves without any additional configuration. R satisfies the low floor criterion: my students are eager to start using it for their homework the day they learn it.</p>
+<p>R also has a very high ceiling. It is a tool used by professional data scientists for exploratory analysis, simulation, and creating publication-quality graphics. You may have seen the popular website FiveThirtyEight. They used R to generate most of their award-winning data visualizations. Just as some people have made a career on being expert in spreadsheets, some people make their living using R.</p>
+<p>The OpenIntro textbook comes with a set of labs which get students solving problems relevant to the textbook chapters, using R. These are meant for a class with a weekly computer lab session supervised by a teaching assistant. I have adapted several of these into homework projects, with associated in-class lessons. The projects are not very complicated, typically they will take less than an hour to complete. They are mostly graded automatically through Canvas. Their purpose is to get students using the statistical tools on some real data. </p>
+<p>GAISE cautions us that</p>
+<blockquote>
+<p>SAS certification, non-introductory R programming, and other more extensive programming topics belong in subsequent courses.</p>
+</blockquote>
+<p>I do not teach my students about string manipulation, looping, conditionals, function writing, or any object-oriented aspects of R. The most basic parts, essentially using R as a calculator, are more than sufficient for what we need.</p>
+<h1>Using Real Data</h1>
+<p>GAISE is unequivocal: </p>
+<blockquote>
+<p>Recommendation 3: Integrate real data with a context and a purpose.
+Using real data in context is crucial in teaching and learning statistics, both to give students experience with analyzing genuine data and to illustrate the usefulness and fascination of our discipline.</p>
+</blockquote>
+<p>On this score, OpenIntro does much, much better than OpenStax. OpenIntro is littered with real data sets, complete with a context and a citation. The included lecture slides also include additional data sets not covered in the main book, so students get more exposure to the process of exploring data. Every example in the text comes with a cleaned-up copy of the data, ready to download from teh website or as an R package. This makes it easy to create your own graphics, follow-up exercises, and tests based on the same data used in the book.</p>
+<p>Contrast this with OpenStax. Its data appendix contains only 2 data sets, and their provenance is dubious. Most of the exercises in the book use made-up values. This can be a good thing! A well-chosen example, used to illustrate an important point, doesn't always have to be true. However, we deprive our students when the only examples we give are made-up. It is ubiquitous to use made-up examples in a math class. It should not be so common in a statistics class.</p>
+<p>When I taught from OpenStax, I tried to compensate for this by using data collected with in-class experiments. This worked okay. Now that I am using spreadsheets and R, there are many, many more choices of data available. I recommend <a href="https://vincentarelbundock.github.io/Rdatasets/articles/data.html">Vincent Arel-Bundock's list</a> of just about every data set anyone has published for free as part of an R package. Every one of these comes with a description of how the data was collected and suggestions of how it can be analyzed. By picking from these data sets, it is easy to find data with the types of variables I am looking for. Also, in some cases, the students will already have the data on their machine ready to load in R.</p>
+<p>It can be tempting to make up examples for short problems, like making confidence intervals for a population proportion. Since we won't work with them very long, it doesn't make sense to spend a lot of time explaining the context. However, these are also some of the easiest examples to find suitable data for. Our library has a subscription to Harper's magazine, which every month publishes <a href="https://harpers.org/harpers-index/">Harper's Index</a>. This is a list of brief, interesting statistics from the news. I regularly peruse Harper's Index for examples to use in class or in quizzes. I find that students are more engaged when we use a number from the news, even if the mathematics is the same.</p>
+<h1>Topic Coverage</h1>
+<p>Most of the topic coverage overlaps between the two books. Here I will point out a few notable differences, as we transition from OpenStax to OpenIntro.</p>
+<h2>Stem-and-leaf plots</h2>
+<p>I love stem-and-leaf plots. They hold a place dear to my heart. I also adore the slide rule and adding machine -- I own more slide rules and adding machines than could ever be practical. Alas, OpenIntro does not cover the stem-and-leaf plot, and I (reluctantly) must agree that it probably does not belong in an intro stats course, at least not any more than a slide rule belongs in an introductory algebra course. It is a neat device, but it is mostly practical when a pencil and paper are the best tools at hand for data visualization. Today, when a histogram is just a few clicks away, there is no need to bother a new student with the rules of the stem and leaf plot. The role of the stem-and-leaf plot is mostly supplanted by the dot plot and the histogram. GAISE cautions us against</p>
+<blockquote>
+<p>Constructing plots by hand. Data displays are now made by computers. Students need to
+know how to read and interpret them. Instead of spending lots of time creating
+histograms by hand, use some of that time instead to develop a deeper understanding and
+ask more challenging questions about what the plots tell us about the data.</p>
+</blockquote>
+<p>I do still have my students create boxplots by hand, with some technological assistance. I feel this is the best way to ensure they can really interpret the whiskers and the outliers. I don't make them compute medians and quartiles by hand, since that process is prone to error. When students mess up computing the median, it is rarely because of a conceptual misunderstanding.</p>
+<h2>Probability Theory</h2>
+<p>Here is where my review of OpenIntro is more measured. As OpenIntro was written by statisticians, it carries a statistician's understanding of probability theory. The section on random variables leaves much to be desired. For example, the OpenIntro book comes with a mostly-excellent set of slides suitable for lectures. The slides on random variables include the bold claim that</p>
+<blockquote>
+<p>Random variables do not work like normal algebraic variables: <div class="math">$$X+X\neq 2X$$</div>
+</p>
+</blockquote>
+<p>This is nonsense. The whole point of random variables is that they do work just like algebraic variables. What the authors mean here is that, given two i.i.d. variables <span class="math">\(X_1\)</span> and <span class="math">\(X_2\)</span>, the random variable <span class="math">\(X_1+X_2\)</span> will in general not have the same distribution as <span class="math">\(2X_1\)</span>. In particular, while <span class="math">\(Var(X_1+X_2)=Var(X_1)+Var(X_2)=2Var(X_1)\)</span>, <span class="math">\(Var(2X_1)=4Var(X_1)\)</span>. This is a useful point to make, but the way the authors make it is confused and a little clumsy.</p>
+<p>If I were choosing a textbook for an introductory probability course, I would probably go with one of the texts by Sheldon Ross. Alas, I do not think any OER textbook exists which is up to my standards for a probability book. Luckily, in our case, we are not choosing a book for a probability course. GAISE tells us</p>
+<blockquote>
+<p>The original GAISE report recommended less emphasis on probability in the introductory course and we continue to endorse that recommendation.</p>
+</blockquote>
+<p>I think the OpenIntro text is well-suited to our course, despite its relatively poor coverage of random variables. I just skip those sections entirely. For comparison, the OpenStax book makes no explicit reference to the algebra of random variables. Also, while the above error does appear in the slides, I have not found any similar error in the text itself. The textbook section on random variables is probably not presented the way I would do it as a probability theorist, but the information presented in the book is correct. There is no danger posed to the curious student who reads outside the required sections.</p>
+<h1>Aesthetics</h1>
+<p>The OpenStax book borrows from many other OER textbooks, dating back to at least 2007. There is a mix of many different graphical styles, citation styles, and problem formats. Personally, I feel the book has a disjointed tone. The sections don't flow together, making the book hard to read. I think this is part of why so few of our students read the book. Also, the paperback version is laid out based on the online version of the text, with unnecessarily big margins leading to a bulky book.</p>
+<p>The OpenIntro book has a much more consistent tone and flow, having been created and maintained by relatively few authors. They make available the configuration files needed to create your own figures in the same style as the book, if you wish. The end-of-chapter problems are of about the same length across chapters. The problems also reference previous problems and examples from the text, which gives a sense of planning and cohesion to the narrative.</p>
+<p>Aesthetic considerations naturally take a back seat compared to concerns about accuracy, accessibility, and content coverage. Aesthetics still matters, because it affects how much and how well students will use the textbook. From my experience so far, I believe that my students are using the OpenIntro textbook more, compared to how my students used the OpenStax textbook in the past.</p>
+<h1>Recommendation</h1>
+<p>Over the course of, say, the next two years, we should transition away from OpenStax for statistics. I do like many other OpenStax books, but for Statistics, OpenIntro is better. By transitioning we will be teaching our students more accurate information, we will  have better alignment with GAISE standards, and our student will have a better reading experience.</p>
+<p>I don't expect that we will change textbooks over night. It will take time for professors to learn the new order of the topics, prepare new lesson plans, and prepare new assessment materials. We should be compensated for that time. The number one request I hear from my students in this course is to have more homework. Many of the online problems we use in the OpenStax course could be adapted to the newer textbook. There are many problems in the printed OpenIntro textbook that don't have online randomized versions yet. This is an area where I would welcome collaboration with colleagues more experienced in online homework creation.</p>
+<script type="text/javascript">if (!document.getElementById('mathjaxscript_pelican_#%@#$@#')) {
+    var align = "center",
+        indent = "0em",
+        linebreak = "false";
+
+    if (false) {
+        align = (screen.width < 768) ? "left" : align;
+        indent = (screen.width < 768) ? "0em" : indent;
+        linebreak = (screen.width < 768) ? 'true' : linebreak;
+    }
+
+    var mathjaxscript = document.createElement('script');
+    mathjaxscript.id = 'mathjaxscript_pelican_#%@#$@#';
+    mathjaxscript.type = 'text/javascript';
+    mathjaxscript.src = 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.3/latest.js?config=TeX-AMS-MML_HTMLorMML';
+
+    var configscript = document.createElement('script');
+    configscript.type = 'text/x-mathjax-config';
+    configscript[(window.opera ? "innerHTML" : "text")] =
+        "MathJax.Hub.Config({" +
+        "    config: ['MMLorHTML.js']," +
+        "    TeX: { extensions: ['AMSmath.js','AMSsymbols.js','noErrors.js','noUndefined.js'], equationNumbers: { autoNumber: 'none' } }," +
+        "    jax: ['input/TeX','input/MathML','output/HTML-CSS']," +
+        "    extensions: ['tex2jax.js','mml2jax.js','MathMenu.js','MathZoom.js']," +
+        "    displayAlign: '"+ align +"'," +
+        "    displayIndent: '"+ indent +"'," +
+        "    showMathMenu: true," +
+        "    messageStyle: 'normal'," +
+        "    tex2jax: { " +
+        "        inlineMath: [ ['\\\\(','\\\\)'] ], " +
+        "        displayMath: [ ['$$','$$'] ]," +
+        "        processEscapes: true," +
+        "        preview: 'TeX'," +
+        "    }, " +
+        "    'HTML-CSS': { " +
+        "        availableFonts: ['STIX', 'TeX']," +
+        "        preferredFont: 'STIX'," +
+        "        styles: { '.MathJax_Display, .MathJax .mo, .MathJax .mi, .MathJax .mn': {color: 'inherit ! important'} }," +
+        "        linebreaks: { automatic: "+ linebreak +", width: '90% container' }," +
+        "    }, " +
+        "}); " +
+        "if ('default' !== 'default') {" +
+            "MathJax.Hub.Register.StartupHook('HTML-CSS Jax Ready',function () {" +
+                "var VARIANT = MathJax.OutputJax['HTML-CSS'].FONTDATA.VARIANT;" +
+                "VARIANT['normal'].fonts.unshift('MathJax_default');" +
+                "VARIANT['bold'].fonts.unshift('MathJax_default-bold');" +
+                "VARIANT['italic'].fonts.unshift('MathJax_default-italic');" +
+                "VARIANT['-tex-mathit'].fonts.unshift('MathJax_default-italic');" +
+            "});" +
+            "MathJax.Hub.Register.StartupHook('SVG Jax Ready',function () {" +
+                "var VARIANT = MathJax.OutputJax.SVG.FONTDATA.VARIANT;" +
+                "VARIANT['normal'].fonts.unshift('MathJax_default');" +
+                "VARIANT['bold'].fonts.unshift('MathJax_default-bold');" +
+                "VARIANT['italic'].fonts.unshift('MathJax_default-italic');" +
+                "VARIANT['-tex-mathit'].fonts.unshift('MathJax_default-italic');" +
+            "});" +
+        "}";
+
+    (document.body || document.getElementsByTagName('head')[0]).appendChild(configscript);
+    (document.body || document.getElementsByTagName('head')[0]).appendChild(mathjaxscript);
+}
+</script>
+    </div><!-- /.entry-content -->
+
+  </article>
+</section>
+        <section id="extras" class="body">
+                <div class="blogroll">
+                        <h2>links</h2>
+                        <ul>
+                            <li><a href="https://github.com/AldenMB">My GitHub</a></li>
+                            <li><a href="https://nt-tl.net/">My wife</a></li>
+                            <li><a href="https://laurestine.github.io/">My sister</a></li>
+                            <li><a href="https://www.clintonbradford.com/">My brother</a></li>
+                        </ul>
+                </div><!-- /.blogroll -->
+                <div class="social">
+                        <h2>social</h2>
+                        <ul>
+                            <li><a href="https://aldenbradford.com/feeds/all.atom.xml" type="application/atom+xml" rel="alternate">atom feed</a></li>
+
+                        </ul>
+                </div><!-- /.social -->
+        </section><!-- /#extras -->
+
+        <footer id="contentinfo" class="body">
+                <address id="about" class="vcard body">
+                Proudly powered by <a href="https://getpelican.com/">Pelican</a>, which takes great advantage of <a href="https://www.python.org/">Python</a>.
+                </address><!-- /#about -->
+
+                <p>The theme is by <a href="https://www.smashingmagazine.com/2009/08/designing-a-html-5-layout-from-scratch/">Smashing Magazine</a>, thanks!</p>
+        </footer><!-- /#contentinfo -->
+
+</body>
+</html>

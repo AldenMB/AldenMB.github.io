@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="english">
+<head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta name="generator" content="Pelican" />
+        <title>Alden Bradford - Xanthippe</title>
+        <link rel="stylesheet" href="https://aldenbradford.com/theme/css/main.css" />
+        <link href="https://aldenbradford.com/feeds/all.atom.xml" type="application/atom+xml" rel="alternate" title="Alden Bradford Atom Feed" />
+</head>
+
+<body id="index" class="home">
+        <header id="banner" class="body">
+                <h1><a href="https://aldenbradford.com/">Alden Bradford</a></h1>
+                <nav><ul>
+                    <li><a href="https://aldenbradford.com/">Welcome</a></li>
+                    <li><a href="https://aldenbradford.com/category/blog.html">Blog</a></li>
+                </ul></nav>
+        </header><!-- /#banner -->
+
+            <aside id="featured" class="body">
+                <article>
+                    <h1 class="entry-title"><a href="https://aldenbradford.com/decoding-a-multiplexed-lcd.html">Decoding a multiplexed LCD</a></h1>
+<footer class="post-info">
+        <abbr class="published" title="2022-08-12T00:00:00-04:00">
+                Published: Fri 12 August 2022
+        </abbr>
+
+        <address class="vcard author">
+                By                         <a class="url fn" href="https://aldenbradford.com/author/alden-bradford.html">Alden Bradford</a>
+        </address>
+<p>In <a href="https://aldenbradford.com/category/blog.html">Blog</a>.</p>
+<p>tags: <a href="https://aldenbradford.com/tag/electronics.html">electronics</a> <a href="https://aldenbradford.com/tag/xanthippe.html">Xanthippe</a> <a href="https://aldenbradford.com/tag/lcd.html">LCD</a> </p>
+</footer><!-- /.post-info --><p>The button-pressing side of Xanthippe is currently working intermittently. I have ordered some more-appropriate parts which will hopefully improve matters. In the mean time, the LCD decoding functionality is working fine. Now is an ideal time to figure out the correspondence between the signals heading to the display and the segments which are activated.</p>
+<p>Previously, when designing the display for my calculator emulator, I painstakingly traced every segment. I found that there are precisely 112 segments. There are 32 wires going into the LCD, making up 4 ground planes and 28 data lines, for a total of 4x28=112 segments. It's clear there is an alignment between the two, it's just a matter of figuring it out.</p>
+<h1>Naming conventions</h1>
+<p>In order to describe the correspondence, it will be necessary to have names for the signals and names for the segments. I already have names I like for the segments, which I made up when creating this SVG file.</p>
+<p><img alt="a hand-made SVG of the TI-30Xa display" src="https://aldenbradford.com/display.svg" width="600"></p>
+<p>I have edited the file here to overlay some of the segment labels. Each digit is numbered starting from the right at 0. Each segment within follows a traditional lettering scheme for 7 segment displays. For the orphan "-" sign at the left, it is numbered as though there were an entire digit around it. The exponent digits are numbered similarly, prefixed with E. The indicators above are text, so their labels are simply their text content.</p>
+<p>When naming the signals I wish to refer back to the physical device as much as possible. I have numbered the wires leading to the display, starting with 1 closest to the battery. The first four wires carry the ground planes. I have also assigned each ground plane a letter, according to the order the segments cycle through when displaying. They repeat a pattern of 4-3-2-1, so I have assigned the backplane on pin 4 the letter A, the plane on pin 3 the letter B, and the plane on pin 2 the letter C.</p>
+<p>I have put together a simple script which constantly polls the screen and produces the following output.</p>
+<pre>
+   33322222222221111111111000000000
+   21098765432109876543210987654321
+A: ......##....................#...
+B: #.....##.....................#..
+C: #.....#.......................#.
+D: ......##.......................#
+</pre>
+<p>A "." indicates that the corresponding segment is not active, and "#" indicates it is active. In this way we end up with a table. All that remains is to fill it in with labels.</p>
+<h1>The table</h1>
+<p>To avoid filling the whole screen with tables, I will include the full table here only once. Below I will describe how it was filled in.</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>32</th>
+<th>31</th>
+<th>30</th>
+<th>29</th>
+<th>28</th>
+<th>27</th>
+<th>26</th>
+<th>25</th>
+<th>24</th>
+<th>23</th>
+<th>22</th>
+<th>21</th>
+<th>20</th>
+<th>19</th>
+<th>18</th>
+<th>17</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>A</td>
+<td>STAT</td>
+<td>R</td>
+<td>K</td>
+<td>E0D</td>
+<td>()</td>
+<td>E1D</td>
+<td>0DP</td>
+<td>0D</td>
+<td>1DP</td>
+<td>1D</td>
+<td>2DP</td>
+<td>2D</td>
+<td>3DP</td>
+<td>3D</td>
+<td>4DP</td>
+<td>4D</td>
+</tr>
+<tr>
+<td>B</td>
+<td>DE</td>
+<td>X</td>
+<td>E0C</td>
+<td>E0E</td>
+<td>E1C</td>
+<td>E1E</td>
+<td>0C</td>
+<td>0E</td>
+<td>1C</td>
+<td>1E</td>
+<td>2C</td>
+<td>2E</td>
+<td>3C</td>
+<td>3E</td>
+<td>4C</td>
+<td>4E</td>
+</tr>
+<tr>
+<td>C</td>
+<td>G</td>
+<td>RAD</td>
+<td>E0B</td>
+<td>E0G</td>
+<td>E1B</td>
+<td>E1G</td>
+<td>0B</td>
+<td>0G</td>
+<td>1B</td>
+<td>1G</td>
+<td>2B</td>
+<td>2G</td>
+<td>3B</td>
+<td>3G</td>
+<td>4B</td>
+<td>4G</td>
+</tr>
+<tr>
+<td>D</td>
+<td>FIX</td>
+<td>E2G</td>
+<td>E0A</td>
+<td>E0F</td>
+<td>E1A</td>
+<td>E1F</td>
+<td>0A</td>
+<td>0F</td>
+<td>1A</td>
+<td>1F</td>
+<td>2A</td>
+<td>2F</td>
+<td>3A</td>
+<td>3F</td>
+<td>4A</td>
+<td>4F</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>16</th>
+<th>15</th>
+<th>14</th>
+<th>13</th>
+<th>12</th>
+<th>11</th>
+<th>10</th>
+<th>9</th>
+<th>8</th>
+<th>7</th>
+<th>6</th>
+<th>5</th>
+<th>4</th>
+<th>3</th>
+<th>2</th>
+<th>1</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>A</td>
+<td>5DP</td>
+<td>5D</td>
+<td>6DP</td>
+<td>6D</td>
+<td>7DP</td>
+<td>7D</td>
+<td>8DP</td>
+<td>8D</td>
+<td>9DP</td>
+<td>9D</td>
+<td>M3</td>
+<td>2nd</td>
+<td>A</td>
+<td>.</td>
+<td>.</td>
+<td>.</td>
+</tr>
+<tr>
+<td>B</td>
+<td>5C</td>
+<td>5E</td>
+<td>6C</td>
+<td>6E</td>
+<td>7C</td>
+<td>7E</td>
+<td>8C</td>
+<td>8E</td>
+<td>9C</td>
+<td>9E</td>
+<td>10G</td>
+<td>HYP</td>
+<td>.</td>
+<td>B</td>
+<td>.</td>
+<td>.</td>
+</tr>
+<tr>
+<td>C</td>
+<td>5B</td>
+<td>5G</td>
+<td>6B</td>
+<td>6G</td>
+<td>7B</td>
+<td>7G</td>
+<td>8B</td>
+<td>8G</td>
+<td>9B</td>
+<td>9G</td>
+<td>M2</td>
+<td>ENG</td>
+<td>.</td>
+<td>.</td>
+<td>C</td>
+<td>.</td>
+</tr>
+<tr>
+<td>D</td>
+<td>5A</td>
+<td>5F</td>
+<td>6A</td>
+<td>6F</td>
+<td>7A</td>
+<td>7F</td>
+<td>8A</td>
+<td>8F</td>
+<td>9A</td>
+<td>9F</td>
+<td>M1</td>
+<td>SCI</td>
+<td>.</td>
+<td>.</td>
+<td>.</td>
+<td>D</td>
+</tr>
+</tbody>
+</table>
+<h2>The backplanes</h2>
+<p>These are free spaces. Bingo!</p>
+<h2>DEGRAD</h2>
+<p>The angle indication is actually composed of three segments, "DE", "G", and "RAD". By cycling through the angle modes, we can infer the values from each combination.</p>
+<h2>Indicators</h2>
+<p>Most of the indicators can be toggled on or off individually. That saves us some effort, we can just inspect them one at a time.</p>
+<h2>Digits</h2>
+<p>What about the digits? The calculator powers on showing "0.", which indicates that most of the first digit lies in columns 25 and 26. If we enter "8." this confirms it, and tells us segment G for free.</p>
+<p>Pushing the digit to the left by hitting zero, we find columns for the other digits just the same. Hitting "-" at the end tells us 10G.</p>
+<p>Now we must discern which segment is which. I don't like to assume, so let's test all of them. Starting with "G", since we can just push a negative sign through to see it. We can get DP by sending and 8 along without its decimal point. Next grab E by sending a 9 along. 6 gives us B in a similar way. Take away F from 9 and you get 3, so 3 will tell us F. 1 consists of B and C, and we know B, so 1 gives us C. Finally, 7 is the only digit which distinguishes between A and D, so we need it to get us those. Now we are done with the mantissa</p>
+<h2>Exponent</h2>
+<p>A bit trickier since you can't have a blank digit in the exponent. We can have 8, the complement of blank. By comparing everything against 8, we get all our segments in the same way.</p>
+<h1>Conclusions</h1>
+<p>We can see a definite pattern, with the digits all using the same configuration of segments on backplanes, just placed on different pins.We can see that the "K" and "()" indicators are filling the spots of the exponent's decimal points.</p>
+<p>We can also see that a natural way to encode this signal would be to group adjacent pairs of wires into bytes, so that one digit with associated decimal point ends up occupying exactly one byte.</p>
+<p>Now that I have confidence in the wiring of the LCD reader, all that remains is to get a stable solution to the button pressing problem. I have some ideas for how this will get done, but this will make up a future post. Stay tuned!</p>                </article>
+            </aside><!-- /#featured -->
+                <section id="content" class="body">
+                    <h1>Other articles</h1>
+                    <hr />
+                    <ol id="posts-list" class="hfeed">
+
+            <li><article class="hentry">
+                <header>
+                    <h1><a href="https://aldenbradford.com/lessons-from-the-xanthippe-circuit-board.html" rel="bookmark"
+                           title="Permalink to Lessons from the Xanthippe circuit board">Lessons from the Xanthippe circuit board</a></h1>
+                </header>
+
+                <div class="entry-content">
+<footer class="post-info">
+        <abbr class="published" title="2022-08-11T00:00:00-04:00">
+                Published: Thu 11 August 2022
+        </abbr>
+
+        <address class="vcard author">
+                By                         <a class="url fn" href="https://aldenbradford.com/author/alden-bradford.html">Alden Bradford</a>
+        </address>
+<p>In <a href="https://aldenbradford.com/category/blog.html">Blog</a>.</p>
+<p>tags: <a href="https://aldenbradford.com/tag/electronics.html">electronics</a> <a href="https://aldenbradford.com/tag/xanthippe.html">Xanthippe</a> <a href="https://aldenbradford.com/tag/circuit-boards.html">circuit boards</a> </p>
+</footer><!-- /.post-info -->                <p>Regrets and insights brought from the Xanthippe circuit board</p>
+                <a class="readmore" href="https://aldenbradford.com/lessons-from-the-xanthippe-circuit-board.html">read more</a>
+                </div><!-- /.entry-content -->
+            </article></li>
+
+            <li><article class="hentry">
+                <header>
+                    <h1><a href="https://aldenbradford.com/introducing-xanthippe.html" rel="bookmark"
+                           title="Permalink to Introducing Xanthippe">Introducing Xanthippe</a></h1>
+                </header>
+
+                <div class="entry-content">
+<footer class="post-info">
+        <abbr class="published" title="2022-08-04T00:00:00-04:00">
+                Published: Thu 04 August 2022
+        </abbr>
+
+        <address class="vcard author">
+                By                         <a class="url fn" href="https://aldenbradford.com/author/alden-bradford.html">Alden Bradford</a>
+        </address>
+<p>In <a href="https://aldenbradford.com/category/blog.html">Blog</a>.</p>
+<p>tags: <a href="https://aldenbradford.com/tag/electronics.html">electronics</a> <a href="https://aldenbradford.com/tag/xanthippe.html">Xanthippe</a> <a href="https://aldenbradford.com/tag/data-structures.html">data structures</a> </p>
+</footer><!-- /.post-info -->                <p>A formal introduction to my calculator validator</p>
+                <a class="readmore" href="https://aldenbradford.com/introducing-xanthippe.html">read more</a>
+                </div><!-- /.entry-content -->
+            </article></li>
+
+            <li><article class="hentry">
+                <header>
+                    <h1><a href="https://aldenbradford.com/reading-a-multiplexed-lcd-signal.html" rel="bookmark"
+                           title="Permalink to Reading a Multiplexed LCD Signal">Reading a Multiplexed LCD Signal</a></h1>
+                </header>
+
+                <div class="entry-content">
+<footer class="post-info">
+        <abbr class="published" title="2022-07-21T00:00:00-04:00">
+                Published: Thu 21 July 2022
+        </abbr>
+
+        <address class="vcard author">
+                By                         <a class="url fn" href="https://aldenbradford.com/author/alden-bradford.html">Alden Bradford</a>
+        </address>
+<p>In <a href="https://aldenbradford.com/category/blog.html">Blog</a>.</p>
+<p>tags: <a href="https://aldenbradford.com/tag/electronics.html">electronics</a> <a href="https://aldenbradford.com/tag/xanthippe.html">Xanthippe</a> </p>
+</footer><!-- /.post-info -->                <p>I want to read the signal going to the display of a TI-30Xa calculator. The display has 112 segments, multiplexed in a 4x28 configuration. How can we recover the displayed values from just those 32 pins?</p>
+                <a class="readmore" href="https://aldenbradford.com/reading-a-multiplexed-lcd-signal.html">read more</a>
+                </div><!-- /.entry-content -->
+            </article></li>
+
+            <li><article class="hentry">
+                <header>
+                    <h1><a href="https://aldenbradford.com/reverse-engineering-a-matrix-keypad.html" rel="bookmark"
+                           title="Permalink to Reverse-Engineering a Matrix Keypad">Reverse-Engineering a Matrix Keypad</a></h1>
+                </header>
+
+                <div class="entry-content">
+<footer class="post-info">
+        <abbr class="published" title="2022-07-21T00:00:00-04:00">
+                Published: Thu 21 July 2022
+        </abbr>
+
+        <address class="vcard author">
+                By                         <a class="url fn" href="https://aldenbradford.com/author/alden-bradford.html">Alden Bradford</a>
+        </address>
+<p>In <a href="https://aldenbradford.com/category/blog.html">Blog</a>.</p>
+<p>tags: <a href="https://aldenbradford.com/tag/electronics.html">electronics</a> <a href="https://aldenbradford.com/tag/xanthippe.html">Xanthippe</a> </p>
+</footer><!-- /.post-info -->                <p>The process of figuring out the layout of a keypad without looking at it directly.</p>
+                <a class="readmore" href="https://aldenbradford.com/reverse-engineering-a-matrix-keypad.html">read more</a>
+                </div><!-- /.entry-content -->
+            </article></li>
+
+            <li><article class="hentry">
+                <header>
+                    <h1><a href="https://aldenbradford.com/reflections-on-wiring-a-calculator.html" rel="bookmark"
+                           title="Permalink to Reflections on wiring a calculator">Reflections on wiring a calculator</a></h1>
+                </header>
+
+                <div class="entry-content">
+<footer class="post-info">
+        <abbr class="published" title="2022-07-19T00:00:00-04:00">
+                Published: Tue 19 July 2022
+        </abbr>
+
+        <address class="vcard author">
+                By                         <a class="url fn" href="https://aldenbradford.com/author/alden-bradford.html">Alden Bradford</a>
+        </address>
+<p>In <a href="https://aldenbradford.com/category/blog.html">Blog</a>.</p>
+<p>tags: <a href="https://aldenbradford.com/tag/electronics.html">electronics</a> <a href="https://aldenbradford.com/tag/soldering.html">soldering</a> <a href="https://aldenbradford.com/tag/xanthippe.html">Xanthippe</a> </p>
+</footer><!-- /.post-info -->                <p>Some thoughts on soldering, connectors, circuit repair, and test setups.</p>
+                <a class="readmore" href="https://aldenbradford.com/reflections-on-wiring-a-calculator.html">read more</a>
+                </div><!-- /.entry-content -->
+            </article></li>
+                </ol><!-- /#posts-list -->
+                </section><!-- /#content -->
+        <section id="extras" class="body">
+                <div class="blogroll">
+                        <h2>links</h2>
+                        <ul>
+                            <li><a href="https://github.com/AldenMB">My GitHub</a></li>
+                            <li><a href="https://nt-tl.net/">My wife</a></li>
+                            <li><a href="https://laurestine.github.io/">My sister</a></li>
+                            <li><a href="https://www.clintonbradford.com/">My brother</a></li>
+                        </ul>
+                </div><!-- /.blogroll -->
+                <div class="social">
+                        <h2>social</h2>
+                        <ul>
+                            <li><a href="https://aldenbradford.com/feeds/all.atom.xml" type="application/atom+xml" rel="alternate">atom feed</a></li>
+
+                        </ul>
+                </div><!-- /.social -->
+        </section><!-- /#extras -->
+
+        <footer id="contentinfo" class="body">
+                <address id="about" class="vcard body">
+                Proudly powered by <a href="https://getpelican.com/">Pelican</a>, which takes great advantage of <a href="https://www.python.org/">Python</a>.
+                </address><!-- /#about -->
+
+                <p>The theme is by <a href="https://www.smashingmagazine.com/2009/08/designing-a-html-5-layout-from-scratch/">Smashing Magazine</a>, thanks!</p>
+        </footer><!-- /#contentinfo -->
+
+</body>
+</html>

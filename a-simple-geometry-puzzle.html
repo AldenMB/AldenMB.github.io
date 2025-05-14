@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="english">
+<head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta name="generator" content="Pelican" />
+        <title>A simple geometry puzzle</title>
+        <link rel="stylesheet" href="https://aldenbradford.com/theme/css/main.css" />
+        <link href="https://aldenbradford.com/feeds/all.atom.xml" type="application/atom+xml" rel="alternate" title="Alden Bradford Atom Feed" />
+        <meta name="description" content="A little puzzle involving a circle with inscribed squares" />
+</head>
+
+<body id="index" class="home">
+        <header id="banner" class="body">
+                <h1><a href="https://aldenbradford.com/">Alden Bradford</a></h1>
+                <nav><ul>
+                    <li><a href="https://aldenbradford.com/">Welcome</a></li>
+                    <li class="active"><a href="https://aldenbradford.com/category/blog.html">Blog</a></li>
+                </ul></nav>
+        </header><!-- /#banner -->
+<section id="content" class="body">
+  <article>
+    <header>
+      <h1 class="entry-title">
+        <a href="https://aldenbradford.com/a-simple-geometry-puzzle.html" rel="bookmark"
+           title="Permalink to A simple geometry puzzle">A simple geometry puzzle</a></h1>
+    </header>
+
+    <div class="entry-content">
+<footer class="post-info">
+        <abbr class="published" title="2022-11-15T00:00:00-05:00">
+                Published: Tue 15 November 2022
+        </abbr>
+
+        <address class="vcard author">
+                By                         <a class="url fn" href="https://aldenbradford.com/author/alden-bradford.html">Alden Bradford</a>
+        </address>
+<p>In <a href="https://aldenbradford.com/category/blog.html">Blog</a>.</p>
+<p>tags: <a href="https://aldenbradford.com/tag/geometry.html">geometry</a> <a href="https://aldenbradford.com/tag/puzzle.html">puzzle</a> </p>
+</footer><!-- /.post-info -->      <p>I found a fun puzzle last week, which I would like to share with you. It concerns the following figure.</p>
+<p><img alt="the puzzle" src="https://aldenbradford.com/baseball.svg"></p>
+<p>You are given a right-angled circle sector, with a square inscribed. Beside the square another square is inscribed. The question for you is: how big are the squares? To make things easier, let's say the circle has a radius of <span class="math">\(\sqrt{250}\)</span>. What, then, are the side lengths of the inscribed squares?</p>
+<h1>Hints</h1>
+<p>In case your geometry skills are a bit rusty, I have prepared a series of hints you may find helpful. To avoid giving it all away, I will hide them until you click the button to reveal them.</p>
+<h2>Hint 1</h2>
+<p><button onclick="document.getElementById('hint1').toggleAttribute('hidden')">Show</button></p>
+<div id="hint1" hidden="true">
+<p>When you are given a point on the arc of a circle, it is often helpful to draw a line connecting that point to the circle center.</p>
+</div>
+
+<h2>Hint 2</h2>
+<p><button onclick="document.getElementById('hint2').toggleAttribute('hidden')">Show</button></p>
+<div id="hint2" hidden="true">
+<p>The Pythagorean theorem is your friend. Look for ways to make right triangles.</p>
+</div>
+
+<h2>Hint 3</h2>
+<p><button onclick="document.getElementById('hint3').toggleAttribute('hidden')">Show</button></p>
+<div id="hint3" hidden="true">
+<p><img alt="the first graphical hint" src="/baseball_hint1.svg"></p>
+</div>
+
+<h2>Hint 4</h2>
+<p><button onclick="document.getElementById('hint4').toggleAttribute('hidden')">Show</button></p>
+<div id="hint4" hidden="true">
+<p><img alt="the second graphical hint" src="/baseball_hint2.svg"></p>
+</div>
+
+<p><a href="https://aldenbradford.com/baseball_hint1.svg"></a>
+<a href="https://aldenbradford.com/baseball_hint2.svg"></a></p>
+<script type="text/javascript">if (!document.getElementById('mathjaxscript_pelican_#%@#$@#')) {
+    var align = "center",
+        indent = "0em",
+        linebreak = "false";
+
+    if (false) {
+        align = (screen.width < 768) ? "left" : align;
+        indent = (screen.width < 768) ? "0em" : indent;
+        linebreak = (screen.width < 768) ? 'true' : linebreak;
+    }
+
+    var mathjaxscript = document.createElement('script');
+    mathjaxscript.id = 'mathjaxscript_pelican_#%@#$@#';
+    mathjaxscript.type = 'text/javascript';
+    mathjaxscript.src = 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.3/latest.js?config=TeX-AMS-MML_HTMLorMML';
+
+    var configscript = document.createElement('script');
+    configscript.type = 'text/x-mathjax-config';
+    configscript[(window.opera ? "innerHTML" : "text")] =
+        "MathJax.Hub.Config({" +
+        "    config: ['MMLorHTML.js']," +
+        "    TeX: { extensions: ['AMSmath.js','AMSsymbols.js','noErrors.js','noUndefined.js'], equationNumbers: { autoNumber: 'none' } }," +
+        "    jax: ['input/TeX','input/MathML','output/HTML-CSS']," +
+        "    extensions: ['tex2jax.js','mml2jax.js','MathMenu.js','MathZoom.js']," +
+        "    displayAlign: '"+ align +"'," +
+        "    displayIndent: '"+ indent +"'," +
+        "    showMathMenu: true," +
+        "    messageStyle: 'normal'," +
+        "    tex2jax: { " +
+        "        inlineMath: [ ['\\\\(','\\\\)'] ], " +
+        "        displayMath: [ ['$$','$$'] ]," +
+        "        processEscapes: true," +
+        "        preview: 'TeX'," +
+        "    }, " +
+        "    'HTML-CSS': { " +
+        "        availableFonts: ['STIX', 'TeX']," +
+        "        preferredFont: 'STIX'," +
+        "        styles: { '.MathJax_Display, .MathJax .mo, .MathJax .mi, .MathJax .mn': {color: 'inherit ! important'} }," +
+        "        linebreaks: { automatic: "+ linebreak +", width: '90% container' }," +
+        "    }, " +
+        "}); " +
+        "if ('default' !== 'default') {" +
+            "MathJax.Hub.Register.StartupHook('HTML-CSS Jax Ready',function () {" +
+                "var VARIANT = MathJax.OutputJax['HTML-CSS'].FONTDATA.VARIANT;" +
+                "VARIANT['normal'].fonts.unshift('MathJax_default');" +
+                "VARIANT['bold'].fonts.unshift('MathJax_default-bold');" +
+                "VARIANT['italic'].fonts.unshift('MathJax_default-italic');" +
+                "VARIANT['-tex-mathit'].fonts.unshift('MathJax_default-italic');" +
+            "});" +
+            "MathJax.Hub.Register.StartupHook('SVG Jax Ready',function () {" +
+                "var VARIANT = MathJax.OutputJax.SVG.FONTDATA.VARIANT;" +
+                "VARIANT['normal'].fonts.unshift('MathJax_default');" +
+                "VARIANT['bold'].fonts.unshift('MathJax_default-bold');" +
+                "VARIANT['italic'].fonts.unshift('MathJax_default-italic');" +
+                "VARIANT['-tex-mathit'].fonts.unshift('MathJax_default-italic');" +
+            "});" +
+        "}";
+
+    (document.body || document.getElementsByTagName('head')[0]).appendChild(configscript);
+    (document.body || document.getElementsByTagName('head')[0]).appendChild(mathjaxscript);
+}
+</script>
+    </div><!-- /.entry-content -->
+
+  </article>
+</section>
+        <section id="extras" class="body">
+                <div class="blogroll">
+                        <h2>links</h2>
+                        <ul>
+                            <li><a href="https://github.com/AldenMB">My GitHub</a></li>
+                            <li><a href="https://nt-tl.net/">My wife</a></li>
+                            <li><a href="https://laurestine.github.io/">My sister</a></li>
+                            <li><a href="https://www.clintonbradford.com/">My brother</a></li>
+                        </ul>
+                </div><!-- /.blogroll -->
+                <div class="social">
+                        <h2>social</h2>
+                        <ul>
+                            <li><a href="https://aldenbradford.com/feeds/all.atom.xml" type="application/atom+xml" rel="alternate">atom feed</a></li>
+
+                        </ul>
+                </div><!-- /.social -->
+        </section><!-- /#extras -->
+
+        <footer id="contentinfo" class="body">
+                <address id="about" class="vcard body">
+                Proudly powered by <a href="https://getpelican.com/">Pelican</a>, which takes great advantage of <a href="https://www.python.org/">Python</a>.
+                </address><!-- /#about -->
+
+                <p>The theme is by <a href="https://www.smashingmagazine.com/2009/08/designing-a-html-5-layout-from-scratch/">Smashing Magazine</a>, thanks!</p>
+        </footer><!-- /#contentinfo -->
+
+</body>
+</html>
