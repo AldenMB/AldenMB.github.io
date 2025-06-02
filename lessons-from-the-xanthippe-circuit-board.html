@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="english">
+<head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta name="generator" content="Pelican" />
+        <title>Lessons from the Xanthippe circuit board</title>
+        <link rel="stylesheet" href="https://aldenbradford.com/theme/css/main.css" />
+        <link href="https://aldenbradford.com/feeds/all.atom.xml" type="application/atom+xml" rel="alternate" title="Alden Bradford Atom Feed" />
+        <meta name="description" content="Regrets and insights brought from the Xanthippe circuit board" />
+</head>
+
+<body id="index" class="home">
+        <header id="banner" class="body">
+                <h1><a href="https://aldenbradford.com/">Alden Bradford</a></h1>
+                <nav><ul>
+                    <li><a href="https://aldenbradford.com/">Welcome</a></li>
+                    <li class="active"><a href="https://aldenbradford.com/category/blog.html">Blog</a></li>
+                </ul></nav>
+        </header><!-- /#banner -->
+<section id="content" class="body">
+  <article>
+    <header>
+      <h1 class="entry-title">
+        <a href="https://aldenbradford.com/lessons-from-the-xanthippe-circuit-board.html" rel="bookmark"
+           title="Permalink to Lessons from the Xanthippe circuit board">Lessons from the Xanthippe circuit board</a></h1>
+    </header>
+
+    <div class="entry-content">
+<footer class="post-info">
+        <abbr class="published" title="2022-08-11T00:00:00-04:00">
+                Published: Thu 11 August 2022
+        </abbr>
+
+        <address class="vcard author">
+                By                         <a class="url fn" href="https://aldenbradford.com/author/alden-bradford.html">Alden Bradford</a>
+        </address>
+<p>In <a href="https://aldenbradford.com/category/blog.html">Blog</a>.</p>
+<p>tags: <a href="https://aldenbradford.com/tag/electronics.html">electronics</a> <a href="https://aldenbradford.com/tag/xanthippe.html">Xanthippe</a> <a href="https://aldenbradford.com/tag/circuit-boards.html">circuit boards</a> </p>
+</footer><!-- /.post-info -->      <blockquote>
+<p>It is too bad! Always the old story! When a man has finished building his house, he finds that he has learnt unawares something which he OUGHT absolutely to have known before he began to build. The eternal, fatal "Too late!" The melancholia of everything COMPLETED—!</p>
+<p>-- Friedrich Nietsche, <cite>Beyond Good and Evil</cite>, section 277, translated by Helen Zimmern</p>
+</blockquote>
+<p>It's here! The board I designed has arrived!</p>
+<p>This is always an exciting time. Marvel over all the little details which went into a circuit board, which seemed so much larger on the computer screen. Patiently solder all the connections. Curse the clever choices you made only a week prior. Hold your breath to see if it works as you hoped.</p>
+<p>We are always our own harshest critics. I have been often told not to point out the flaws of my own artistic works -- most people won't notice the flaws unless pointed out, and many wouldn't consider them flaws unless they are told. There is wisdom in that. We should embrace the imperfect, recognizing that we are also imperfect.</p>
+<p>We should also be frank with ourselves. We can embrace the mistakes we made while simultaneously taking measures to prevent those mistakes in the future. This blog is mostly just for my own reference. With that in mind, this blog post lists some lessons which I hope will stick with me.</p>
+<h1>Board size</h1>
+<p>The board manufacturer I used, JLCPCB, provides a significant discount for boards which fit within a 100X100mm square. I think I could have fit my design into this space if I had set out to do so from the beginning. Once I realized this, though, I had already done most of the fiddly layout and didn't want to change it.</p>
+<p>Also, I had initially neglected to include mounting holes in my design. I put some in by expanding the outline, which led to large mostly-unused margins at the top and bottom. If I had included mounting holes from the beginning, I would have saved some space over all.</p>
+<h1>Default behavior</h1>
+<p>Some of the chips in my circuit, notably the 74HC595 chips, have undefined behavior if their inputs are not driven. This is no good if the board receives power before the microcontroller is driving it. This could have been avoided by using some pulldown resistors on all the inputs.</p>
+<h1>Resistor arrays</h1>
+<p>I got pretty bored soldering the 32 pullup resistors individually. It was much more pleasant than doing the same on prototype board, but still not great. I think I would happily accept the additional expense of using resistor arrays for pullups, since this almost halves the number of solder points and means dealing with larger (i.e. less fiddly) parts.</p>
+<h1>TO-92 footprints</h1>
+<p>These gave me a lot of trouble during soldering. I used a footprint for standard, unbent leads. That made it easy to insert the parts, sure, but it meant the pads were too close for easy soldering. This led to a few solder bridges I had to fix. Next time I will definitely go for a bent-lead footprint, just to make the hand soldering easier.</p>
+<h1>Breakouts</h1>
+<p>Now that I am powering up and debugging the circuit, it would be quite useful to have a header for each of the signals for testing. Even something as simple as duplicating the input/output headers, so I can access them while they are plugged. That would have been a cheap thing to add, which would make the current task easier.</p>
+<h1>Disconnects</h1>
+<p>Since there is more than one part to the circuit, it would be a help to the debugging if I could isolate parts of the circuit from one another. I'm thinking something like a double row of headers, which I could join with jumpers. That would also help if I decide to keep half the circuit but replace the other half -- I could just leave some of the jumpers off to disconnect the portion I don't need, and even use the headers to move the signal to another board.</p>
+<h1>Conclusion</h1>
+<p>I am in the midst of hunting down bugs and errors, finding out why the circuit does not do exactly what I want it to. It is easy then to forget all the things it is doing well. Aside from the trouble with the TO-92 footprints, the board was quite easy to assemble. The layout is fairly sensible, and by not packing parts too tight I was able to get the soldering iron everywhere it needed to go. It is a good design, even if it is not working right just yet. The goal of pointing out the errors that were made is not to diminish the usefulness of the board I have, or the work that went into it. Rather, I hope to make the next board I make even better. </p>
+    </div><!-- /.entry-content -->
+
+  </article>
+</section>
+        <section id="extras" class="body">
+                <div class="blogroll">
+                        <h2>links</h2>
+                        <ul>
+                            <li><a href="https://github.com/AldenMB">My GitHub</a></li>
+                            <li><a href="https://nt-tl.net/">My wife</a></li>
+                            <li><a href="https://laurestine.github.io/">My sister</a></li>
+                            <li><a href="https://www.clintonbradford.com/">My brother</a></li>
+                        </ul>
+                </div><!-- /.blogroll -->
+                <div class="social">
+                        <h2>social</h2>
+                        <ul>
+                            <li><a href="https://aldenbradford.com/feeds/all.atom.xml" type="application/atom+xml" rel="alternate">atom feed</a></li>
+
+                        </ul>
+                </div><!-- /.social -->
+        </section><!-- /#extras -->
+
+        <footer id="contentinfo" class="body">
+                <address id="about" class="vcard body">
+                Proudly powered by <a href="https://getpelican.com/">Pelican</a>, which takes great advantage of <a href="https://www.python.org/">Python</a>.
+                </address><!-- /#about -->
+
+                <p>The theme is by <a href="https://www.smashingmagazine.com/2009/08/designing-a-html-5-layout-from-scratch/">Smashing Magazine</a>, thanks!</p>
+        </footer><!-- /#contentinfo -->
+
+</body>
+</html>

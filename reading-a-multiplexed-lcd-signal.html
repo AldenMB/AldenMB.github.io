@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="english">
+<head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta name="generator" content="Pelican" />
+        <title>Reading a Multiplexed LCD Signal</title>
+        <link rel="stylesheet" href="https://aldenbradford.com/theme/css/main.css" />
+        <link href="https://aldenbradford.com/feeds/all.atom.xml" type="application/atom+xml" rel="alternate" title="Alden Bradford Atom Feed" />
+        <meta name="description" content="I want to read the signal going to the display of a TI-30Xa calculator. The display has 112 segments, multiplexed in a 4x28 configuration. How can..." />
+</head>
+
+<body id="index" class="home">
+        <header id="banner" class="body">
+                <h1><a href="https://aldenbradford.com/">Alden Bradford</a></h1>
+                <nav><ul>
+                    <li><a href="https://aldenbradford.com/">Welcome</a></li>
+                    <li class="active"><a href="https://aldenbradford.com/category/blog.html">Blog</a></li>
+                </ul></nav>
+        </header><!-- /#banner -->
+<section id="content" class="body">
+  <article>
+    <header>
+      <h1 class="entry-title">
+        <a href="https://aldenbradford.com/reading-a-multiplexed-lcd-signal.html" rel="bookmark"
+           title="Permalink to Reading a Multiplexed LCD Signal">Reading a Multiplexed LCD Signal</a></h1>
+    </header>
+
+    <div class="entry-content">
+<footer class="post-info">
+        <abbr class="published" title="2022-07-21T00:00:00-04:00">
+                Published: Thu 21 July 2022
+        </abbr>
+
+        <address class="vcard author">
+                By                         <a class="url fn" href="https://aldenbradford.com/author/alden-bradford.html">Alden Bradford</a>
+        </address>
+<p>In <a href="https://aldenbradford.com/category/blog.html">Blog</a>.</p>
+<p>tags: <a href="https://aldenbradford.com/tag/electronics.html">electronics</a> <a href="https://aldenbradford.com/tag/xanthippe.html">Xanthippe</a> </p>
+</footer><!-- /.post-info -->      <p>I want to read the signal going to the display of a TI-30Xa calculator. The display has 112 segments, multiplexed in a 4x28 configuration. How can we recover the displayed values from just those 32 pins?</p>
+<h1>backplanes</h1>
+<p>First, we have to identify the signals going to the backplanes. Those don't change no matter what is displayed, always giving the same repeating signal. Using the pin assignments <a href="/reflections-on-wiring-a-calculator">I chose previously</a>, those are pins 1-4. Here is what the voltage at each of them is throughout one 24 millisecond cycle. To keep things tidy, the header row gives the time at the start of the period. The following table is in units of 1.5 volts, so that everything ends up an integer.</p>
+<table>
+<thead>
+<tr>
+<th>pin</th>
+<th>0ms</th>
+<th>3ms</th>
+<th>6ms</th>
+<th>9ms</th>
+<th>12ms</th>
+<th>15ms</th>
+<th>18ms</th>
+<th>21ms</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>3</td>
+<td>0</td>
+<td>2</td>
+<td>2</td>
+<td>2</td>
+<td>3</td>
+<td>1</td>
+<td>1</td>
+<td>1</td>
+</tr>
+<tr>
+<td>4</td>
+<td>2</td>
+<td>0</td>
+<td>2</td>
+<td>2</td>
+<td>1</td>
+<td>3</td>
+<td>1</td>
+<td>1</td>
+</tr>
+<tr>
+<td>2</td>
+<td>2</td>
+<td>2</td>
+<td>0</td>
+<td>2</td>
+<td>1</td>
+<td>1</td>
+<td>3</td>
+<td>1</td>
+</tr>
+<tr>
+<td>1</td>
+<td>2</td>
+<td>2</td>
+<td>2</td>
+<td>0</td>
+<td>1</td>
+<td>1</td>
+<td>1</td>
+<td>3</td>
+</tr>
+</tbody>
+</table>
+<p>We can see that in the second half of the cycle the same pattern of voltages is repeated. Treating each voltage as a function of time V(t), the signal obeys the rule V(t) = 3-V(t-12). In fact, every pin going to the display obeys this rule. This is done so that every LCD segment is guaranteed to see a balanced load. This leads to our first helpful observation for reading the signal.</p>
+<p><strong>We only need to measure the pins four times per cycle, during the first 12 milliseconds.</strong></p>
+<h1>data</h1>
+<p>That's the four backplanes identified, what about the data pins? To give an example, let's look at pin 32. Its signal changes depending on whether the "g" in the "de/g/rad" display is on. We can test this easily, because the display will cycle between saying "deg", "rad", and "grad". By looking during the transition between "rad" and "grad", we can be sure the "g" is the only change.</p>
+<table>
+<thead>
+<tr>
+<th>pin</th>
+<th>0ms</th>
+<th>3ms</th>
+<th>6ms</th>
+<th>9ms</th>
+<th>12ms</th>
+<th>15ms</th>
+<th>18ms</th>
+<th>21ms</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>32(no g)</td>
+<td>1</td>
+<td>1</td>
+<td>1</td>
+<td>1</td>
+<td>2</td>
+<td>2</td>
+<td>2</td>
+<td>2</td>
+</tr>
+<tr>
+<td>32(g)</td>
+<td>1</td>
+<td>1</td>
+<td>3</td>
+<td>1</td>
+<td>2</td>
+<td>2</td>
+<td>0</td>
+<td>2</td>
+</tr>
+</tbody>
+</table>
+<p>We can see it obeys the same symmetry relation. The only difference between the two signals is in the 6 millisecond position, where it goes to 3 units when the "g" is showing. In other cases, it stays at 1 unit.</p>
+<p>This makes sense. When a segment is meant to be off, this scheme keeps its voltage always within 1.5 volts of the four backplanes. When it is meant to be on, it goes all the way up to 4.5 volts making for a 1.5 volt difference with three of the backplanes and a 4.5 volt difference with the backplane it targets.</p>
+<p>Assuming the others segments are driven in the same way, this tells us how to tell which are activated. <strong>For each pin, its corresponding cells will be active when it reaches 4.5 volts during each of the four measurement windows.</strong></p>
+<p>There are a few downsides to this scheme which we can certainly see in the final product. For one thing, every cell always has at least 1.5 volts across it, so it is very slightly on. If you hold the display at an angle, you can faintly see all the supposedly-turned-off cells. This effect goes away when the calculator is turned off for real, so it is clearly due to the multiplexing scheme.</p>
+<p>Another downside is that cells are only activated for 1/4 the time. Presumably we could achieve deeper tone depth in the turned-on cells if they were driven the whole time.</p>
+<p>Both of those pale in comparison to the big advantage of a multiplexed display: we got 112 segments with only 32 pins from the microcontroller, four of which are always giving the same signal.</p>
+<h1>from measurement, to circuit</h1>
+<p>To begin, let's take all 32 pins and put them into comparators. <a href="https://aldenbradford.com/KA339A-D.pdf">The comparators I have</a> prefer to work near their lower voltage end, so let's use the 0 value during the second half of the cycle to read our data pins. We can get the start of our read by looking at groundplane 1, for example. This way, all our comparators can share a reference value of 0.75 volts. This gives us a clean signal we can feed into any microcontroller, with the output voltage determined by the comparator chips.</p>
+<p>After that, we just need a microcontroller to act as a timed shift register. 29 pins (28 for data and one for the timing pulse) is too many for any of the ones I have on hand -- the Arduino Nano has 22 and the Raspberry Pi Pico has 25. I am inclined to set two Arduino Nanos on this task, each reading 14 pins, and have them communicate their combined signal to a separate microcontroller which will handle the keypad. This way I can be sure that the timing of reading the display will be handled correctly. The Arduinos can take 5 volts on their data line, so I can give the comparators extra breathing room with a 5 volt input. This is perhaps a bit wasteful, leaving 7 pins on each Arduino untouched, though of course a couple of those will be needed to communicate. The benefits are significant however: it's a modular approach which uses parts I have on hand.</p>
+<h1>luxuries</h1>
+<p>Since the comparators come in chips of four, we have enough to read every backplane for no additional cost. The Arduinos also have plenty of room to pick up the additional pins, they can certainly take in 18 pins. We could use this to shift in our data in an interrupt, without having to mess with timers. I hope this will make it more resilient against timing bugs, and make it easier to write code which handles communication since I won't need to handle reading data in the main loop.</p>
+    </div><!-- /.entry-content -->
+
+  </article>
+</section>
+        <section id="extras" class="body">
+                <div class="blogroll">
+                        <h2>links</h2>
+                        <ul>
+                            <li><a href="https://github.com/AldenMB">My GitHub</a></li>
+                            <li><a href="https://nt-tl.net/">My wife</a></li>
+                            <li><a href="https://laurestine.github.io/">My sister</a></li>
+                            <li><a href="https://www.clintonbradford.com/">My brother</a></li>
+                        </ul>
+                </div><!-- /.blogroll -->
+                <div class="social">
+                        <h2>social</h2>
+                        <ul>
+                            <li><a href="https://aldenbradford.com/feeds/all.atom.xml" type="application/atom+xml" rel="alternate">atom feed</a></li>
+
+                        </ul>
+                </div><!-- /.social -->
+        </section><!-- /#extras -->
+
+        <footer id="contentinfo" class="body">
+                <address id="about" class="vcard body">
+                Proudly powered by <a href="https://getpelican.com/">Pelican</a>, which takes great advantage of <a href="https://www.python.org/">Python</a>.
+                </address><!-- /#about -->
+
+                <p>The theme is by <a href="https://www.smashingmagazine.com/2009/08/designing-a-html-5-layout-from-scratch/">Smashing Magazine</a>, thanks!</p>
+        </footer><!-- /#contentinfo -->
+
+</body>
+</html>

@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="english">
+<head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta name="generator" content="Pelican" />
+        <title>Alden Bradford - number theory</title>
+        <link rel="stylesheet" href="https://aldenbradford.com/theme/css/main.css" />
+        <link href="https://aldenbradford.com/feeds/all.atom.xml" type="application/atom+xml" rel="alternate" title="Alden Bradford Atom Feed" />
+</head>
+
+<body id="index" class="home">
+        <header id="banner" class="body">
+                <h1><a href="https://aldenbradford.com/">Alden Bradford</a></h1>
+                <nav><ul>
+                    <li><a href="https://aldenbradford.com/">Welcome</a></li>
+                    <li><a href="https://aldenbradford.com/category/blog.html">Blog</a></li>
+                </ul></nav>
+        </header><!-- /#banner -->
+
+            <aside id="featured" class="body">
+                <article>
+                    <h1 class="entry-title"><a href="https://aldenbradford.com/revisiting-apollonian-gaskets.html">Revisiting Apollonian gaskets</a></h1>
+<footer class="post-info">
+        <abbr class="published" title="2022-08-06T00:00:00-04:00">
+                Published: Sat 06 August 2022
+        </abbr>
+
+        <address class="vcard author">
+                By                         <a class="url fn" href="https://aldenbradford.com/author/alden-bradford.html">Alden Bradford</a>
+        </address>
+<p>In <a href="https://aldenbradford.com/category/blog.html">Blog</a>.</p>
+<p>tags: <a href="https://aldenbradford.com/tag/number-theory.html">number theory</a> <a href="https://aldenbradford.com/tag/apollo.html">Apollo</a> <a href="https://aldenbradford.com/tag/apollonian-circle-packings.html">Apollonian circle packings</a> </p>
+</footer><!-- /.post-info --><p>Last summer I designed <a href="/Apollo">Apollo</a>, a tool for making Apollonian gaskets. Now I am a year older and a year wiser, so I think it's worth revisiting it. There are a few great improvements we can make, particularly when it comes to making integral packings, i.e. packings where the bend of every circle is an integer.</p>
+<h1>Computing bends to start from</h1>
+<h2>No primitive bends</h2>
+<p>There are basically two places where the code can be improved. First, the algorithm I use to find the primitive bends for a packing could be better. In particular, there are cases where it gets into an infinite loop, due to the gasket being in fact unbounded. The algorithm I use starts with three bends and finds a fourth using the quadratic formula. Then, by placing the bends in increasing order and using the mapping
+</p>
+<div class="math">$$
+(w, x, y, z) \mapsto (w, x, y, 2(w+x+y)-z)
+$$</div>
+<p>
+we make the largest bend smaller. If this makes the largest bend bigger instead, we are done, we found the primitive bends. Otherwise we sort the bends to find the new largest bend and repeat.</p>
+<p>The problem with this strategy is that for some gaskets, the bend can decrease indefinitely toward zero without going negative. In those cases this strategy will not terminate. Here is an example. To make things simple, let's take <span class="math">\(w=0\)</span>, and take the other bends to be in a geometric progression <span class="math">\((x, y, z) = (x, \alpha x, \alpha^2 x)\)</span>. By Descartes's theorem, <span class="math">\(\alpha\)</span> must satisfy the equation 
+</p>
+<div class="math">$$
+2(1+\alpha^2+\alpha^4) = (1+\alpha+\alpha^2)^2.
+$$</div>
+<p>
+At first this may look nasty, but it gets nicer if we do a backwards sort of completing the square, I suppose you could say completing the difference-of-squares.
+</p>
+<div class="math">\begin{align*}
+\alpha^4+\alpha^2+1
+&amp;= (\alpha^4+2\alpha^2+1)-\alpha^2\\
+&amp;= (\alpha^2+1)^2-\alpha^2\\
+&amp;= (\alpha^2+\alpha+1)(\alpha^2-\alpha+1)
+\end{align*}</div>
+<p>
+So, we see a common factor in both sides of the equation. We can factor it out as 
+</p>
+<div class="math">$$
+(\alpha^2+\alpha+1)(\alpha^2-3\alpha+1)=0.
+$$</div>
+<p>
+This has two real roots, the solutions to <span class="math">\(\alpha^2-3\alpha+1=0\)</span>. For our purposes I prefer to write this as <span class="math">\(\alpha+\frac{1}{\alpha} = 3\)</span>, which emphasizes that the two solutions are reciprocal to one another. Taking <span class="math">\(\alpha\)</span> to be the larger of these two roots (<span class="math">\(\alpha=(3+\sqrt{5})/2\)</span> if you are curious) puts our original bends in increasing order.</p>
+<p>If we apply our mirroring strategy to <span class="math">\((0, x, \alpha x, \alpha^2 x)\)</span> we get rid of <span class="math">\(\alpha^2 x\)</span> and replace it with 
+</p>
+<div class="math">\begin{align*}
+2(x+\alpha x)-\alpha^2 x 
+&amp;= 2x+2\alpha x -(3\alpha-1) x\\
+&amp;= (3-\alpha) x\\
+&amp;= \frac{1}{\alpha} x.
+\end{align*}</div>
+<p>
+Sorting the bends gives us <span class="math">\((0, \frac{1}{\alpha} x, x, \alpha x)\)</span>. We see that for this configuration of bends the mirroring lets the bends decrease indefinitely toward zero, dividing their magnitudes by <span class="math">\(\alpha\)</span> at each stage.</p>
+<p>This can never happen if the first four bends are integers since no sequence of positive integers can decrease forever. The method specified above fails precisely because some of the time we don't get integer bends. A better solution would be to treat the cases separately, i.e. figure out a plan to deal with large regions and just plot any three bends specified, without first reducing the bends.</p>
+<h2>A list of good bends</h2>
+<p>The reason I previously included the bend-reducing algorithm was as a way to generate integral gaskets. Usually, if I care about the exact bend of a gasket, it's because it's an integral packing. Why not simply provide a list of all the integral packings?</p>
+<p>In <a href="https://arxiv.org/abs/math/0009113">this paper from 2003</a> the authors provide a way of describing all the primitive integral packings in their theorem 4.1. They give a one-to-one correspondence between primitive packings of the form <span class="math">\((a, b, c, d)\)</span> and integer solutions to the equation <span class="math">\(x^2+m^2=d_1d_2\)</span> satisfying <span class="math">\(x&lt;0\leq 2m\leq d_1 \leq d_2\)</span> and <span class="math">\(\gcd(x, d_1, d_2)=1\)</span>.</p>
+<div class="math">\begin{align*}
+a&amp;=x\\
+b&amp;=d_1-x\\
+c&amp;=d_2-x\\
+d&amp;=-2m+d_1+d_2-x
+\end{align*}</div>
+<p>I want these grouped by their outer bend, so I will fix <span class="math">\(a=x=-n\)</span>. As it turns out, for each fixed <span class="math">\(n\)</span> there are not too many candidates for <span class="math">\(m\)</span>, and we can check them all provided <span class="math">\(n\)</span> isn't too big.</p>
+<p>Since we want <span class="math">\(2m\leq d_1\)</span> and <span class="math">\(2m\leq d_2\)</span> it follows that <span class="math">\(4m^2\leq d_1d_2\)</span> and so <span class="math">\(3m^2\leq d_1d_2-m^2=n^2\)</span>. Thus, we only need to check <span class="math">\(m&lt;n/\sqrt{3}\)</span>. For each <span class="math">\(m\)</span>, we can just try all the numbers <span class="math">\(d_1\)</span> between <span class="math">\(2m\)</span> and <span class="math">\(\sqrt{n^2+m^2}\)</span> to see if they divide <span class="math">\(n^2+m^2\)</span>. If so that gives us <span class="math">\(d_2\)</span>, so we can just check if <span class="math">\(\gcd(n, d1, d2)=1\)</span>. Here's some Python code to carry out this procedure.</p>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span> <span class="nn">math</span>
+
+
+<span class="k">def</span> <span class="nf">get_primitive_bends</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">n</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">yield</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span>
+        <span class="k">return</span>
+    <span class="k">for</span> <span class="n">m</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">math</span><span class="o">.</span><span class="n">ceil</span><span class="p">(</span><span class="n">n</span> <span class="o">/</span> <span class="n">math</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">3</span><span class="p">))):</span>
+        <span class="n">s</span> <span class="o">=</span> <span class="n">m</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="n">n</span><span class="o">**</span><span class="mi">2</span>
+        <span class="k">for</span> <span class="n">d1</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">max</span><span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">m</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="n">math</span><span class="o">.</span><span class="n">floor</span><span class="p">(</span><span class="n">math</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">s</span><span class="p">))</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
+            <span class="n">d2</span><span class="p">,</span> <span class="n">remainder</span> <span class="o">=</span> <span class="nb">divmod</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">d1</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">remainder</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">math</span><span class="o">.</span><span class="n">gcd</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">d1</span><span class="p">,</span> <span class="n">d2</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="k">yield</span> <span class="o">-</span><span class="n">n</span><span class="p">,</span> <span class="n">d1</span> <span class="o">+</span> <span class="n">n</span><span class="p">,</span> <span class="n">d2</span> <span class="o">+</span> <span class="n">n</span><span class="p">,</span> <span class="n">d1</span> <span class="o">+</span> <span class="n">d2</span> <span class="o">+</span> <span class="n">n</span> <span class="o">-</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">m</span>
+
+
+<span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">10</span><span class="p">):</span>
+    <span class="k">for</span> <span class="n">bend</span> <span class="ow">in</span> <span class="n">get_primitive_bends</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">bend</span><span class="p">)</span>
+</code></pre></div>
+
+<p>This gives us exactly <a href="https://en.wikipedia.org/wiki/Apollonian_gasket#Integral_Apollonian_circle_packings">the list on Wikipedia</a>.</p>
+<div class="highlight"><pre><span></span><code><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+<span class="p">(</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">7</span><span class="p">)</span>
+<span class="p">(</span><span class="o">-</span><span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">12</span><span class="p">,</span> <span class="mi">13</span><span class="p">)</span>
+<span class="p">(</span><span class="o">-</span><span class="mi">3</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">8</span><span class="p">)</span>
+<span class="p">(</span><span class="o">-</span><span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span> <span class="mi">21</span><span class="p">)</span>
+<span class="p">(</span><span class="o">-</span><span class="mi">4</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">9</span><span class="p">,</span> <span class="mi">9</span><span class="p">)</span>
+<span class="p">(</span><span class="o">-</span><span class="mi">5</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">30</span><span class="p">,</span> <span class="mi">31</span><span class="p">)</span>
+<span class="p">(</span><span class="o">-</span><span class="mi">5</span><span class="p">,</span> <span class="mi">7</span><span class="p">,</span> <span class="mi">18</span><span class="p">,</span> <span class="mi">18</span><span class="p">)</span>
+<span class="p">(</span><span class="o">-</span><span class="mi">6</span><span class="p">,</span> <span class="mi">7</span><span class="p">,</span> <span class="mi">42</span><span class="p">,</span> <span class="mi">43</span><span class="p">)</span>
+<span class="p">(</span><span class="o">-</span><span class="mi">6</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">15</span><span class="p">,</span> <span class="mi">19</span><span class="p">)</span>
+<span class="p">(</span><span class="o">-</span><span class="mi">6</span><span class="p">,</span> <span class="mi">11</span><span class="p">,</span> <span class="mi">14</span><span class="p">,</span> <span class="mi">15</span><span class="p">)</span>
+<span class="p">(</span><span class="o">-</span><span class="mi">7</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">56</span><span class="p">,</span> <span class="mi">57</span><span class="p">)</span>
+<span class="p">(</span><span class="o">-</span><span class="mi">7</span><span class="p">,</span> <span class="mi">9</span><span class="p">,</span> <span class="mi">32</span><span class="p">,</span> <span class="mi">32</span><span class="p">)</span>
+<span class="p">(</span><span class="o">-</span><span class="mi">7</span><span class="p">,</span> <span class="mi">12</span><span class="p">,</span> <span class="mi">17</span><span class="p">,</span> <span class="mi">20</span><span class="p">)</span>
+<span class="p">(</span><span class="o">-</span><span class="mi">8</span><span class="p">,</span> <span class="mi">9</span><span class="p">,</span> <span class="mi">72</span><span class="p">,</span> <span class="mi">73</span><span class="p">)</span>
+<span class="p">(</span><span class="o">-</span><span class="mi">8</span><span class="p">,</span> <span class="mi">13</span><span class="p">,</span> <span class="mi">21</span><span class="p">,</span> <span class="mi">24</span><span class="p">)</span>
+<span class="p">(</span><span class="o">-</span><span class="mi">8</span><span class="p">,</span> <span class="mi">12</span><span class="p">,</span> <span class="mi">25</span><span class="p">,</span> <span class="mi">25</span><span class="p">)</span>
+<span class="p">(</span><span class="o">-</span><span class="mi">9</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">90</span><span class="p">,</span> <span class="mi">91</span><span class="p">)</span>
+<span class="p">(</span><span class="o">-</span><span class="mi">9</span><span class="p">,</span> <span class="mi">11</span><span class="p">,</span> <span class="mi">50</span><span class="p">,</span> <span class="mi">50</span><span class="p">)</span>
+<span class="p">(</span><span class="o">-</span><span class="mi">9</span><span class="p">,</span> <span class="mi">14</span><span class="p">,</span> <span class="mi">26</span><span class="p">,</span> <span class="mi">27</span><span class="p">)</span>
+<span class="p">(</span><span class="o">-</span><span class="mi">9</span><span class="p">,</span> <span class="mi">18</span><span class="p">,</span> <span class="mi">19</span><span class="p">,</span> <span class="mi">22</span><span class="p">)</span>
+</code></pre></div>
+
+<p>We could certainly get more clever about how we find <span class="math">\(d_1\)</span> and <span class="math">\(d_2\)</span>, though trial division works well for small <span class="math">\(n\)</span>. An example speedup is to notice <span class="math">\(d_1d_2=m^2+n^2\)</span> is the sum of two squares. By the aptly-named <a href="https://en.wikipedia.org/wiki/Sum_of_two_squares_theorem">sum of two squares theorem</a>, we know any prime factors of <span class="math">\(m^2+n^2\)</span> which are congruent to <span class="math">\(3\)</span> mod <span class="math">\(4\)</span> must have an even exponent -- for example, if <span class="math">\(m^2+n^2\)</span> is divisible by <span class="math">\(7\)</span> then it must also be divisible by <span class="math">\(49\)</span>. We can use that to find the factorization quicker, possibly requiring many fewer trial divisions.</p>
+<h1>Using integral bend-centers</h1>
+<p>In <a href="https://arxiv.org/abs/math/0010302v5">this other article</a>, the authors show that every integral packing can be translated and rotated to make it strongly integral, i.e. with integer bend-centers. They do this by embedding every integral packing into a single integral superpacking, and rotating/translating that integral superpacking to get a strongly integral superpacking.</p>
+<p>The benefits of having integer bend-centers should be obvious. Not only is it generally faster to do arithmetic on integers, we also no longer have to worry about floating point errors creeping in as we delve deeper. We could use this to make an interactive tool which lets you zoom in as far as you like, without fear of drifting off course.</p>
+<p>In that paper they do not give an algorithm explicitly for constructing a strongly integral packing for a given integral packing. However, we can adapt a couple of their theorems to create a strategy. That's what I'll describe here.</p>
+<p>Their theorem 4.2 is proved by creating a superapollonian group action which takes a given Descartes configuration to <span class="math">\((0, 0, g, g)\)</span>. If we start with a primitive configuration, then we can take <span class="math">\(g=1\)</span>. What we will do is apply their proposed strategy, saving the group action -- specifically, its representation as a 4x4 orthogonal matrix. Taking the transpose gives us the inverse action.</p>
+<p>We can then apply that action to a strongly integral packing of <span class="math">\((0, 0, 1, 1)\)</span>. For example, if we apply it to 
+</p>
+<div class="math">$$
+\begin{bmatrix}
+0 &amp; 0 &amp; 1\\
+0 &amp; 0 &amp;-1\\
+1 &amp; 1 &amp; 0\\
+1 &amp;-1 &amp; 0
+\end{bmatrix}
+$$</div>
+<p>
+then we will get the embedding of our desired configuration of bends in the standard strongly integral superpacking. What's more, the location in the plane will be aligned with the superpacking -- we can trivially shift it back to the origin for plotting if we wish, or we can make a neat drawing of the whole superpacking with the desired circle indicated.</p>
+<h1>Where this will go</h1>
+<p>I don't personally have too much interest in making more drawings of gaskets. The ones I made are pretty enough, and Apollo does well enough at creating them. I might patch it to use the list of gaskets above. If I do make a new version, I think I would want it to be a tool for exploring the Superapollonian packing. Something where you can scroll through in real time, or pinch to zoom on a touchscreen. Have a side panel to highlight specific integral packings.</p>
+<script type="text/javascript">if (!document.getElementById('mathjaxscript_pelican_#%@#$@#')) {
+    var align = "center",
+        indent = "0em",
+        linebreak = "false";
+
+    if (false) {
+        align = (screen.width < 768) ? "left" : align;
+        indent = (screen.width < 768) ? "0em" : indent;
+        linebreak = (screen.width < 768) ? 'true' : linebreak;
+    }
+
+    var mathjaxscript = document.createElement('script');
+    mathjaxscript.id = 'mathjaxscript_pelican_#%@#$@#';
+    mathjaxscript.type = 'text/javascript';
+    mathjaxscript.src = 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.3/latest.js?config=TeX-AMS-MML_HTMLorMML';
+
+    var configscript = document.createElement('script');
+    configscript.type = 'text/x-mathjax-config';
+    configscript[(window.opera ? "innerHTML" : "text")] =
+        "MathJax.Hub.Config({" +
+        "    config: ['MMLorHTML.js']," +
+        "    TeX: { extensions: ['AMSmath.js','AMSsymbols.js','noErrors.js','noUndefined.js'], equationNumbers: { autoNumber: 'none' } }," +
+        "    jax: ['input/TeX','input/MathML','output/HTML-CSS']," +
+        "    extensions: ['tex2jax.js','mml2jax.js','MathMenu.js','MathZoom.js']," +
+        "    displayAlign: '"+ align +"'," +
+        "    displayIndent: '"+ indent +"'," +
+        "    showMathMenu: true," +
+        "    messageStyle: 'normal'," +
+        "    tex2jax: { " +
+        "        inlineMath: [ ['\\\\(','\\\\)'] ], " +
+        "        displayMath: [ ['$$','$$'] ]," +
+        "        processEscapes: true," +
+        "        preview: 'TeX'," +
+        "    }, " +
+        "    'HTML-CSS': { " +
+        "        availableFonts: ['STIX', 'TeX']," +
+        "        preferredFont: 'STIX'," +
+        "        styles: { '.MathJax_Display, .MathJax .mo, .MathJax .mi, .MathJax .mn': {color: 'inherit ! important'} }," +
+        "        linebreaks: { automatic: "+ linebreak +", width: '90% container' }," +
+        "    }, " +
+        "}); " +
+        "if ('default' !== 'default') {" +
+            "MathJax.Hub.Register.StartupHook('HTML-CSS Jax Ready',function () {" +
+                "var VARIANT = MathJax.OutputJax['HTML-CSS'].FONTDATA.VARIANT;" +
+                "VARIANT['normal'].fonts.unshift('MathJax_default');" +
+                "VARIANT['bold'].fonts.unshift('MathJax_default-bold');" +
+                "VARIANT['italic'].fonts.unshift('MathJax_default-italic');" +
+                "VARIANT['-tex-mathit'].fonts.unshift('MathJax_default-italic');" +
+            "});" +
+            "MathJax.Hub.Register.StartupHook('SVG Jax Ready',function () {" +
+                "var VARIANT = MathJax.OutputJax.SVG.FONTDATA.VARIANT;" +
+                "VARIANT['normal'].fonts.unshift('MathJax_default');" +
+                "VARIANT['bold'].fonts.unshift('MathJax_default-bold');" +
+                "VARIANT['italic'].fonts.unshift('MathJax_default-italic');" +
+                "VARIANT['-tex-mathit'].fonts.unshift('MathJax_default-italic');" +
+            "});" +
+        "}";
+
+    (document.body || document.getElementsByTagName('head')[0]).appendChild(configscript);
+    (document.body || document.getElementsByTagName('head')[0]).appendChild(mathjaxscript);
+}
+</script>                </article>
+            </aside><!-- /#featured -->
+        <section id="extras" class="body">
+                <div class="blogroll">
+                        <h2>links</h2>
+                        <ul>
+                            <li><a href="https://github.com/AldenMB">My GitHub</a></li>
+                            <li><a href="https://nt-tl.net/">My wife</a></li>
+                            <li><a href="https://laurestine.github.io/">My sister</a></li>
+                            <li><a href="https://www.clintonbradford.com/">My brother</a></li>
+                        </ul>
+                </div><!-- /.blogroll -->
+                <div class="social">
+                        <h2>social</h2>
+                        <ul>
+                            <li><a href="https://aldenbradford.com/feeds/all.atom.xml" type="application/atom+xml" rel="alternate">atom feed</a></li>
+
+                        </ul>
+                </div><!-- /.social -->
+        </section><!-- /#extras -->
+
+        <footer id="contentinfo" class="body">
+                <address id="about" class="vcard body">
+                Proudly powered by <a href="https://getpelican.com/">Pelican</a>, which takes great advantage of <a href="https://www.python.org/">Python</a>.
+                </address><!-- /#about -->
+
+                <p>The theme is by <a href="https://www.smashingmagazine.com/2009/08/designing-a-html-5-layout-from-scratch/">Smashing Magazine</a>, thanks!</p>
+        </footer><!-- /#contentinfo -->
+
+</body>
+</html>

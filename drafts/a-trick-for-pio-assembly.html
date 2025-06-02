@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="english">
+<head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta name="generator" content="Pelican" />
+        <title>A trick for PIO assembly</title>
+        <link rel="stylesheet" href="https://aldenbradford.com/theme/css/main.css" />
+        <link href="https://aldenbradford.com/feeds/all.atom.xml" type="application/atom+xml" rel="alternate" title="Alden Bradford Atom Feed" />
+        <meta name="description" content="A more concise and readable way to unroll loops in PIOASM" />
+</head>
+
+<body id="index" class="home">
+        <header id="banner" class="body">
+                <h1><a href="https://aldenbradford.com/">Alden Bradford</a></h1>
+                <nav><ul>
+                    <li><a href="https://aldenbradford.com/">Welcome</a></li>
+                    <li class="active"><a href="https://aldenbradford.com/category/blog.html">Blog</a></li>
+                </ul></nav>
+        </header><!-- /#banner -->
+<section id="content" class="body">
+  <article>
+    <header>
+      <h1 class="entry-title">
+        <a href="https://aldenbradford.com/drafts/a-trick-for-pio-assembly.html" rel="bookmark"
+           title="Permalink to A trick for PIO assembly">A trick for PIO assembly</a></h1>
+    </header>
+
+    <div class="entry-content">
+<footer class="post-info">
+        <abbr class="published" title="9999-12-31T23:59:59.999999-04:56">
+                Published: 
+        </abbr>
+
+        <address class="vcard author">
+                By                         <a class="url fn" href="https://aldenbradford.com/author/alden-bradford.html">Alden Bradford</a>
+        </address>
+<p>In <a href="https://aldenbradford.com/category/blog.html">Blog</a>.</p>
+<p>tags: <a href="https://aldenbradford.com/tag/electronics.html">electronics</a> <a href="https://aldenbradford.com/tag/python.html">Python</a> </p>
+</footer><!-- /.post-info -->      <p>I am learning how to use the PIO feature of the Raspberry Pi Pico. This gives access to eight independent state machines, which can run in parallel to your main program, manipulating the GPIO very fast and with precise timing. A program for a PIO state machine is tiny, consisting of at most 32 instructions. There are only 9 two-byte instructions to choose from in PIO assembly, all specialized to doing input/output tasks.</p>
+<p>There are currently two interfaces provided for writing PIOASM code. There is an assembler bundled with the C/C++ SDK, which allows you to compile a program using the PIOASM assembly language. This is a fairly bare-bones assembly language, giving you labels for jump statements and some compile-time arithmetic, but not much else. For the most part the assembly commands correspond one-to-one with the binary instructions.</p>
+<p>The second interface is a bit weirder. In Micropython, they provide a decorator, <code>@rp2.asm_pio</code>, which lets you write PIO assembly in a regular Python function. How does it do this? It monkey-patches the global namespace of the function. <a href="https://github.com/micropython/micropython/blob/master/ports/rp2/modules/rp2.py">You can see the code yourself here</a>. The result is that anything inside the function is called using a miniature language with all the syntax of Python, but none of the names. Each of the provided functions just adds the relevant instruction to an internally-stored PIO program.</p>
+<p>This strategy explains some of the choices which were made for the functions in this mini-language. This is why a Python PIOASM program can have a function called <code>set</code> -- within this scope, it has overwritten the name of the standard python <code>set</code>. That's also why it uses the handle <code>in_</code> instead of <code>in</code>, since <code>in</code> is a reserved word in Python, part of the syntax, and not the name of an object.</p>
+<p>A fun consequence is that we can take advantage of Python syntax when writing our code. For example, before I realized this I had the following lines in a program.</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># tell the calculator to release the buttons</span>
+<span class="nb">set</span><span class="p">(</span><span class="n">pins</span><span class="p">,</span> <span class="mb">0b000</span><span class="p">)</span>  <span class="c1"># empty the register</span>
+<span class="nb">set</span><span class="p">(</span><span class="n">pins</span><span class="p">,</span> <span class="mb">0b110</span><span class="p">)</span>  <span class="c1"># show the result</span>
+<span class="nb">set</span><span class="p">(</span><span class="n">pins</span><span class="p">,</span> <span class="mb">0b100</span><span class="p">)</span>
+</code></pre></div>
+
+<p>We can make it easier on the eyes by defining local variables which explain what each bit is for. Here's what that same part of my code looks like now.</p>
+<div class="highlight"><pre><span></span><code><span class="n">show</span> <span class="o">=</span> <span class="mb">0b010</span>
+<span class="n">noblank</span> <span class="o">=</span> <span class="mb">0b100</span>
+<span class="c1"># tell the calculator to release the buttons</span>
+<span class="nb">set</span><span class="p">(</span><span class="n">pins</span><span class="p">,</span> <span class="mi">0</span> <span class="o">|</span> <span class="mi">0</span><span class="p">)</span>  <span class="c1"># empty the register</span>
+<span class="nb">set</span><span class="p">(</span><span class="n">pins</span><span class="p">,</span> <span class="n">show</span> <span class="o">|</span> <span class="n">noblank</span><span class="p">)</span>  <span class="c1"># show the result</span>
+<span class="nb">set</span><span class="p">(</span><span class="n">pins</span><span class="p">,</span> <span class="mi">0</span> <span class="o">|</span> <span class="n">noblank</span><span class="p">)</span>
+</code></pre></div>
+
+<p>It does not stop there. Since we are still writing a Python function, we can use Python control structures to make our program. For example, I had some code which looked like this.</p>
+<div class="highlight"><pre><span></span><code><span class="n">clock</span> <span class="o">=</span> <span class="mb">0b01</span>
+<span class="n">nsample</span> <span class="o">=</span> <span class="mb">0b10</span>
+
+<span class="n">wait</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">pin</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+
+<span class="nb">set</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="mi">31</span><span class="p">)</span><span class="o">.</span><span class="n">side</span><span class="p">(</span><span class="n">nsample</span> <span class="o">|</span> <span class="mi">0</span><span class="p">)</span>
+<span class="n">label</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">in_</span><span class="p">(</span><span class="n">pins</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">side</span><span class="p">(</span><span class="n">nsample</span> <span class="o">|</span> <span class="n">clock</span><span class="p">)</span>
+<span class="n">jmp</span><span class="p">(</span><span class="n">x_dec</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">side</span><span class="p">(</span><span class="n">nsample</span> <span class="o">|</span> <span class="mi">0</span><span class="p">)</span>
+<span class="n">push</span><span class="p">(</span><span class="n">noblock</span><span class="p">)</span><span class="o">.</span><span class="n">side</span><span class="p">(</span><span class="mi">0</span> <span class="o">|</span> <span class="mi">0</span><span class="p">)</span>
+
+<span class="n">wait</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">pin</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+
+<span class="nb">set</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="mi">31</span><span class="p">)</span><span class="o">.</span><span class="n">side</span><span class="p">(</span><span class="n">nsample</span> <span class="o">|</span> <span class="mi">0</span><span class="p">)</span>
+<span class="n">label</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">in_</span><span class="p">(</span><span class="n">pins</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">side</span><span class="p">(</span><span class="n">nsample</span> <span class="o">|</span> <span class="n">clock</span><span class="p">)</span>
+<span class="n">jmp</span><span class="p">(</span><span class="n">x_dec</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">side</span><span class="p">(</span><span class="n">nsample</span> <span class="o">|</span> <span class="mi">0</span><span class="p">)</span>
+<span class="n">push</span><span class="p">(</span><span class="n">noblock</span><span class="p">)</span><span class="o">.</span><span class="n">side</span><span class="p">(</span><span class="mi">0</span> <span class="o">|</span> <span class="mi">0</span><span class="p">)</span>
+
+<span class="n">wait</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">pin</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+
+<span class="nb">set</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="mi">31</span><span class="p">)</span><span class="o">.</span><span class="n">side</span><span class="p">(</span><span class="n">nsample</span> <span class="o">|</span> <span class="mi">0</span><span class="p">)</span>
+<span class="n">label</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+<span class="n">in_</span><span class="p">(</span><span class="n">pins</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">side</span><span class="p">(</span><span class="n">nsample</span> <span class="o">|</span> <span class="n">clock</span><span class="p">)</span>
+<span class="n">jmp</span><span class="p">(</span><span class="n">x_dec</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">side</span><span class="p">(</span><span class="n">nsample</span> <span class="o">|</span> <span class="mi">0</span><span class="p">)</span>
+<span class="n">push</span><span class="p">(</span><span class="n">noblock</span><span class="p">)</span><span class="o">.</span><span class="n">side</span><span class="p">(</span><span class="mi">0</span> <span class="o">|</span> <span class="mi">0</span><span class="p">)</span>
+
+<span class="n">wait</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">pin</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+
+<span class="nb">set</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="mi">31</span><span class="p">)</span><span class="o">.</span><span class="n">side</span><span class="p">(</span><span class="n">nsample</span> <span class="o">|</span> <span class="mi">0</span><span class="p">)</span>
+<span class="n">label</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+<span class="n">in_</span><span class="p">(</span><span class="n">pins</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">side</span><span class="p">(</span><span class="n">nsample</span> <span class="o">|</span> <span class="n">clock</span><span class="p">)</span>
+<span class="n">jmp</span><span class="p">(</span><span class="n">x_dec</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span><span class="o">.</span><span class="n">side</span><span class="p">(</span><span class="n">nsample</span> <span class="o">|</span> <span class="mi">0</span><span class="p">)</span>
+<span class="n">push</span><span class="p">(</span><span class="n">noblock</span><span class="p">)</span><span class="o">.</span><span class="n">side</span><span class="p">(</span><span class="mi">0</span> <span class="o">|</span> <span class="mi">0</span><span class="p">)</span>
+
+<span class="n">irq</span><span class="p">(</span><span class="n">rel</span><span class="p">(</span><span class="mi">0</span><span class="p">))</span>
+</code></pre></div>
+
+<p>That's not too bad, really. The local variables defined at the top make it clear what the side-sets are doing, and while reading it you will quickly realize each of the loop blocks are doing the same thing. The program is 25 instructions long, since the local variable declaration doesn't get passed to the PIOSM compiler.</p>
+<p>You may think that we could fit this in fewer instructions by making an assembly subroutine. There is no obvious way to set the arguments to the wait commands from variable, but we could make the bit-shift loop into a subroutine and use the spare scratch variable <code>y</code> to keep track of where we are jumping from. Indeed, you can do it that way, but since there aren't instructions in PIOASM for handling subroutines it ends up taking more instructions total to use that approach. Having the loop unrolled in this manner makes the program run faster, and makes it easier to read.</p>
+<p>We can do better. The following code makes the same program -- produces the same 25 instructions for the PIO module -- but does it in a way that's easier to read.</p>
+<div class="highlight"><pre><span></span><code><span class="n">clock</span> <span class="o">=</span> <span class="mb">0b01</span>
+<span class="n">nsample</span> <span class="o">=</span> <span class="mb">0b10</span>
+<span class="k">for</span> <span class="n">loop_number</span><span class="p">,</span> <span class="p">(</span><span class="n">trigger_pin</span><span class="p">,</span> <span class="n">condition</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span>
+    <span class="p">[(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">)]</span>
+<span class="p">):</span>
+    <span class="n">wait</span><span class="p">(</span><span class="n">condition</span><span class="p">,</span> <span class="n">pin</span><span class="p">,</span> <span class="n">trigger_pin</span><span class="p">)</span>
+
+    <span class="nb">set</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="mi">31</span><span class="p">)</span><span class="o">.</span><span class="n">side</span><span class="p">(</span><span class="n">nsample</span> <span class="o">|</span> <span class="mi">0</span><span class="p">)</span>
+    <span class="n">label</span><span class="p">(</span><span class="n">loop_number</span><span class="p">)</span>
+    <span class="n">in_</span><span class="p">(</span><span class="n">pins</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">side</span><span class="p">(</span><span class="n">nsample</span> <span class="o">|</span> <span class="n">clock</span><span class="p">)</span>
+    <span class="n">jmp</span><span class="p">(</span><span class="n">x_dec</span><span class="p">,</span> <span class="n">loop_number</span><span class="p">)</span><span class="o">.</span><span class="n">side</span><span class="p">(</span><span class="n">nsample</span> <span class="o">|</span> <span class="mi">0</span><span class="p">)</span>
+    <span class="n">push</span><span class="p">(</span><span class="n">noblock</span><span class="p">)</span><span class="o">.</span><span class="n">side</span><span class="p">(</span><span class="mi">0</span> <span class="o">|</span> <span class="mi">0</span><span class="p">)</span>
+
+<span class="n">irq</span><span class="p">(</span><span class="n">rel</span><span class="p">(</span><span class="mi">0</span><span class="p">))</span>
+</code></pre></div>
+
+<p>It's important to emphasize that the loop here is not part of the assembled code. In order to do loops in PIOASM you need to use jump instructions. Rather, we are looping over the process of creating the program. Essentially, we are using Python syntax to write an assembler macro.</p>
+<p>I am fairly sure this is not the way we are intended to write PIOASM code. After all, a PIO program is at most 32 instructions, so listing out the instructions one by one will always be explicit and reasonable to read. A program with loops like the one I gave above has the potential to confuse people greatly, if they get the impression that the assembled program will have a loop in it.</p>
+<p>For this coding style, the biggest nail in the coffin <a href="https://github.com/micropython/micropython/blob/963e599ec0d253534eb835ade7020e8ac3d7919b/ports/rp2/modules/rp2.py#L258">is one line of Micropython source code</a>. What is this doing here? One thing it will do is prevent you from making modular PIO functions. For example, to me the following code makes sense.</p>
+<div class="highlight"><pre><span></span><code><span class="k">def</span> <span class="nf">delay</span><span class="p">(</span><span class="n">loops</span><span class="o">=</span><span class="mi">31</span><span class="p">,</span> <span class="n">duration</span><span class="o">=</span><span class="mi">31</span><span class="p">,</span> <span class="n">loop_label</span> <span class="o">=</span> <span class="s1">&#39;delay_loop&#39;</span><span class="p">):</span>
+    <span class="nb">set</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">loops</span><span class="p">)</span>
+    <span class="n">label</span><span class="p">(</span><span class="n">loop_label</span><span class="p">)</span>
+    <span class="n">nop</span><span class="p">[</span><span class="n">duration</span><span class="o">-</span><span class="mi">2</span><span class="p">]</span>
+    <span class="n">jmp</span><span class="p">(</span><span class="n">y_dec</span><span class="p">,</span> <span class="n">loop_label</span><span class="p">)</span>
+
+
+<span class="nd">@rp2</span><span class="o">.</span><span class="n">asm_pio</span><span class="p">(</span><span class="n">autopush</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">alternating_slow_fast_read</span><span class="p">():</span>
+    <span class="n">in_</span><span class="p">(</span><span class="n">pins</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="n">delay</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">20</span><span class="p">)</span>
+    <span class="n">in_</span><span class="p">(</span><span class="n">pins</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="n">delay</span><span class="p">(</span><span class="mi">15</span><span class="p">,</span> <span class="mi">30</span><span class="p">)</span>
+</code></pre></div>
+
+<p>I think it is clear what this code intends, but it does not work because of that <code>__globals__.clear()</code> call in the Micropython source.</p>
+    </div><!-- /.entry-content -->
+
+  </article>
+</section>
+        <section id="extras" class="body">
+                <div class="blogroll">
+                        <h2>links</h2>
+                        <ul>
+                            <li><a href="https://github.com/AldenMB">My GitHub</a></li>
+                            <li><a href="https://nt-tl.net/">My wife</a></li>
+                            <li><a href="https://laurestine.github.io/">My sister</a></li>
+                            <li><a href="https://www.clintonbradford.com/">My brother</a></li>
+                        </ul>
+                </div><!-- /.blogroll -->
+                <div class="social">
+                        <h2>social</h2>
+                        <ul>
+                            <li><a href="https://aldenbradford.com/feeds/all.atom.xml" type="application/atom+xml" rel="alternate">atom feed</a></li>
+
+                        </ul>
+                </div><!-- /.social -->
+        </section><!-- /#extras -->
+
+        <footer id="contentinfo" class="body">
+                <address id="about" class="vcard body">
+                Proudly powered by <a href="https://getpelican.com/">Pelican</a>, which takes great advantage of <a href="https://www.python.org/">Python</a>.
+                </address><!-- /#about -->
+
+                <p>The theme is by <a href="https://www.smashingmagazine.com/2009/08/designing-a-html-5-layout-from-scratch/">Smashing Magazine</a>, thanks!</p>
+        </footer><!-- /#contentinfo -->
+
+</body>
+</html>

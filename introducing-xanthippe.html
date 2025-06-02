@@ -1,0 +1,532 @@
+<!DOCTYPE html>
+<html lang="english">
+<head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta name="generator" content="Pelican" />
+        <title>Introducing Xanthippe</title>
+        <link rel="stylesheet" href="https://aldenbradford.com/theme/css/main.css" />
+        <link href="https://aldenbradford.com/feeds/all.atom.xml" type="application/atom+xml" rel="alternate" title="Alden Bradford Atom Feed" />
+        <meta name="description" content="A formal introduction to my calculator validator" />
+</head>
+
+<body id="index" class="home">
+        <header id="banner" class="body">
+                <h1><a href="https://aldenbradford.com/">Alden Bradford</a></h1>
+                <nav><ul>
+                    <li><a href="https://aldenbradford.com/">Welcome</a></li>
+                    <li class="active"><a href="https://aldenbradford.com/category/blog.html">Blog</a></li>
+                </ul></nav>
+        </header><!-- /#banner -->
+<section id="content" class="body">
+  <article>
+    <header>
+      <h1 class="entry-title">
+        <a href="https://aldenbradford.com/introducing-xanthippe.html" rel="bookmark"
+           title="Permalink to Introducing Xanthippe">Introducing Xanthippe</a></h1>
+    </header>
+
+    <div class="entry-content">
+<footer class="post-info">
+        <abbr class="published" title="2022-08-04T00:00:00-04:00">
+                Published: Thu 04 August 2022
+        </abbr>
+
+        <address class="vcard author">
+                By                         <a class="url fn" href="https://aldenbradford.com/author/alden-bradford.html">Alden Bradford</a>
+        </address>
+<p>In <a href="https://aldenbradford.com/category/blog.html">Blog</a>.</p>
+<p>tags: <a href="https://aldenbradford.com/tag/electronics.html">electronics</a> <a href="https://aldenbradford.com/tag/xanthippe.html">Xanthippe</a> <a href="https://aldenbradford.com/tag/data-structures.html">data structures</a> </p>
+</footer><!-- /.post-info -->      <p>I have been going on about my project to <a href="/calculator_emulator">emulate a calculator in the browser</a> for some time. A month or so ago I decided that, if I am going to make the more fiddly bits of the calculator work correctly, I should really find a way to generate tests automatically.</p>
+<p>I have spoken previously about how an emulator is really the ideal venue for test-driven development. All the visible behaviors of the finished product are completely specified, in the sense that any feature not-yet-implemented corresponds to a class of inputs which produce an incorrect output. If you want to know what the emulator should do in a given situation, all you have to do is check against the real deal.</p>
+<p>Up to now, I have been using a suite of tests I carefully chose based on pressing buttons by hand. That made sense when there were only a dozen or two tests. Because the examples are carefully chosen, I don't necessarily need many tests to cover a wide range of features. Now there are close to 50 tests, and the remaining functionality -- fractions, statistics registers, base 10 encoding, alternative display styles -- rely on hidden information. With more state involved, I expect the number of necessary test to explode.</p>
+<h1>What is Xanthippe?</h1>
+<p>This is where Xanthippe comes in. Instead of pressing the buttons myself and documenting what the display shows, I will program a computer to press the buttons for me. This way all I have to do is specify a string of presses, and I can automatically get what the calculator shows at each stage. This way I can really "go ham" designing the emulator, and have real confidence that the emulator behaves like the genuine article.</p>
+<p>I have already <a href="reflections-on-wiring-a-calculator">soldered test points to a calculator</a> and figured out the electrical characteristics of <a href="reverse-engineering-a-matrix-keypad">the buttons</a> and <a href="reading-a-multiplexed-lcd-signal">the display</a>. I have designed <a href="https://github.com/AldenMB/Xanthippe/tree/main/calculator_interface">a circuit board</a> which reads the signals from the LCD to a shift register and writes button presses from a shift register. Assuming the circuit works as intended (the circuit board is still in the mail right now) I should be able to write code for any microcontroller which controls the calculator and reads its outputs.</p>
+<p>Currently, my dream for Xanthippe is that it will be an art piece hanging on a wall in a glass box, constantly pressing buttons on the calculator and recording the results. It will send all the results onto Github, so I can test my emulator against them whenever I make a change. I also want to be able to make requests for specific sequences to check, so I can still design test cases explicitly.</p>
+<h1>Why the name?</h1>
+<p>I am emulating the TI-30Xa, and there are not too many names which start with the letters "Xa". I think Xavier would be a better name for the emulator itself (easier to type). Xanthippe is the name of the wife of Socrates. I think that's somewhat fitting, for a character who sits behind the scenes and makes sure the famous one is keeping in line. Xanthippe is often portrayed as stubborn and unyielding, which fits the role of a testing suite. Though the emulator may disagree, we will know Xanthippe is right.</p>
+<h1>What cases to test?</h1>
+<p>Once I have Xanthippe pushing buttons, the obvious question to ask is "which ones?". There are 40 buttons, and button press sequences often reach over 20 presses in length, so there is no hope of just trying every combination. Many of those combinations will reach an error state long before they reach the end, and calculator does not do much upon reaching an error state, so in reality we can cut lots of sequences short. There are still well too many for an exhaustive search.</p>
+<p>A few combinations spring to mind as obvious additions. First, I have already specified many button sequences as good tests, may as well do those. Second, since my emulator runs in the browser, it is not too tricky to ask it to phone home. Whenever someone completes a session with the emulator I can have it send off the button presses, and Xanthippe can check them. That way I am sure to have coverage of the cases people actually use, at least the second time they try it. I could even do something silly like loading answers from Xanthippe when I have them instead of using the emulator, which could make people think I am very fast at fixing bugs. Probably unwise since that would lead to inconsistent behavior, which is the only thing harder to troubleshoot than incorrect behavior.</p>
+<p>Another way I can choose button presses is to explore the area around existing sequences. For example, if there is something in memory, I could press buttons to read what it is. I could subtract the visible part of a mantissa to reveal the hidden part. This surely deserves its own blog post.</p>
+<h1>How to save the answers?</h1>
+<p>The calculator does not give us a whole lot of information. Most of the computation happens within the epoxy blob, a "black box" as it were. Really, I just need a way of mapping each sequence of button presses to a display on the screen. Since there are 40 buttons a button press can fit in a single byte. There are 118=8x14 segments on the screen. Not all the combinations are possible of course, so I could fit the LCD into less than 14 bytes, but why bother? The premise of Xanthippe is that I don't know everything the calculator does at all times, so I may as well have a format which can store every result conceivable. This also will take less processing, since what I get from the screen are raw bits.</p>
+<p>There is actually one more thing I can measure, which I may as well do. The calculator takes longer to process some presses than others. I have to monitor how long it takes to respond anyhow, since I can't give a new button press while I am waiting for the previous one to resolve. Why not record the time each button press takes? In some future version of the emulator I may wish to simulate the actual delay the calculator gives, so I may as well record that as well. That way I actually have every piece of information the calculator will give me.</p>
+<p>I can be somewhat clever about the data structure I use. After each button press, the calculator gives me a result to store. However, multiple sequences of button presses can start with the same few buttons. Why repeat them in the storage? I can instead do a tree structure. In JSON, one node of the tree might look something like this.</p>
+<div class="highlight"><pre><span></span><code><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;display&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;dQw4w9WgXcQ&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;time&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">148</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;a&quot;</span><span class="p">:{}</span>
+<span class="w">    </span><span class="nt">&quot;X&quot;</span><span class="p">:{}</span>
+<span class="w">    </span><span class="nt">&quot;7&quot;</span><span class="p">:{}</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<p>Here <code>dQw4w9WgXcQ</code> is an example base-64-encoded LCD reading. Time is how long the button press took, in some appropriate units. Each of those single-character keys would be a button press, and it would lead to a child node of the same type. We would only include those children which we have evaluated. A tree is a simple, sensible way to store the type of data we are creating.</p>
+<h1>How to encode the keys?</h1>
+<p>The shift register in hardware which receives the key presses takes two bytes, switching 16 transistors. The most naive way of storing the presses would be to just record the two bytes which are sent.</p>
+<p>That is quite wasteful, since far from every combination of transistors would ever be turned on. We know there are 40 buttons, and the next power of two up from there is 64=2^6. We should be able to store one button press in less than one byte, rather in one base-64 character.</p>
+<p>You may recall this table from <a href="reverse-engineering-a-matrix-keypad">a previous post</a>.</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>A0</th>
+<th>A1</th>
+<th>A2</th>
+<th>A3</th>
+<th>A4</th>
+<th>A5</th>
+<th>A6</th>
+<th>A7</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>B0</td>
+<td>+/-</td>
+<td>2nd</td>
+<td>+</td>
+<td>0</td>
+<td>.</td>
+<td>SIN</td>
+<td>1/x</td>
+<td></td>
+</tr>
+<tr>
+<td>B1</td>
+<td>y^x</td>
+<td>HYP</td>
+<td>-</td>
+<td>1</td>
+<td>5</td>
+<td>COS</td>
+<td>x^2</td>
+<td></td>
+</tr>
+<tr>
+<td>B2</td>
+<td>OFF</td>
+<td>pi</td>
+<td>X</td>
+<td>2</td>
+<td>6</td>
+<td>TAN</td>
+<td>sqrt</td>
+<td></td>
+</tr>
+<tr>
+<td>B3</td>
+<td></td>
+<td>Sigma+</td>
+<td>/</td>
+<td>3</td>
+<td>7</td>
+<td>DRG</td>
+<td>EE</td>
+<td></td>
+</tr>
+<tr>
+<td>B4</td>
+<td></td>
+<td>STO</td>
+<td>=</td>
+<td>4</td>
+<td>8</td>
+<td>LOG</td>
+<td>(</td>
+<td></td>
+</tr>
+<tr>
+<td>B5</td>
+<td></td>
+<td>RCL</td>
+<td>ab/c</td>
+<td>&lt;-</td>
+<td>9</td>
+<td>LN</td>
+<td>)</td>
+<td></td>
+</tr>
+<tr>
+<td>B6</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td>(reset all)</td>
+</tr>
+<tr>
+<td>RESET</td>
+<td>ON/C</td>
+<td>ON/C</td>
+<td>ON/C</td>
+<td>ON/C</td>
+<td>ON/C</td>
+<td>ON/C</td>
+<td>ON/C</td>
+<td>ON/C</td>
+</tr>
+</tbody>
+</table>
+<p>Here I have added two rows and a column to reflect how the shift registers on Xanthippe are configured. When the A register puts A7 high and B6 high, for example, the pad on the reverse of the calculator is shorted, clearing all memory and putting the calculator in a fresh state. This will prove indispensable when I want to start a new session, as a reliable way to clear all memory of the previous run. There are only 7 pins on the calculator labeled B, so I have used the remaining bit there to trigger a transistor which sends an ON/C keypress.</p>
+<p>In each byte, either none of the bits are on or one of the bits is on. None is the default state, when no button is being pushed. I never need to send an "empty press", that's just the default state in between presses. When the RESET bit is on, it doesn't really matter whether the A bits are on or off, since they can't make a full circuit without one of the B bits on as well. Therefore we can encode the keypress with just 6 bits, 3 for the A byte and 3 for the B+RESET byte. 6 bits is great, because it lets me use base 64 encoding. I like 64 bit encoding because it's standardized and human-readable.</p>
+<p>The two numbers <code>0b111110</code> and <code>0b111111</code> have ambiguous encodings in base 64, since their original versions use the characters <code>+</code> and <code>/</code> which don't play nice in URLs. I would like to avoid them. Depending on whether I use the high bits for A or B, I could run into them or avoid them. By choosing to put B into the three high bits, I can put those in the last row of the table above. Any number of the form <code>0b111xxx</code> will give a RESET, so I never need to use the two offending characters at all.</p>
+<p>The resulting encoding is as follows.</p>
+<table>
+<thead>
+<tr>
+<th>A</th>
+<th>B</th>
+<th>Binary</th>
+<th>Base64</th>
+<th>label</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>0</td>
+<td>0</td>
+<td>000000</td>
+<td>A</td>
+<td>+/-</td>
+</tr>
+<tr>
+<td>1</td>
+<td>0</td>
+<td>000001</td>
+<td>B</td>
+<td>2nd</td>
+</tr>
+<tr>
+<td>2</td>
+<td>0</td>
+<td>000010</td>
+<td>C</td>
+<td>+</td>
+</tr>
+<tr>
+<td>3</td>
+<td>0</td>
+<td>000011</td>
+<td>D</td>
+<td>0</td>
+</tr>
+<tr>
+<td>4</td>
+<td>0</td>
+<td>000100</td>
+<td>E</td>
+<td>.</td>
+</tr>
+<tr>
+<td>5</td>
+<td>0</td>
+<td>000101</td>
+<td>F</td>
+<td>SIN</td>
+</tr>
+<tr>
+<td>6</td>
+<td>0</td>
+<td>000110</td>
+<td>G</td>
+<td>1/x</td>
+</tr>
+<tr>
+<td>0</td>
+<td>1</td>
+<td>001000</td>
+<td>I</td>
+<td>y^x</td>
+</tr>
+<tr>
+<td>1</td>
+<td>1</td>
+<td>001001</td>
+<td>J</td>
+<td>HYP</td>
+</tr>
+<tr>
+<td>2</td>
+<td>1</td>
+<td>001010</td>
+<td>K</td>
+<td>-</td>
+</tr>
+<tr>
+<td>3</td>
+<td>1</td>
+<td>001011</td>
+<td>L</td>
+<td>1</td>
+</tr>
+<tr>
+<td>4</td>
+<td>1</td>
+<td>001100</td>
+<td>M</td>
+<td>5</td>
+</tr>
+<tr>
+<td>5</td>
+<td>1</td>
+<td>001101</td>
+<td>N</td>
+<td>COS</td>
+</tr>
+<tr>
+<td>6</td>
+<td>1</td>
+<td>001110</td>
+<td>O</td>
+<td>x^2</td>
+</tr>
+<tr>
+<td>0</td>
+<td>2</td>
+<td>010000</td>
+<td>Q</td>
+<td>OFF</td>
+</tr>
+<tr>
+<td>1</td>
+<td>2</td>
+<td>010001</td>
+<td>R</td>
+<td>pi</td>
+</tr>
+<tr>
+<td>2</td>
+<td>2</td>
+<td>010010</td>
+<td>S</td>
+<td>X</td>
+</tr>
+<tr>
+<td>3</td>
+<td>2</td>
+<td>010011</td>
+<td>T</td>
+<td>2</td>
+</tr>
+<tr>
+<td>4</td>
+<td>2</td>
+<td>010100</td>
+<td>U</td>
+<td>6</td>
+</tr>
+<tr>
+<td>5</td>
+<td>2</td>
+<td>010101</td>
+<td>V</td>
+<td>TAN</td>
+</tr>
+<tr>
+<td>6</td>
+<td>2</td>
+<td>010110</td>
+<td>W</td>
+<td>sqrt</td>
+</tr>
+<tr>
+<td>1</td>
+<td>3</td>
+<td>011001</td>
+<td>Z</td>
+<td>Sigma+</td>
+</tr>
+<tr>
+<td>2</td>
+<td>3</td>
+<td>011010</td>
+<td>a</td>
+<td>/</td>
+</tr>
+<tr>
+<td>3</td>
+<td>3</td>
+<td>011011</td>
+<td>b</td>
+<td>3</td>
+</tr>
+<tr>
+<td>4</td>
+<td>3</td>
+<td>011100</td>
+<td>c</td>
+<td>7</td>
+</tr>
+<tr>
+<td>5</td>
+<td>3</td>
+<td>011101</td>
+<td>d</td>
+<td>DRG</td>
+</tr>
+<tr>
+<td>6</td>
+<td>3</td>
+<td>011110</td>
+<td>e</td>
+<td>EE</td>
+</tr>
+<tr>
+<td>1</td>
+<td>4</td>
+<td>100001</td>
+<td>h</td>
+<td>STO</td>
+</tr>
+<tr>
+<td>2</td>
+<td>4</td>
+<td>100010</td>
+<td>i</td>
+<td>=</td>
+</tr>
+<tr>
+<td>3</td>
+<td>4</td>
+<td>100011</td>
+<td>j</td>
+<td>4</td>
+</tr>
+<tr>
+<td>4</td>
+<td>4</td>
+<td>100100</td>
+<td>k</td>
+<td>8</td>
+</tr>
+<tr>
+<td>5</td>
+<td>4</td>
+<td>100101</td>
+<td>l</td>
+<td>LOG</td>
+</tr>
+<tr>
+<td>6</td>
+<td>4</td>
+<td>100110</td>
+<td>m</td>
+<td>(</td>
+</tr>
+<tr>
+<td>1</td>
+<td>5</td>
+<td>101001</td>
+<td>p</td>
+<td>RCL</td>
+</tr>
+<tr>
+<td>2</td>
+<td>5</td>
+<td>101010</td>
+<td>q</td>
+<td>ab/c</td>
+</tr>
+<tr>
+<td>3</td>
+<td>5</td>
+<td>101011</td>
+<td>r</td>
+<td>&lt;-</td>
+</tr>
+<tr>
+<td>4</td>
+<td>5</td>
+<td>101100</td>
+<td>s</td>
+<td>9</td>
+</tr>
+<tr>
+<td>5</td>
+<td>5</td>
+<td>101101</td>
+<td>t</td>
+<td>LN</td>
+</tr>
+<tr>
+<td>6</td>
+<td>5</td>
+<td>101110</td>
+<td>u</td>
+<td>)</td>
+</tr>
+<tr>
+<td>7</td>
+<td>6</td>
+<td>110111</td>
+<td>3</td>
+<td>(reset all)</td>
+</tr>
+<tr>
+<td>x</td>
+<td>7</td>
+<td>111xxx</td>
+<td>4,5,...</td>
+<td>ON/C</td>
+</tr>
+</tbody>
+</table>
+<!---
+make the above table using the following Python code.
+for i in range(64):
+    letter = str(base64.b64encode(bytearray([0,0,i])))[-2]
+    A = i % 8
+    B = i //8
+    symbol = table[B][A]
+    if symbol:
+        print(f'{A} | {B} | {i:06b} | {letter:<6} | {symbol}')
+-->
+
+<p>Alas, there is no obvious rhyme or reason to how these are laid out on the calculator. Some times many buttons on the same row of the keypad will share an A pin, but this is a pattern and not a rule. I suspect it mostly has to do with whatever was convenient when the engineers at TI were laying out the traces on the keypad. I could have chosen an encoding which corresponds more to the physical layout than the electrical layout, but any such encoding would be completely ad-hoc. This encoding appeals to me because it is quite natural, and it will be easy for Xanthippe to interpret when connecting to the hardware.</p>
+<p>The issue of how to encode the LCD still remains. There are four batches of 28 bits to store, coming from the four backplanes. For now it makes sense to defer this task, since I currently don't know what cells the majority of the bits correspond to. If, for example, they line up neatly with the 7-segment portion then it would make sense to take advantage of this. Regardless, we will certainly be able to fit the result into 14 bytes somehow, possibly padding it out to 15 bytes to make a 20-character base64 string.</p>
+<h1>How to store the tree?</h1>
+<p>We need a way for Xanthippe to keep its records, so that it knows what it has done and other software can read it. I have two bad ideas and a good idea.</p>
+<p>First, a bad idea: I could define my own binary file format. This would let me load it fast from memory, and store it efficiently. It would also be a lot of work, and it would make it hard for other people to understand the code. If something breaks, I would not have an easy way to recover.</p>
+<p>A less bad, but still not good, idea is to use JSON. This has the advantage of being easy for humans to read, and easy to pass between Python and Javascript. It is also a natural way to express a tree structure. There are some major disadvantages, though. I want to have Xanthippe running constantly, so it will pile up lots of data. A JSON object really would rather stay in memory while it is being manipulated, and only be written to a string when manipulations are done. If I do it this way, Xanthippe will eventually run out of memory, which will be hard to fix. JSON is also not an economical way to store binary data, in terms of disk space.</p>
+<p>Instead I will use an actual database. This is a bit tricky since most databases are built for tables not for trees, but others have solved this problem before me. For now this will take the form of an SQLite database, since that will be the easiest to work with in Python. For the Javascript side of things, I will either figure out how to read the SQLite file directly (likely with <a href="https://github.com/sql-js/sql.js">sql.js</a>) or have Python export it to a file for Javascript consumption. It does feel a bit silly to use SQLite to represent a tree, because to do so I must represent my data as a table which SQLite will internally represent as a B-Tree. There may be a way to give SQLite some hints as to the data structure to regain some performance, but this may also just be the price we pay for compatibility.</p>
+<h1>Next steps</h1>
+<p>Once the circuit board for Xanthippe arrives it will be time to test it out, make sure I can do the reads and writes I have designed. Exploration will probably happen with a microcontroller, but for the final result I'll probably use an old Raspberry Pi I have lying around, since I need the networking. Once I am sending keypresses and receiving raw LCD segments I will need to figure out exactly which LCD segment is controlled by which bit of the signal. After that I can get to writing the code which will run Xanthippe forever.</p>
+    </div><!-- /.entry-content -->
+
+  </article>
+</section>
+        <section id="extras" class="body">
+                <div class="blogroll">
+                        <h2>links</h2>
+                        <ul>
+                            <li><a href="https://github.com/AldenMB">My GitHub</a></li>
+                            <li><a href="https://nt-tl.net/">My wife</a></li>
+                            <li><a href="https://laurestine.github.io/">My sister</a></li>
+                            <li><a href="https://www.clintonbradford.com/">My brother</a></li>
+                        </ul>
+                </div><!-- /.blogroll -->
+                <div class="social">
+                        <h2>social</h2>
+                        <ul>
+                            <li><a href="https://aldenbradford.com/feeds/all.atom.xml" type="application/atom+xml" rel="alternate">atom feed</a></li>
+
+                        </ul>
+                </div><!-- /.social -->
+        </section><!-- /#extras -->
+
+        <footer id="contentinfo" class="body">
+                <address id="about" class="vcard body">
+                Proudly powered by <a href="https://getpelican.com/">Pelican</a>, which takes great advantage of <a href="https://www.python.org/">Python</a>.
+                </address><!-- /#about -->
+
+                <p>The theme is by <a href="https://www.smashingmagazine.com/2009/08/designing-a-html-5-layout-from-scratch/">Smashing Magazine</a>, thanks!</p>
+        </footer><!-- /#contentinfo -->
+
+</body>
+</html>

@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="english">
+<head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta name="generator" content="Pelican" />
+        <title>Alden Bradford - Calculators</title>
+        <link rel="stylesheet" href="https://aldenbradford.com/theme/css/main.css" />
+        <link href="https://aldenbradford.com/feeds/all.atom.xml" type="application/atom+xml" rel="alternate" title="Alden Bradford Atom Feed" />
+</head>
+
+<body id="index" class="home">
+        <header id="banner" class="body">
+                <h1><a href="https://aldenbradford.com/">Alden Bradford</a></h1>
+                <nav><ul>
+                    <li><a href="https://aldenbradford.com/">Welcome</a></li>
+                    <li><a href="https://aldenbradford.com/category/blog.html">Blog</a></li>
+                </ul></nav>
+        </header><!-- /#banner -->
+
+            <aside id="featured" class="body">
+                <article>
+                    <h1 class="entry-title"><a href="https://aldenbradford.com/oqwpc.html">Orrell's Quick Wall Paper Calculator</a></h1>
+<footer class="post-info">
+        <abbr class="published" title="2022-12-05T00:00:00-05:00">
+                Published: Mon 05 December 2022
+        </abbr>
+
+        <address class="vcard author">
+                By                         <a class="url fn" href="https://aldenbradford.com/author/alden-bradford.html">Alden Bradford</a>
+        </address>
+<p>In <a href="https://aldenbradford.com/category/blog.html">Blog</a>.</p>
+<p>tags: <a href="https://aldenbradford.com/tag/calculators.html">Calculators</a> <a href="https://aldenbradford.com/tag/slide-rules.html">Slide rules</a> </p>
+</footer><!-- /.post-info --><p>My wife got me an early holiday gift this year. It's an ancient trade show promotional item, which must be nearly 100 years old by now. I believe it was made in 1923 or 1924, for reasons which will soon become obvious. In addition to working as an advertisement for L.C. Orrell &amp; Company, it serves as a rough area estimation tool for wall paper.</p>
+<p>It consists of a cardboard envelope with two holes cut into it, along with a card which slides inside the envolope. The whole thing measures 5.5 by 2.75 inches. To use it, you slide the card in and out, and different figures show through the holes.</p>
+<script type="text/javascript">
+  function makeDraggable(evt) {
+    var svg = evt.target;
+
+    svg.addEventListener('mousedown', startDrag);
+    svg.addEventListener('mousemove', drag);
+    svg.addEventListener('mouseup', endDrag);
+    svg.addEventListener('mouseleave', endDrag);
+    svg.addEventListener('touchstart', startDrag);
+    svg.addEventListener('touchmove', drag);
+    svg.addEventListener('touchend', endDrag);
+    svg.addEventListener('touchleave', endDrag);
+    svg.addEventListener('touchcancel', endDrag);
+
+    var selectedElement, offset, transform;
+
+    function getMousePosition(evt) {
+      var CTM = svg.getScreenCTM();
+      if (evt.touches) { evt = evt.touches[0]; }
+      return {
+        x: (evt.clientX - CTM.e) / CTM.a,
+        y: (evt.clientY - CTM.f) / CTM.d
+      };
+    }
+
+    function startDrag(evt) {
+        selectedElement = document.getElementById("slide");
+        offset = getMousePosition(evt);
+
+        // Make sure the first transform on the element is a translate transform
+        var transforms = selectedElement.transform.baseVal;
+
+        if (transforms.length === 0 || transforms.getItem(0).type !== SVGTransform.SVG_TRANSFORM_TRANSLATE) {
+          // Create an transform that translates by (0, 0)
+          var translate = svg.createSVGTransform();
+          translate.setTranslate(0, 0);
+          selectedElement.transform.baseVal.insertItemBefore(translate, 0);
+        }
+
+        // Get initial translation
+        transform = transforms.getItem(0);
+        offset.x -= transform.matrix.e;
+        offset.y -= transform.matrix.f;
+
+    }
+
+    function drag(evt) {
+
+      evt.preventDefault();
+      if (selectedElement) {
+
+        var coord = getMousePosition(evt);
+        var dx = coord.x - offset.x;
+
+        dx = Math.max(dx, 0)
+
+        transform.setTranslate(dx, 0);
+      }
+    }
+
+    function endDrag(evt) {
+      selectedElement = false;
+    }
+  }
+</script>
+
+<p><svg xmlns="http://www.w3.org/2000/svg"
+     viewBox="0 0 4000 1732"
+     onload="makeDraggable(evt)"
+     cursor="grab">
+<image x="40" y="10" id="slide" height="1715" width="3325" xlink:href="/front_slide.png" />
+<image xlink:href="/front.png" />
+</svg></p>
+<p>I have put the image above into an SVG to let you drag the card in and out on your screen by clicking and dragging. Try it out! Thanks to <a href="https://www.petercollingridge.co.uk/tutorials/svg/interactive/dragging/">Peter Collingridge</a> for the dragging code. If you would like the bare images, here is the <a href="https://aldenbradford.com/front.png">envolope</a> and the 
+<a href="https://aldenbradford.com/front_slide.png">card</a>.</p>
+<p>On the reverse is a simple table which shows the area of a rectangular ceiling in various dimensions, in case you want to wallpaper your ceiling for some reason.</p>
+<p><img alt="a table of celing areas" src="https://aldenbradford.com/back.jpeg"></p>
+<p>On the back of the inserted card is a calendar, hence my claim that this was made in 1923 or 1924.</p>
+<p><img alt="a 1924 calendar" src="https://aldenbradford.com/back_slide.jpeg"></p>
+<p>I have not found out much about the company that made this, except for a digitized version of <a href="https://commons.wikimedia.org/wiki/File:Sample_Book,_L.C._Orrell_and_Co.,_Book_No._2,_1906_(CH_18802803-71).jpg">one of their sample catalogs</a>.</p>
+<h1>How it works</h1>
+<p>Mostly the mechanism is fairly straightforward. The area of the sides of a room is simply</p>
+<div class="math">$$
+2(\text{length}+\text{width})\times\text{height}.
+$$</div>
+<p>Each position of the slide corresponds to one sum, <span class="math">\(\text{length}+\text{width}\)</span>. The table of heights just shows the corresponding sum, multiplied by the corresponding height. In fact, the sum itself shows up as well (albeit rounded up) as the "yards of border" entry in the table.</p>
+<h1>The mystery</h1>
+<p>Most of the card is quite self-explanatory. There is one thing which still perplexes me though. The calculator claims to give "exact quantities required for over 800 different sized rooms". Where did this number come from? The width is marked out from 7 to 20 giving us 14 widths, and the length is marked from 8 to 20 giving us 13 lengths. Put together with the six given heights, we get <span class="math">\(14\times 13\times 6 = 1092\)</span> dimensions. Wouldn't "over 1000 different sized rooms" have sounded much better? Perhaps they are being more careful than that. After all, an 8-by-10 room is no different from a 10-by-8 room, so maybe they don't want to count those twice. In that case, we would find <span class="math">\(\binom{13}{2}+13=91\)</span> different floor dimensions (choosing two numbers from 8 to 20, or choosing a 7 and a number from 8 to 20). Multiplying by the six heights leaves us 546, woefully short of the promised 800. </p>
+<p>Perhaps they initially intended to make the whole thing a bit bigger, giving all the dimensions listed on the table on the back? No, this gives us the same problem. Treating length and width as separate things, we get 1122 room sizes, much larger than 800. Treating length and width as interchangeable gets us 726 room sizes, still falling short of 800.</p>
+<p>If you have any idea where 800 comes from, let me know. I am stumped!</p>
+<script type="text/javascript">if (!document.getElementById('mathjaxscript_pelican_#%@#$@#')) {
+    var align = "center",
+        indent = "0em",
+        linebreak = "false";
+
+    if (false) {
+        align = (screen.width < 768) ? "left" : align;
+        indent = (screen.width < 768) ? "0em" : indent;
+        linebreak = (screen.width < 768) ? 'true' : linebreak;
+    }
+
+    var mathjaxscript = document.createElement('script');
+    mathjaxscript.id = 'mathjaxscript_pelican_#%@#$@#';
+    mathjaxscript.type = 'text/javascript';
+    mathjaxscript.src = 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.3/latest.js?config=TeX-AMS-MML_HTMLorMML';
+
+    var configscript = document.createElement('script');
+    configscript.type = 'text/x-mathjax-config';
+    configscript[(window.opera ? "innerHTML" : "text")] =
+        "MathJax.Hub.Config({" +
+        "    config: ['MMLorHTML.js']," +
+        "    TeX: { extensions: ['AMSmath.js','AMSsymbols.js','noErrors.js','noUndefined.js'], equationNumbers: { autoNumber: 'none' } }," +
+        "    jax: ['input/TeX','input/MathML','output/HTML-CSS']," +
+        "    extensions: ['tex2jax.js','mml2jax.js','MathMenu.js','MathZoom.js']," +
+        "    displayAlign: '"+ align +"'," +
+        "    displayIndent: '"+ indent +"'," +
+        "    showMathMenu: true," +
+        "    messageStyle: 'normal'," +
+        "    tex2jax: { " +
+        "        inlineMath: [ ['\\\\(','\\\\)'] ], " +
+        "        displayMath: [ ['$$','$$'] ]," +
+        "        processEscapes: true," +
+        "        preview: 'TeX'," +
+        "    }, " +
+        "    'HTML-CSS': { " +
+        "        availableFonts: ['STIX', 'TeX']," +
+        "        preferredFont: 'STIX'," +
+        "        styles: { '.MathJax_Display, .MathJax .mo, .MathJax .mi, .MathJax .mn': {color: 'inherit ! important'} }," +
+        "        linebreaks: { automatic: "+ linebreak +", width: '90% container' }," +
+        "    }, " +
+        "}); " +
+        "if ('default' !== 'default') {" +
+            "MathJax.Hub.Register.StartupHook('HTML-CSS Jax Ready',function () {" +
+                "var VARIANT = MathJax.OutputJax['HTML-CSS'].FONTDATA.VARIANT;" +
+                "VARIANT['normal'].fonts.unshift('MathJax_default');" +
+                "VARIANT['bold'].fonts.unshift('MathJax_default-bold');" +
+                "VARIANT['italic'].fonts.unshift('MathJax_default-italic');" +
+                "VARIANT['-tex-mathit'].fonts.unshift('MathJax_default-italic');" +
+            "});" +
+            "MathJax.Hub.Register.StartupHook('SVG Jax Ready',function () {" +
+                "var VARIANT = MathJax.OutputJax.SVG.FONTDATA.VARIANT;" +
+                "VARIANT['normal'].fonts.unshift('MathJax_default');" +
+                "VARIANT['bold'].fonts.unshift('MathJax_default-bold');" +
+                "VARIANT['italic'].fonts.unshift('MathJax_default-italic');" +
+                "VARIANT['-tex-mathit'].fonts.unshift('MathJax_default-italic');" +
+            "});" +
+        "}";
+
+    (document.body || document.getElementsByTagName('head')[0]).appendChild(configscript);
+    (document.body || document.getElementsByTagName('head')[0]).appendChild(mathjaxscript);
+}
+</script>                </article>
+            </aside><!-- /#featured -->
+        <section id="extras" class="body">
+                <div class="blogroll">
+                        <h2>links</h2>
+                        <ul>
+                            <li><a href="https://github.com/AldenMB">My GitHub</a></li>
+                            <li><a href="https://nt-tl.net/">My wife</a></li>
+                            <li><a href="https://laurestine.github.io/">My sister</a></li>
+                            <li><a href="https://www.clintonbradford.com/">My brother</a></li>
+                        </ul>
+                </div><!-- /.blogroll -->
+                <div class="social">
+                        <h2>social</h2>
+                        <ul>
+                            <li><a href="https://aldenbradford.com/feeds/all.atom.xml" type="application/atom+xml" rel="alternate">atom feed</a></li>
+
+                        </ul>
+                </div><!-- /.social -->
+        </section><!-- /#extras -->
+
+        <footer id="contentinfo" class="body">
+                <address id="about" class="vcard body">
+                Proudly powered by <a href="https://getpelican.com/">Pelican</a>, which takes great advantage of <a href="https://www.python.org/">Python</a>.
+                </address><!-- /#about -->
+
+                <p>The theme is by <a href="https://www.smashingmagazine.com/2009/08/designing-a-html-5-layout-from-scratch/">Smashing Magazine</a>, thanks!</p>
+        </footer><!-- /#contentinfo -->
+
+</body>
+</html>

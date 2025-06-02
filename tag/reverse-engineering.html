@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="english">
+<head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta name="generator" content="Pelican" />
+        <title>Alden Bradford - reverse engineering</title>
+        <link rel="stylesheet" href="https://aldenbradford.com/theme/css/main.css" />
+        <link href="https://aldenbradford.com/feeds/all.atom.xml" type="application/atom+xml" rel="alternate" title="Alden Bradford Atom Feed" />
+</head>
+
+<body id="index" class="home">
+        <header id="banner" class="body">
+                <h1><a href="https://aldenbradford.com/">Alden Bradford</a></h1>
+                <nav><ul>
+                    <li><a href="https://aldenbradford.com/">Welcome</a></li>
+                    <li><a href="https://aldenbradford.com/category/blog.html">Blog</a></li>
+                </ul></nav>
+        </header><!-- /#banner -->
+
+            <aside id="featured" class="body">
+                <article>
+                    <h1 class="entry-title"><a href="https://aldenbradford.com/whats-inside-the-real-cotton-candy-maker.html">What's Inside "The REAL Cotton Candy Maker"?</a></h1>
+<footer class="post-info">
+        <abbr class="published" title="2019-10-01T00:00:00-04:00">
+                Published: Tue 01 October 2019
+        </abbr>
+
+        <address class="vcard author">
+                By                         <a class="url fn" href="https://aldenbradford.com/author/alden-bradford.html">Alden Bradford</a>
+        </address>
+<p>In <a href="https://aldenbradford.com/category/blog.html">Blog</a>.</p>
+<p>tags: <a href="https://aldenbradford.com/tag/electronics.html">electronics</a> <a href="https://aldenbradford.com/tag/reverse-engineering.html">reverse engineering</a> <a href="https://aldenbradford.com/tag/preservation.html">preservation</a> </p>
+</footer><!-- /.post-info --><p>When I was a child, I once owned a toy called "The REAL Cotton Candy Maker". It made cotton candy a couple of times, in small quantities. It stopped working after a few uses, for a reason I do not recall. Perhaps I never knew.</p>
+<p>Recently, I had the good fortune to find a used version of the same toy at a flea market for a couple dollars. I bought it, tried it out, and determined it did not work. I figured I would take it apart, and see what I could see.</p>
+<p><img alt="a hand-drawn circuit diagram" src="https://aldenbradford.com/cotton_candy_circuit.png" width="700px"></p>
+<p>Above is the circuit diagram I reconstructed. Here are a few observations:</p>
+<ul>
+<li>The circuit uses a reed relay to determine whether the lid is closed and in place. This is hooked up at JE1, on pin 7 of U2.</li>
+<li>JE2 is connected to a hall effect sensor, which detects a magnet on the machine's rotating shaft.</li>
+<li>JE3 is just connected to a couple LEDs.</li>
+<li>I have no idea what pin 11 of U2 is for. It seems to go out to a pad where it can be accessed. Perhaps this is used for programming the chip.</li>
+</ul>
+<p>What was wrong with my particular model? I will never know, because I got bored and threw it out. My hope is that  the diagram I worked out along the way will someday help someone in a similar situation to diagnose more quickly, and perhaps get an answer.</p>                </article>
+            </aside><!-- /#featured -->
+        <section id="extras" class="body">
+                <div class="blogroll">
+                        <h2>links</h2>
+                        <ul>
+                            <li><a href="https://github.com/AldenMB">My GitHub</a></li>
+                            <li><a href="https://nt-tl.net/">My wife</a></li>
+                            <li><a href="https://laurestine.github.io/">My sister</a></li>
+                            <li><a href="https://www.clintonbradford.com/">My brother</a></li>
+                        </ul>
+                </div><!-- /.blogroll -->
+                <div class="social">
+                        <h2>social</h2>
+                        <ul>
+                            <li><a href="https://aldenbradford.com/feeds/all.atom.xml" type="application/atom+xml" rel="alternate">atom feed</a></li>
+
+                        </ul>
+                </div><!-- /.social -->
+        </section><!-- /#extras -->
+
+        <footer id="contentinfo" class="body">
+                <address id="about" class="vcard body">
+                Proudly powered by <a href="https://getpelican.com/">Pelican</a>, which takes great advantage of <a href="https://www.python.org/">Python</a>.
+                </address><!-- /#about -->
+
+                <p>The theme is by <a href="https://www.smashingmagazine.com/2009/08/designing-a-html-5-layout-from-scratch/">Smashing Magazine</a>, thanks!</p>
+        </footer><!-- /#contentinfo -->
+
+</body>
+</html>

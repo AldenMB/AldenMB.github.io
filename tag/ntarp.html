@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="english">
+<head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta name="generator" content="Pelican" />
+        <title>Alden Bradford - nTARP</title>
+        <link rel="stylesheet" href="https://aldenbradford.com/theme/css/main.css" />
+        <link href="https://aldenbradford.com/feeds/all.atom.xml" type="application/atom+xml" rel="alternate" title="Alden Bradford Atom Feed" />
+</head>
+
+<body id="index" class="home">
+        <header id="banner" class="body">
+                <h1><a href="https://aldenbradford.com/">Alden Bradford</a></h1>
+                <nav><ul>
+                    <li><a href="https://aldenbradford.com/">Welcome</a></li>
+                    <li><a href="https://aldenbradford.com/category/blog.html">Blog</a></li>
+                </ul></nav>
+        </header><!-- /#banner -->
+
+            <aside id="featured" class="body">
+                <article>
+                    <h1 class="entry-title"><a href="https://aldenbradford.com/bimodality.html">Measures of Bimodality</a></h1>
+<footer class="post-info">
+        <abbr class="published" title="2022-07-10T00:00:00-04:00">
+                Published: Sun 10 July 2022
+        </abbr>
+
+        <address class="vcard author">
+                By                         <a class="url fn" href="https://aldenbradford.com/author/alden-bradford.html">Alden Bradford</a>
+        </address>
+<p>In <a href="https://aldenbradford.com/category/blog.html">Blog</a>.</p>
+<p>tags: <a href="https://aldenbradford.com/tag/statistics.html">Statistics</a> <a href="https://aldenbradford.com/tag/ntarp.html">nTARP</a> <a href="https://aldenbradford.com/tag/clustering.html">Clustering</a> </p>
+</footer><!-- /.post-info --><p>Much of my research has dealt with the problem of deciding if a sample from a random variable indicates that the underlying distribution is bimodal. We have a general intuition, passed down from Francis Galton (I'm not sure where he got the idea), that random effects tend to produce unimodal distributions. This has since then been justified using the central limit theorem -- if you have lots of small random perturbations, the cumulative effect of them will be Gaussian, and hence unimodal. If your distribution is not unimodal, his argument goes, you have good reason to believe that your data are coming from two different sources, each of which has a unimodal distribution.</p>
+<p>This is the basic principle at the heart of the nTARP clustering procedure. In this form of projection pursuit, we seek a distribution of points which appears bimodal. We set a threshold in between the two modes, then bin the data according to which side it falls upon. We hope that, because the observed distribution is bimodal, it must have originated from two distinct sources. That is what makes it a clustering method: it seeks to break apart a signal into distinct sources, based only on patterns in the data.</p>
+<p>Up to now, nTARP has always used the within-group sum of squares statistic, denoted W. This is used under various names in many different contexts: it is the objective function which the k-means algorithm seeks to minimize in one dimension, and also the objective function of Otsu's method for image thresholding. Our results using this method have been mixed. One one hand, when a given sample is very plainly bimodal, the statistic indicates this reliably by assigning it a small W value. On the other hand we have two significant issues:</p>
+<ul>
+<li>W is significantly smaller on distributions with heavy tails. This makes it so that some distributions which appear somewhat bimodal can have a higher W than other distributions which are clearly unimodal, but which have heavy tails.</li>
+<li>W is not stable for small sample sizes. Because W can be computed in a way which depends continuously upon the cumulative distribution function, the Glivenko-Cantelli theorem guarantees that, as the number of samples drawn from a distribution grows, the empirical W will converge to the value of W for the underlying distribution. Unfortunately, this convergence appears to be too slow in many circumstances. For certain data sets, we find that two independent samples of hundreds of points will lead to very different estimates of the population W. Note that the meaning of "small" depends on the underlying distribution in a manner I do not yet fully understand -- for some data sets it is very stable, for others very unstable.</li>
+</ul>
+<p>For this reason, we are interested in looking for other tests of bimodality. That is, given a sample of several points from a one-dimensional random variable, what techniques exist to estimate whether (or to what extent) the random variable is bimodal? Here we attempt to survey a few of the most popular techniques.</p>
+<h1>A survey of tests</h1>
+<h2>Statistics based on labeled data</h2>
+<p>These are generally unsuitable for clustering, because they rely on data which has already been split into two proposed sources. Most of these assume each mode of the data is Gaussian. I list a few here (from Wikipedia) for completeness.</p>
+<ul>
+<li>Ashman's D</li>
+<li>Bimodal separation</li>
+<li>Bimodality amplitude</li>
+<li>Bimodal ratio</li>
+<li>Wilcock's bimodality parameter</li>
+<li>Wang's bimodality index</li>
+<li>Sambrook Smith's index</li>
+</ul>
+<p>Linear discriminant analysis would also fall into this category, though it is less concerned with detecting bimodality than with fitting bimodal data.</p>
+<h2>Kurtosis</h2>
+<p>There have been decades of arguments at this point over exactly what qualitative features are encoded by kurtosis. The only one which is generally uncontroversial is that distributions with high kurtosis have "heavy tails". Of course, this is in some sense kicking the can down the road, since people may mean different things by "heavy tailed". One of the more controversial perspectives is that kurtosis measures how bimodal a distribution is. This is usually justified by the observation that a Bernoulli random variable, which is in some sense the ideal bimodal distribution, minimizes the kurtosis among those distributions with a common variance. This interpretation is frowned upon by some, but is still widely used by researchers analyzing ordinal data with a bounded support, such as Likert scales. For a sophisticated discussion, see <a href="https://www.tandfonline.com/doi/pdf/10.1080/00031305.1971.10477241">"Kurtosis Measures Bimodality?" by David Hildebrand.</a></p>
+<h2>Bimodality coefficient</h2>
+<p>This one is attributed to various sources, but certainly goes back at least to Karl Pearson. (skewness^2+1)/kurtosis. The rationale is the same as for kurtosis, but it always gives a number between 0 and 1. I have not found any strong theoretical justification for this statistic. One reason for its wide use is that it is available in many common statistical software packages, such as SAS. Another is its age -- it is well-established.</p>
+<h2>Sturrock's index</h2>
+<p>A Gaussian fit is performed (any model could be used in principle, but they chose Gaussian), giving a theoretical CDF. The inverse CDF is applied to the data mapping them to quantiles between 0 and 1. Sturrock's index is the spectral power of the resulting distribution due to the frequency 2. This technique is essentially equivalent to comparing the empirical CDF to the theoretical CDF on a P-P plot. Their strategy is quite ad-hoc, probably appropriate for their domain, but would not generalize to other types of data very well. In particular, it would only make sense over a certain range of separations. The strategy of comparing the empirical CDF with a theoretical CDF is very general, and could be used to quantify how well any sample matches a given theoretical model. This would more accurately be termed a test for discrepancy from a proposed theoretical CDF, rather than a true test of multimodality. It gets to be on this list because it is substantially different from any of the other tests described here.</p>
+<h2>Hartigan's dip test</h2>
+<p>This is based on comparing the empirical CDF to the nearest unimodal CDF. Hartigan and Hartigan show that the nearest unimodal CDF is always a mixture between the empirical CDF and a uniform distribution. The dip statistic can be computed efficiently, using some FORTRAN code which has been passed around since the 80s and translated into other languages. This only gives an index; to make it into a proper "test", Hargian and Hartigan suggest computing it on samples from a known distribution for comparison.</p>
+<h2>Silverman's kernel density test</h2>
+<p><a href="https://purdue.primo.exlibrisgroup.com/permalink/01PURDUE_PUWL/5imsd2/cdi_proquest_journals_1302943262">Silverman</a> takes the problem of estimating a kernel density bandwidth, and turns it on its head. Usually, to get a good kernel density estimate, you need unimodal data. By choosing the smallest bandwidth which keeps the estimate unimodal, you can resolve as much detail as possible without introducing artificial wiggles. It becomes a problem if the data are bimodal, because this approach would smear out the distribution removing all detail. Silverman takes this burden and turns it into an asset: by looking for distributions which require a large bandwidth to reach unimodality, we can pick out those which are bimodal. Silverman also gives a significance test, based on bootstrapping.</p>
+<p>As Hartigan and Hartigan note, this statistic has the disadvantage of depending on the scale of the data. You can normalize the data of course, but care must be taken to do so fairly. This would also naturally deal poorly with heavy-tailed distributions, where there are regions which are severely undersampled. Another disadvantage is that is is slow to compute. If a Gaussian kernel is chosen then the number of modes depends monotonically on the bandwidth, which allows for a binary search, but Silverman does not propose any better technique than this.</p>
+<p>I do wonder whether we could get somewhere with a slightly more subtle version of this test, somewhat akin to the Topologist's bar codes. Might we say the correct bandwidth is not where the data becomes unimodal, but where the modality of the data does not depend strongly on the bandwidth? That is, there should be a wide range of bandwidths over which the density estimate has the same modality. That range might tell us more than just a single number can.</p>
+<h2>information-theoretic approaches</h2>
+<p><a href="https://link.springer.com/content/pdf/10.3758%2Fs13428-012-0225-x.pdf">Some people</a> seem to be applying an information-theoretic approach as well, to see whether a two-component mixture model does a significantly better job of expressing the information in a sample. This is a purely parametric approach, in that the underlying distribution is assumed.</p>
+<h1>Conclusions</h1>
+<p>Three of the above methods see widespread use across disciplines: the bimodality coefficient, the Hartigan dip test, and Silverman's kernel density test.Many papers cite these three together, in a scattershot approach to statistical analysis. For some reason, the statistic W only sees much use in the image processing community, presumably due to the influence of Otsu's method for image segmentation, and even there is goes by another name. I have not seen much written with the goal of improving on these statistics. I think most authors find it more valuable to have statistics which are directly comparable to other researchers' numbers, rather than seeking marginal improvements to the computation methods.</p>
+<p>Of course, if a parametric form for the data are known, far more options are available -- one could use gradient descent to estimate parameters, for example. In the case where more is known about the parametric form of the data, we would expect a custom method to work better in principle because it does not have to learn what we already know. We are looking for a truly general statistic, something which does not depend on the form of the distribution. This rules out most published approaches other than the four identified above.</p>                </article>
+            </aside><!-- /#featured -->
+        <section id="extras" class="body">
+                <div class="blogroll">
+                        <h2>links</h2>
+                        <ul>
+                            <li><a href="https://github.com/AldenMB">My GitHub</a></li>
+                            <li><a href="https://nt-tl.net/">My wife</a></li>
+                            <li><a href="https://laurestine.github.io/">My sister</a></li>
+                            <li><a href="https://www.clintonbradford.com/">My brother</a></li>
+                        </ul>
+                </div><!-- /.blogroll -->
+                <div class="social">
+                        <h2>social</h2>
+                        <ul>
+                            <li><a href="https://aldenbradford.com/feeds/all.atom.xml" type="application/atom+xml" rel="alternate">atom feed</a></li>
+
+                        </ul>
+                </div><!-- /.social -->
+        </section><!-- /#extras -->
+
+        <footer id="contentinfo" class="body">
+                <address id="about" class="vcard body">
+                Proudly powered by <a href="https://getpelican.com/">Pelican</a>, which takes great advantage of <a href="https://www.python.org/">Python</a>.
+                </address><!-- /#about -->
+
+                <p>The theme is by <a href="https://www.smashingmagazine.com/2009/08/designing-a-html-5-layout-from-scratch/">Smashing Magazine</a>, thanks!</p>
+        </footer><!-- /#contentinfo -->
+
+</body>
+</html>

@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="english">
+<head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta name="generator" content="Pelican" />
+        <title>Alden Bradford - Optimization</title>
+        <link rel="stylesheet" href="https://aldenbradford.com/theme/css/main.css" />
+        <link href="https://aldenbradford.com/feeds/all.atom.xml" type="application/atom+xml" rel="alternate" title="Alden Bradford Atom Feed" />
+</head>
+
+<body id="index" class="home">
+        <header id="banner" class="body">
+                <h1><a href="https://aldenbradford.com/">Alden Bradford</a></h1>
+                <nav><ul>
+                    <li><a href="https://aldenbradford.com/">Welcome</a></li>
+                    <li><a href="https://aldenbradford.com/category/blog.html">Blog</a></li>
+                </ul></nav>
+        </header><!-- /#banner -->
+
+            <aside id="featured" class="body">
+                <article>
+                    <h1 class="entry-title"><a href="https://aldenbradford.com/a-problem-in-optimal-transport.html">A Problem in Optimal Transport</a></h1>
+<footer class="post-info">
+        <abbr class="published" title="2022-09-02T00:00:00-04:00">
+                Published: Fri 02 September 2022
+        </abbr>
+
+        <address class="vcard author">
+                By                         <a class="url fn" href="https://aldenbradford.com/author/alden-bradford.html">Alden Bradford</a>
+        </address>
+<p>In <a href="https://aldenbradford.com/category/blog.html">Blog</a>.</p>
+<p>tags: <a href="https://aldenbradford.com/tag/optimization.html">Optimization</a> <a href="https://aldenbradford.com/tag/convex-functions.html">Convex Functions</a> </p>
+</footer><!-- /.post-info --><p>I like math classes. I don't like turning in math homework. Lucky for me, I am far enough along in my math education that people mostly don't assign me homework. On the other hand, solving problems is the best way anyone has found so far of learning math. I am taking a course in optimal transport theory, and so I have made some homework for myself.</p>
+<p>In one dimension, the optimal transport problem is sometimes quite easy to solve. So long as the cost function <span class="math">\(c(x,y)\)</span> can be written as <span class="math">\(\phi(|x-y|)\)</span> where <span class="math">\(\phi\)</span> is convex and increasing, then there is an optimal transport plan <span class="math">\(T\)</span> and it is monotone, in the sense that if <span class="math">\(x_1&lt;x_2\)</span> then <span class="math">\(T(x_1)\leq T(x_2)\)</span>. Why is this? I feel we can get to the heart of it by discarding concerns about complicated distributions and sigma algebras. Let's focus on the case where we just have two point masses to move to two targets. That is, our source distribution is <span class="math">\(\delta(x_1)+\delta(x_2)\)</span> and the target is <span class="math">\(\delta(y_1)+\delta(y_2)\)</span>. We will take <span class="math">\(x_1&lt;x_2\)</span> and <span class="math">\(y_1&lt;y_2\)</span>. There are two transport plans to consider.
+</p>
+<div class="math">\begin{align*}
+T_\parallel&amp;\begin{cases} x_1 \mapsto y_1 \\ x_2\mapsto y_2 \end{cases} \\
+T_\perp&amp;\begin{cases} x_1 \mapsto y_2 \\ x_2\mapsto y_1 \end{cases}
+\end{align*}</div>
+<p>
+In a sense the plan <span class="math">\(T_\perp\)</span> crosses itself, while <span class="math">\(T_\parallel\)</span> does not. Our claim is that, given <span class="math">\(\phi\)</span> is convex and nondecreasing, <span class="math">\(c(T_\parallel)\leq c(T_\perp)\)</span>. We will prove this together, paying special attention to where we use each of the conditions on <span class="math">\(\phi\)</span>. That is, we will show that
+</p>
+<div class="math">$$
+\phi(|y_1-x_1|)+\phi(|y_2-x_2|) \leq \phi(|y_1-x_2|)+\phi(|y_2-x_1|).\tag{$*$}
+$$</div>
+<h1>The proof</h1>
+<p>Inequality <span class="math">\((*)\)</span> is symmetric in terms of <span class="math">\(x\)</span> and <span class="math">\(y\)</span>, so we can take <span class="math">\(x_1&lt;y_1\)</span> without loss of generality. Let's treat two cases, either <span class="math">\(x_2&gt;y_2\)</span> or <span class="math">\(x_2&lt;y_2\)</span>.</p>
+<h2>When <span class="math">\(x_2&gt;y_2\)</span></h2>
+<p>Our assumptions together tell us <span class="math">\(x_1\leq y_1\leq y_2 \leq x_2\)</span>. Then our goal <span class="math">\((*)\)</span> can be written as
+</p>
+<div class="math">$$
+\phi(y_1-x_1)+\phi(x_2-y_2) \leq \phi(y_2-x_1)+\phi(x_2-y_1).
+$$</div>
+<p>
+This case is solved by the nondecreasing assumption on <span class="math">\(\phi\)</span>, since <span class="math">\(\phi(y_1-x_1)\leq \phi(y_2-x_1)\)</span> and <span class="math">\(\phi(x_2-y_2)\leq \phi(x_2-y_1)\)</span>. We do not require convexity at all in this case.</p>
+<h2>When <span class="math">\(x_2&lt;y_2\)</span></h2>
+<p>We can rewrite our goal <span class="math">\((*)\)</span> as 
+</p>
+<div class="math">$$
+\phi(y_1-x_1)+\phi(y_2-x_2) \leq \phi(y_2-x_1) + \phi(|y_1-x_2|).
+$$</div>
+<p>
+By repeatedly applying <span class="math">\(x_1&lt;x_2\)</span> and <span class="math">\(y_1&lt;y_2\)</span> we find <span class="math">\(y_1-x_2\leq y_1-x_1\leq y_2-x_1\)</span> and <span class="math">\(y_1-x_2\leq y_2-x_2 \leq y_2-x_1\)</span>. By convexity, we have
+</p>
+<div class="math">\begin{align*}
+\phi(y_1-x_1)&amp;\leq \frac{y_2-y_1}{y_2-y_1+x_2-x_1}\phi(y_2-x_1)+\frac{x_2-x_1}{y_2-y_1+x_2-x_1}\phi(y_1-x_2),\\
+\phi(y_2-x_2)&amp;\leq \frac{x_2-x_1}{y_2-y_1+x_2-x_1}\phi(y_2-x_1)+\frac{y_2-y_1}{y_2-y_1+x_2-x_1}\phi(y_1-x_2).
+\end{align*}</div>
+<p>
+Adding these yields
+</p>
+<div class="math">$$
+\phi(y_1-x_1)+\phi(y_2-x_2) \leq \phi(y_2-x_1) + \phi(y_1-x_2).
+$$</div>
+<p>
+Finally, the nondecreasing assumption tells us <span class="math">\(\phi(y_1-x_2)\leq \phi(|y_1-x_2|)\)</span>.</p>
+<h1>Conclusion</h1>
+<p>The <span class="math">\(x_2&gt;y_2\)</span> case above relied only on the nondecreasing assumption. Indeed, it seems to me that it is both necessary and sufficient in that case. That's the case where both distances are reduced by changing from <span class="math">\(T_\perp\)</span> to <span class="math">\(T_\parallel\)</span>. In the other case, <span class="math">\(x_2&lt;y_2\)</span>, we used convexity because <span class="math">\(|x_1-T(x_1)|\)</span> decreased while <span class="math">\(|x_2-T(x_2)|\)</span> increased. Convexity allows us to express the "diminishing return" property of a cost, where it's at least twice as hard to move a mass twice as far. In this case the trade was worth it, because <span class="math">\(x_1\)</span> had farther to go.</p>
+<p>None of this is new stuff. Looking ahead, proposition 4.5 of Luigi Ambrosio's book treats a very similar question, from a slightly less elementary perspective. However, I do think this example is illustrative. It shows exactly what aspect of the cost function we are taking advantage of, when we use the convexity property.</p>
+<script type="text/javascript">if (!document.getElementById('mathjaxscript_pelican_#%@#$@#')) {
+    var align = "center",
+        indent = "0em",
+        linebreak = "false";
+
+    if (false) {
+        align = (screen.width < 768) ? "left" : align;
+        indent = (screen.width < 768) ? "0em" : indent;
+        linebreak = (screen.width < 768) ? 'true' : linebreak;
+    }
+
+    var mathjaxscript = document.createElement('script');
+    mathjaxscript.id = 'mathjaxscript_pelican_#%@#$@#';
+    mathjaxscript.type = 'text/javascript';
+    mathjaxscript.src = 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.3/latest.js?config=TeX-AMS-MML_HTMLorMML';
+
+    var configscript = document.createElement('script');
+    configscript.type = 'text/x-mathjax-config';
+    configscript[(window.opera ? "innerHTML" : "text")] =
+        "MathJax.Hub.Config({" +
+        "    config: ['MMLorHTML.js']," +
+        "    TeX: { extensions: ['AMSmath.js','AMSsymbols.js','noErrors.js','noUndefined.js'], equationNumbers: { autoNumber: 'none' } }," +
+        "    jax: ['input/TeX','input/MathML','output/HTML-CSS']," +
+        "    extensions: ['tex2jax.js','mml2jax.js','MathMenu.js','MathZoom.js']," +
+        "    displayAlign: '"+ align +"'," +
+        "    displayIndent: '"+ indent +"'," +
+        "    showMathMenu: true," +
+        "    messageStyle: 'normal'," +
+        "    tex2jax: { " +
+        "        inlineMath: [ ['\\\\(','\\\\)'] ], " +
+        "        displayMath: [ ['$$','$$'] ]," +
+        "        processEscapes: true," +
+        "        preview: 'TeX'," +
+        "    }, " +
+        "    'HTML-CSS': { " +
+        "        availableFonts: ['STIX', 'TeX']," +
+        "        preferredFont: 'STIX'," +
+        "        styles: { '.MathJax_Display, .MathJax .mo, .MathJax .mi, .MathJax .mn': {color: 'inherit ! important'} }," +
+        "        linebreaks: { automatic: "+ linebreak +", width: '90% container' }," +
+        "    }, " +
+        "}); " +
+        "if ('default' !== 'default') {" +
+            "MathJax.Hub.Register.StartupHook('HTML-CSS Jax Ready',function () {" +
+                "var VARIANT = MathJax.OutputJax['HTML-CSS'].FONTDATA.VARIANT;" +
+                "VARIANT['normal'].fonts.unshift('MathJax_default');" +
+                "VARIANT['bold'].fonts.unshift('MathJax_default-bold');" +
+                "VARIANT['italic'].fonts.unshift('MathJax_default-italic');" +
+                "VARIANT['-tex-mathit'].fonts.unshift('MathJax_default-italic');" +
+            "});" +
+            "MathJax.Hub.Register.StartupHook('SVG Jax Ready',function () {" +
+                "var VARIANT = MathJax.OutputJax.SVG.FONTDATA.VARIANT;" +
+                "VARIANT['normal'].fonts.unshift('MathJax_default');" +
+                "VARIANT['bold'].fonts.unshift('MathJax_default-bold');" +
+                "VARIANT['italic'].fonts.unshift('MathJax_default-italic');" +
+                "VARIANT['-tex-mathit'].fonts.unshift('MathJax_default-italic');" +
+            "});" +
+        "}";
+
+    (document.body || document.getElementsByTagName('head')[0]).appendChild(configscript);
+    (document.body || document.getElementsByTagName('head')[0]).appendChild(mathjaxscript);
+}
+</script>                </article>
+            </aside><!-- /#featured -->
+        <section id="extras" class="body">
+                <div class="blogroll">
+                        <h2>links</h2>
+                        <ul>
+                            <li><a href="https://github.com/AldenMB">My GitHub</a></li>
+                            <li><a href="https://nt-tl.net/">My wife</a></li>
+                            <li><a href="https://laurestine.github.io/">My sister</a></li>
+                            <li><a href="https://www.clintonbradford.com/">My brother</a></li>
+                        </ul>
+                </div><!-- /.blogroll -->
+                <div class="social">
+                        <h2>social</h2>
+                        <ul>
+                            <li><a href="https://aldenbradford.com/feeds/all.atom.xml" type="application/atom+xml" rel="alternate">atom feed</a></li>
+
+                        </ul>
+                </div><!-- /.social -->
+        </section><!-- /#extras -->
+
+        <footer id="contentinfo" class="body">
+                <address id="about" class="vcard body">
+                Proudly powered by <a href="https://getpelican.com/">Pelican</a>, which takes great advantage of <a href="https://www.python.org/">Python</a>.
+                </address><!-- /#about -->
+
+                <p>The theme is by <a href="https://www.smashingmagazine.com/2009/08/designing-a-html-5-layout-from-scratch/">Smashing Magazine</a>, thanks!</p>
+        </footer><!-- /#contentinfo -->
+
+</body>
+</html>

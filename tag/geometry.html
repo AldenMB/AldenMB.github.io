@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="english">
+<head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta name="generator" content="Pelican" />
+        <title>Alden Bradford - Geometry</title>
+        <link rel="stylesheet" href="https://aldenbradford.com/theme/css/main.css" />
+        <link href="https://aldenbradford.com/feeds/all.atom.xml" type="application/atom+xml" rel="alternate" title="Alden Bradford Atom Feed" />
+</head>
+
+<body id="index" class="home">
+        <header id="banner" class="body">
+                <h1><a href="https://aldenbradford.com/">Alden Bradford</a></h1>
+                <nav><ul>
+                    <li><a href="https://aldenbradford.com/">Welcome</a></li>
+                    <li><a href="https://aldenbradford.com/category/blog.html">Blog</a></li>
+                </ul></nav>
+        </header><!-- /#banner -->
+
+            <aside id="featured" class="body">
+                <article>
+                    <h1 class="entry-title"><a href="https://aldenbradford.com/solution-to-a-puzzle-on-the-incircle-of-a-triangle.html">Solution to a puzzle on the incircle of a triangle</a></h1>
+<footer class="post-info">
+        <abbr class="published" title="2023-04-09T00:00:00-04:00">
+                Published: Sun 09 April 2023
+        </abbr>
+
+        <address class="vcard author">
+                By                         <a class="url fn" href="https://aldenbradford.com/author/alden-bradford.html">Alden Bradford</a>
+        </address>
+<p>In <a href="https://aldenbradford.com/category/blog.html">Blog</a>.</p>
+<p>tags: <a href="https://aldenbradford.com/tag/geometry.html">Geometry</a> <a href="https://aldenbradford.com/tag/puzzles.html">Puzzles</a> </p>
+</footer><!-- /.post-info --><p>Some times I hang around the <a href="https://www.reddit.com/r/MathHelp/">math help subreddit</a>. Most of the people posting there are doing some standard homework problem from algebra or calculus, and they get help right away. Every so often there will be a probability question, and those people get help within a day or so. My favorite to see are the geometry questions. Those questions don't always get solved, since they tend to be trickier. That's <a href="https://www.reddit.com/r/MathHelp/comments/12cgipu/geometry_question/">where I found</a> the following puzzle.</p>
+<h1>The puzzle</h1>
+<p>Begin with a general triangle <span class="math">\(\triangle ABC\)</span>. Construct the incenter <span class="math">\(I\)</span>, altitude <span class="math">\(AH\)</span>, and <span class="math">\(M\)</span> the midpoint of <span class="math">\(BC\)</span>. Define <span class="math">\(K\)</span> to be the intersection of the lines <span class="math">\(AH\)</span> and <span class="math">\(MI\)</span>. Show that <span class="math">\(\overline{AK}\)</span> is equal to the inradius <span class="math">\(r\)</span> of the triangle.</p>
+<iframe src="https://www.geogebra.org/calculator/sfdk3mqv?embed" width="600" height="400" allowfullscreen style="border: 1px solid #e4e4e4;border-radius: 4px;" frameborder="0"></iframe>
+
+<p>Just for convenience, let's also define <span class="math">\(D\)</span> to be the point on <span class="math">\(BC\)</span> which touches the incircle, so that <span class="math">\(\overline{ID}=r\)</span>.</p>
+<p>This puzzle had me stumped for a few days. I did eventually get a solution which is not too messy, detailed below, thought I suspect there is a nicer solution using more geometry. I enjoyed solving this, and I hope you will to. If you would like to solve it yourself, stop here. Otherwise, read on.</p>
+<h1>The solution strategy</h1>
+<p>The main idea is to consider the area of the triangle. We are given an altitude, after all, and altitudes are good for finding areas. We will compute the area of <span class="math">\(\triangle ABC\)</span> in two different ways. First, using the given altitude, the area must be <span class="math">\(\frac{1}{2}\overline{AH}\overline{BC}\)</span>. Second, by partitioning <span class="math">\(\triangle ABC\)</span> along its angle bisectors (into <span class="math">\(\triangle ABI\)</span>, <span class="math">\(\triangle BCI\)</span>, and <span class="math">\(\triangle CAI\)</span>) we find another formula for the area, <span class="math">\(\frac{1}{2}r(\overline{AB}+\overline{BC}+\overline{AC})\)</span>. That is,</p>
+<div class="math">\begin{equation}
+r(\overline{AB}+\overline{BC}+\overline{AC})=\overline{AH}\overline{BC}.\tag{I}
+\end{equation}</div>
+<p>We will use one other fact about the incenter, which may not be immediately obvious.</p>
+<div class="math">\begin{equation}
+\overline{AB}+\overline{CD} = \overline{AC}+\overline{DB}.\tag{II}
+\end{equation}</div>
+<p>Here is a picture-proof of that theorem. Connecting the incenter to each side along a radius, we split the trianlge into three kites. Dividing each in half, we get three pairs of congruent right triangles, all with the same altitude <span class="math">\(r\)</span>. Equation <span class="math">\(\text{(II)}\)</span> simply follows from grouping those triangles and considering their bases.</p>
+<iframe src="https://www.geogebra.org/calculator/axrqzdyb?embed" width="600" height="400" allowfullscreen style="border: 1px solid #e4e4e4;border-radius: 4px;" frameborder="0"></iframe>
+
+<p>Besides that, we will only use Pythagoras, 
+</p>
+<div class="math">\begin{equation}
+\overline{AB}^2=\overline{AH}^2+\overline{HB}^2,\qquad \overline{AC}^2=\overline{AH}^2+\overline{CH}^2,\tag{III}
+\end{equation}</div>
+<p>
+the definition of midpoint,
+</p>
+<div class="math">\begin{equation}
+\overline{CM}=\overline{BM},\tag{IV}
+\end{equation}</div>
+<p>
+and similar triangles,
+</p>
+<div class="math">\begin{equation}
+r\overline{MH}=\overline{KH}\overline{MD}.\tag{V}
+\end{equation}</div>
+<p>If you would like to try it for yourself, have a go at manipulating the above formulas to get the answer. Otherwise read on.</p>
+<h1>The arithmetic</h1>
+<p>Depending on the relative positions of <span class="math">\(A\)</span>, <span class="math">\(B\)</span>, and <span class="math">\(C\)</span>, the lengths will add up differently. To make it simpler to follow, we will assume that (as in the diagram above) <span class="math">\(H\)</span> lies between <span class="math">\(M\)</span> and <span class="math">\(B\)</span>. The strategy will work in any case, but this will make a world of difference for readability.</p>
+<p>Let's begin at <span class="math">\(\text{(III)}\)</span>, subtracting the two equations to cancel the <span class="math">\(\overline{AH}\)</span> term.
+</p>
+<div class="math">\begin{align*}
+\overline{AC}^2-\overline{AB}^2
+&amp;=\overline{CH}^2-\overline{HB}^2\\
+&amp;=(\overline{CH}+\overline{HB})(\overline{CH}-\overline{HB})\\
+&amp;=\overline{BC}(\overline{CM}+\overline{MH}-\overline{HB})\\
+&amp;=\overline{BC}(\overline{BM}+\overline{MH}-\overline{HB})\\
+&amp;=2\overline{BC}\overline{MH}.\tag{VI}
+\end{align*}</div>
+<p>Inspired by the difference-of-squares formula, let's manipulate <span class="math">\(\text{(II)}\)</span> similarly.
+</p>
+<div class="math">\begin{align*}
+\overline{AC}-\overline{AB}
+&amp;= \overline{CD}-\overline{DB}\\
+&amp;= \overline{CM}+\overline{MD} -\overline{DB}\\
+&amp;= \overline{BM}+\overline{MD} -\overline{DB}\\
+&amp;= 2\overline{MD}.\tag{VII}
+\end{align*}</div>
+<p>Do the same with <span class="math">\(\text(I)\)</span>,
+</p>
+<div class="math">\begin{equation}
+r(\overline{AC}+\overline{AB})=\overline{BC}(\overline{AH}-r).\tag{VIII}
+\end{equation}</div>
+<p>Difference of squares takes us home, and <span class="math">\(\text{(V)}\)</span> lays the problem to rest.
+</p>
+<div class="math">\begin{align*}
+r(\overline{AC}^2-\overline{AB}^2) &amp;= r(\overline{AC}+\overline{AB})(\overline{AC}-\overline{AB})\\
+2r\overline{BC}\overline{MH} &amp;= \overline{BC}(\overline{AH}-r)2\overline{MD}\\
+r\overline{MH} &amp;= (\overline{AH}-r)\overline{MD}\\
+\overline{KH}\overline{MD} &amp;= (\overline{AH}-r)\overline{MD}\\
+r&amp;=\overline{AH}-\overline{KH}\\
+&amp;=\overline{AK}.
+\end{align*}</div>
+<h1>Conclusion</h1>
+<p>As mentioned above, this solution is based on areas, because we are given altitudes. It still feels quite algebra-heavy for a geometry proof. In general, <span class="math">\(H\)</span> could lie to the left of <span class="math">\(C\)</span>, between <span class="math">\(C\)</span> and <span class="math">\(M\)</span>, between <span class="math">\(M\)</span> and <span class="math">\(B\)</span>, or to the right of <span class="math">\(B\)</span>. Giving all the details of each case would be tiresome, but would make this proof fully rigorous. I can't quite shake the feeling that there must be a tidyer way about this problem, using less algebra and more geometry. For now, I leave it here. I hope you enjoyed this puzzle as much as I did.</p>
+<script type="text/javascript">if (!document.getElementById('mathjaxscript_pelican_#%@#$@#')) {
+    var align = "center",
+        indent = "0em",
+        linebreak = "false";
+
+    if (false) {
+        align = (screen.width < 768) ? "left" : align;
+        indent = (screen.width < 768) ? "0em" : indent;
+        linebreak = (screen.width < 768) ? 'true' : linebreak;
+    }
+
+    var mathjaxscript = document.createElement('script');
+    mathjaxscript.id = 'mathjaxscript_pelican_#%@#$@#';
+    mathjaxscript.type = 'text/javascript';
+    mathjaxscript.src = 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.3/latest.js?config=TeX-AMS-MML_HTMLorMML';
+
+    var configscript = document.createElement('script');
+    configscript.type = 'text/x-mathjax-config';
+    configscript[(window.opera ? "innerHTML" : "text")] =
+        "MathJax.Hub.Config({" +
+        "    config: ['MMLorHTML.js']," +
+        "    TeX: { extensions: ['AMSmath.js','AMSsymbols.js','noErrors.js','noUndefined.js'], equationNumbers: { autoNumber: 'none' } }," +
+        "    jax: ['input/TeX','input/MathML','output/HTML-CSS']," +
+        "    extensions: ['tex2jax.js','mml2jax.js','MathMenu.js','MathZoom.js']," +
+        "    displayAlign: '"+ align +"'," +
+        "    displayIndent: '"+ indent +"'," +
+        "    showMathMenu: true," +
+        "    messageStyle: 'normal'," +
+        "    tex2jax: { " +
+        "        inlineMath: [ ['\\\\(','\\\\)'] ], " +
+        "        displayMath: [ ['$$','$$'] ]," +
+        "        processEscapes: true," +
+        "        preview: 'TeX'," +
+        "    }, " +
+        "    'HTML-CSS': { " +
+        "        availableFonts: ['STIX', 'TeX']," +
+        "        preferredFont: 'STIX'," +
+        "        styles: { '.MathJax_Display, .MathJax .mo, .MathJax .mi, .MathJax .mn': {color: 'inherit ! important'} }," +
+        "        linebreaks: { automatic: "+ linebreak +", width: '90% container' }," +
+        "    }, " +
+        "}); " +
+        "if ('default' !== 'default') {" +
+            "MathJax.Hub.Register.StartupHook('HTML-CSS Jax Ready',function () {" +
+                "var VARIANT = MathJax.OutputJax['HTML-CSS'].FONTDATA.VARIANT;" +
+                "VARIANT['normal'].fonts.unshift('MathJax_default');" +
+                "VARIANT['bold'].fonts.unshift('MathJax_default-bold');" +
+                "VARIANT['italic'].fonts.unshift('MathJax_default-italic');" +
+                "VARIANT['-tex-mathit'].fonts.unshift('MathJax_default-italic');" +
+            "});" +
+            "MathJax.Hub.Register.StartupHook('SVG Jax Ready',function () {" +
+                "var VARIANT = MathJax.OutputJax.SVG.FONTDATA.VARIANT;" +
+                "VARIANT['normal'].fonts.unshift('MathJax_default');" +
+                "VARIANT['bold'].fonts.unshift('MathJax_default-bold');" +
+                "VARIANT['italic'].fonts.unshift('MathJax_default-italic');" +
+                "VARIANT['-tex-mathit'].fonts.unshift('MathJax_default-italic');" +
+            "});" +
+        "}";
+
+    (document.body || document.getElementsByTagName('head')[0]).appendChild(configscript);
+    (document.body || document.getElementsByTagName('head')[0]).appendChild(mathjaxscript);
+}
+</script>                </article>
+            </aside><!-- /#featured -->
+                <section id="content" class="body">
+                    <h1>Other articles</h1>
+                    <hr />
+                    <ol id="posts-list" class="hfeed">
+
+            <li><article class="hentry">
+                <header>
+                    <h1><a href="https://aldenbradford.com/another-little-puzzle.html" rel="bookmark"
+                           title="Permalink to Another little puzzle">Another little puzzle</a></h1>
+                </header>
+
+                <div class="entry-content">
+<footer class="post-info">
+        <abbr class="published" title="2022-11-29T00:00:00-05:00">
+                Published: Tue 29 November 2022
+        </abbr>
+
+        <address class="vcard author">
+                By                         <a class="url fn" href="https://aldenbradford.com/author/alden-bradford.html">Alden Bradford</a>
+        </address>
+<p>In <a href="https://aldenbradford.com/category/blog.html">Blog</a>.</p>
+<p>tags: <a href="https://aldenbradford.com/tag/geometry.html">geometry</a> <a href="https://aldenbradford.com/tag/puzzle.html">puzzle</a> </p>
+</footer><!-- /.post-info -->                <p>A little puzzle involving nesteed circles</p>
+                <a class="readmore" href="https://aldenbradford.com/another-little-puzzle.html">read more</a>
+                </div><!-- /.entry-content -->
+            </article></li>
+
+            <li><article class="hentry">
+                <header>
+                    <h1><a href="https://aldenbradford.com/a-simple-geometry-puzzle.html" rel="bookmark"
+                           title="Permalink to A simple geometry puzzle">A simple geometry puzzle</a></h1>
+                </header>
+
+                <div class="entry-content">
+<footer class="post-info">
+        <abbr class="published" title="2022-11-15T00:00:00-05:00">
+                Published: Tue 15 November 2022
+        </abbr>
+
+        <address class="vcard author">
+                By                         <a class="url fn" href="https://aldenbradford.com/author/alden-bradford.html">Alden Bradford</a>
+        </address>
+<p>In <a href="https://aldenbradford.com/category/blog.html">Blog</a>.</p>
+<p>tags: <a href="https://aldenbradford.com/tag/geometry.html">geometry</a> <a href="https://aldenbradford.com/tag/puzzle.html">puzzle</a> </p>
+</footer><!-- /.post-info -->                <p>A little puzzle involving a circle with inscribed squares</p>
+                <a class="readmore" href="https://aldenbradford.com/a-simple-geometry-puzzle.html">read more</a>
+                </div><!-- /.entry-content -->
+            </article></li>
+                </ol><!-- /#posts-list -->
+                </section><!-- /#content -->
+        <section id="extras" class="body">
+                <div class="blogroll">
+                        <h2>links</h2>
+                        <ul>
+                            <li><a href="https://github.com/AldenMB">My GitHub</a></li>
+                            <li><a href="https://nt-tl.net/">My wife</a></li>
+                            <li><a href="https://laurestine.github.io/">My sister</a></li>
+                            <li><a href="https://www.clintonbradford.com/">My brother</a></li>
+                        </ul>
+                </div><!-- /.blogroll -->
+                <div class="social">
+                        <h2>social</h2>
+                        <ul>
+                            <li><a href="https://aldenbradford.com/feeds/all.atom.xml" type="application/atom+xml" rel="alternate">atom feed</a></li>
+
+                        </ul>
+                </div><!-- /.social -->
+        </section><!-- /#extras -->
+
+        <footer id="contentinfo" class="body">
+                <address id="about" class="vcard body">
+                Proudly powered by <a href="https://getpelican.com/">Pelican</a>, which takes great advantage of <a href="https://www.python.org/">Python</a>.
+                </address><!-- /#about -->
+
+                <p>The theme is by <a href="https://www.smashingmagazine.com/2009/08/designing-a-html-5-layout-from-scratch/">Smashing Magazine</a>, thanks!</p>
+        </footer><!-- /#contentinfo -->
+
+</body>
+</html>
