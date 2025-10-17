@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="english">
+<head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta name="generator" content="Pelican" />
+        <title>Return to Battleship</title>
+        <link rel="stylesheet" href="https://aldenbradford.com/theme/css/main.css" />
+        <link href="https://aldenbradford.com/feeds/all.atom.xml" type="application/atom+xml" rel="alternate" title="Alden Bradford Atom Feed" />
+        <meta name="description" content="Reflecting on an old coding project, and what I would do differently now." />
+</head>
+
+<body id="index" class="home">
+        <header id="banner" class="body">
+                <h1><a href="https://aldenbradford.com/">Alden Bradford</a></h1>
+                <nav><ul>
+                    <li><a href="https://aldenbradford.com/">Welcome</a></li>
+                    <li class="active"><a href="https://aldenbradford.com/category/blog.html">Blog</a></li>
+                </ul></nav>
+        </header><!-- /#banner -->
+<section id="content" class="body">
+  <article>
+    <header>
+      <h1 class="entry-title">
+        <a href="https://aldenbradford.com/battleship.html" rel="bookmark"
+           title="Permalink to Return to Battleship">Return to Battleship</a></h1>
+    </header>
+
+    <div class="entry-content">
+<footer class="post-info">
+        <abbr class="published" title="2022-08-28T00:00:00-04:00">
+                Published: Sun 28 August 2022
+        </abbr>
+
+        <address class="vcard author">
+                By                         <a class="url fn" href="https://aldenbradford.com/author/alden-bradford.html">Alden Bradford</a>
+        </address>
+<p>In <a href="https://aldenbradford.com/category/blog.html">Blog</a>.</p>
+<p>tags: <a href="https://aldenbradford.com/tag/programming.html">Programming</a> <a href="https://aldenbradford.com/tag/javascript.html">Javascript</a> </p>
+</footer><!-- /.post-info -->      <p>Particularly in grad school it can feel like your life is standing still. Because you are always learning new things, pushing yourself outside of your comfort zone, it can seem like you have not mastered anything. This is an illusion. To prove this, all you need to do is look at something you made before and feel the cringe. If you cringe at the way you solved a problem before, that is a sure sign that you know better now than you did then.</p>
+<p>I am in the midst of refreshing my math department webpage, removing what is out-of-date and preserving what deserves to be preserved. Four years ago, I was teaching myself Javascript. I was also frequently playing Battleship over the phone with my then-girlfriend, now-wife. I made a quick tool to generate ship placements for me. Last year I heard from an old friend that they had actually found the tool on a search, and that it had been useful. For that reason, I think it's worth preserving. I have copied it below.</p>
+<p>I know better than to jump back in to a completed project. The tool I made works, and it works well. To redo it would be a wasted effort. However, the power of cringe is strong. I feel compelled to at least comment on the bad parts of the code, if only to reassure myself that I have indeed grown.</p>
+<h1>The tool</h1>
+<p>This is a placement generator for Battleship. It will give you a randomly selected arrangement of your ships on the board. Here, "randomly selected" means that every possible arrangement is equally likely.</p>
+<form id="input_form">
+Rows:<br> 
+<input type="number" name="rows" max="99" min="1" value="10"><br>
+Columns:<br>
+<input type="number" name="columns" max="52" min="1" value="10"><br>
+Ships:<br>
+<textarea name="ships" rows="3" cols="17">
+(C,5),(B,4),(c,3),(S,3),(D,2)
+</textarea><br>
+<input type="reset">
+<button type="button" id="generate" onclick="generateBoard()">Generate!</button>
+</form>
+
+<pre id="the_board">
+</pre>
+
+<p>Written by Alden Bradford on November 1-2, 2018. Generated placements are guaranteed to be (pseudo) random, but not guaranteed to be good. Use at your own risk.</p>
+<script>
+"use strict";
+
+var theForm = document.getElementById("input_form");
+
+function generateBoard(){
+    let board = new Board(theForm);
+    let container = document.getElementById("the_board");
+    board.placeShips();
+    if (!board.failed){
+        container.innerHTML = board.appearance();
+    } else {
+        container.innerHTML = "I tried 1,000,000 times, but \nI could not make the board work.";
+    }   
+}
+
+function parseShips(string){
+    let inputList = string.match(/\w,\d+/g);
+    let ships = [];
+    for(let i = 0; i < inputList.length; i++){
+        let pair = [];
+        pair[0] = inputList[i].match(/\w/)[0];
+        pair[1] = parseInt(inputList[i].match(/\d+/)[0],10);
+        ships[i] = pair;
+    }
+    return ships;
+}
+
+class Board {
+    constructor(form){
+        this.rows = form.elements.rows.valueAsNumber;
+        this.cols = form.elements.columns.valueAsNumber;
+        this.cells = [];
+        this.initializeCells();
+        this.shipPairs = parseShips(form.elements.ships.value);
+        this.failed = false;
+    }
+    initializeCells(){
+        this.cells = [];
+        for(let i=0;i<this.cols;i++){
+            this.cells[i]=[];
+            for(let j=0;j<this.rows;j++){
+                this.cells[i][j]= new Cell();
+            }
+        }
+    }
+    appearance(){
+        let string = 
+        "   A B C D E F G H I J K L M N O P Q R S T U V W X Y Z a b c d e f g h i j k l m n o p q r s t u v w x y z ";
+        string = string.slice(0,this.cols*2+2);
+        string = string.concat('\n');
+        for(let j = 0; j < this.rows; j++){
+            if( j < 9)  string = string.concat(' ');
+            string = string.concat(`${j+1}`);
+            for(let i = 0; i < this.cols; i++){
+                string = string.concat(" "+this.cells[i][j].appearance());
+            }
+            string = string.concat('\n');
+        }
+        string = string.slice(0,-1);
+        return string;
+    }
+    placeShip(charLenPair){
+        let direction = ["v","h"][Math.floor(Math.random()*2)];
+        let max_col = this.cols;
+        let max_row = this.rows;
+        if(direction === "v") max_row -= (charLenPair[1]-1);
+        if(direction === "h") max_col -= (charLenPair[1]-1);
+        if(max_row <1 || max_col<1) return false;
+        let corner=[Math.floor(Math.random()*max_col),
+                    Math.floor(Math.random()*max_row)];
+        let newShip = new Ship(charLenPair,direction,corner,this);
+        if(newShip.canFit()){
+            newShip.insert();
+            return true;
+        } else {
+        return false;
+        }
+    }
+    placeShips(){
+        for(let attempt = 0; attempt < 1000000; attempt++){
+            this.initializeCells();
+            let attemptSuccessful = true;
+            for(let i = 0; i<this.shipPairs.length; i++){
+                if(!this.placeShip(this.shipPairs[i])){
+                    attemptSuccessful = false;
+                    break;
+                }
+            }
+            if(attemptSuccessful){
+                return;
+            }
+        }
+        this.failed = true;
+    }
+}
+
+class Ship{
+    constructor(charLenPair,orientation,corner,board){
+        this.appearance = charLenPair[0];
+        this.length = charLenPair[1];
+        this.orientation = orientation;
+        this.corner = corner;
+        this.board = board;
+    }
+    cells(){
+        let cellList = [];
+        if(this.orientation === "h"){
+            for(let i = 0; i < this.length; i++){
+                cellList[i] = this.board.cells[this.corner[0]+i][this.corner[1]  ];
+            }
+        }
+        if(this.orientation === "v"){
+            for(let i = 0; i < this.length; i++){
+                cellList[i] = this.board.cells[this.corner[0]  ][this.corner[1]+i];
+            }
+        }
+        return cellList;
+    }
+    canFit(){
+        let cellList = this.cells();
+        for(let i = 0; i<this.length; i++){
+            if(cellList[i].contains) return false;
+        }
+        return true;
+    }
+    insert(){
+        let cellList=this.cells();
+        for(let i = 0; i<this.length; i++){
+            cellList[i].contains = this;
+        }   
+    }
+}
+
+class Cell {
+    constructor(){
+    this.contains = null;
+    }
+    appearance(){
+        return this.contains ? this.contains.appearance : '~';
+    }
+}
+
+window.addEventListener('load', (event) => generateBoard());
+</script>
+
+<h1>The good</h1>
+<p>One of the things which makes this particular tool so useful is that it is written in pure Javascript. Everyone with a modern web browser has a Javascript interpreter already installed and ready to go. The code is so portable that I was able to copy it directly here with no changes, and it still works perfectly. This is why I think Javascript is a good first language for many people to learn. There are exceptions, of course -- if you want to do data science you should learn Python, if you want to program Arduino you should learn C, et cetera. For most people, the benefit of having your code run anywhere outweighs the cost of having to deal with Javascript's peculiarities. Perhaps this will change soon, as there are several attempts in the works to make Python available in the browser. For now, Javascript has a strong advantage.</p>
+<p>Let's have a look at my old code and see what nice qualities it has, lest we become overcritical.</p>
+<div class="highlight"><pre><span></span><code><span class="s2">&quot;use strict&quot;</span><span class="p">;</span>
+
+<span class="kd">var</span><span class="w"> </span><span class="nx">theForm</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">document</span><span class="p">.</span><span class="nx">getElementById</span><span class="p">(</span><span class="s2">&quot;input_form&quot;</span><span class="p">);</span>
+
+<span class="kd">function</span><span class="w"> </span><span class="nx">generateBoard</span><span class="p">(){</span>
+<span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="nx">board</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">Board</span><span class="p">(</span><span class="nx">theForm</span><span class="p">);</span>
+<span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="nx">container</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">document</span><span class="p">.</span><span class="nx">getElementById</span><span class="p">(</span><span class="s2">&quot;the_board&quot;</span><span class="p">);</span>
+<span class="w">    </span><span class="nx">board</span><span class="p">.</span><span class="nx">placeShips</span><span class="p">();</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="nx">board</span><span class="p">.</span><span class="nx">failed</span><span class="p">){</span>
+<span class="w">        </span><span class="nx">container</span><span class="p">.</span><span class="nx">innerHTML</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">board</span><span class="p">.</span><span class="nx">appearance</span><span class="p">();</span>
+<span class="w">    </span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nx">container</span><span class="p">.</span><span class="nx">innerHTML</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;I tried 1,000,000 times, but \nI could not make the board work.&quot;</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span><span class="w">   </span>
+<span class="p">}</span>
+
+<span class="kd">function</span><span class="w"> </span><span class="nx">parseShips</span><span class="p">(</span><span class="nx">string</span><span class="p">){</span>
+<span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="nx">inputList</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">string</span><span class="p">.</span><span class="nx">match</span><span class="p">(</span><span class="sr">/\w,\d+/g</span><span class="p">);</span>
+<span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="nx">ships</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[];</span>
+<span class="w">    </span><span class="k">for</span><span class="p">(</span><span class="kd">let</span><span class="w"> </span><span class="nx">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">0</span><span class="p">;</span><span class="w"> </span><span class="nx">i</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="nx">inputList</span><span class="p">.</span><span class="nx">length</span><span class="p">;</span><span class="w"> </span><span class="nx">i</span><span class="o">++</span><span class="p">){</span>
+<span class="w">        </span><span class="kd">let</span><span class="w"> </span><span class="nx">pair</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[];</span>
+<span class="w">        </span><span class="nx">pair</span><span class="p">[</span><span class="mf">0</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">inputList</span><span class="p">[</span><span class="nx">i</span><span class="p">].</span><span class="nx">match</span><span class="p">(</span><span class="sr">/\w/</span><span class="p">)[</span><span class="mf">0</span><span class="p">];</span>
+<span class="w">        </span><span class="nx">pair</span><span class="p">[</span><span class="mf">1</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">parseInt</span><span class="p">(</span><span class="nx">inputList</span><span class="p">[</span><span class="nx">i</span><span class="p">].</span><span class="nx">match</span><span class="p">(</span><span class="sr">/\d+/</span><span class="p">)[</span><span class="mf">0</span><span class="p">],</span><span class="mf">10</span><span class="p">);</span>
+<span class="w">        </span><span class="nx">ships</span><span class="p">[</span><span class="nx">i</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">pair</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nx">ships</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kd">class</span><span class="w"> </span><span class="nx">Board</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kr">constructor</span><span class="p">(</span><span class="nx">form</span><span class="p">){</span>
+<span class="w">        </span><span class="k">this</span><span class="p">.</span><span class="nx">rows</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">form</span><span class="p">.</span><span class="nx">elements</span><span class="p">.</span><span class="nx">rows</span><span class="p">.</span><span class="nx">valueAsNumber</span><span class="p">;</span>
+<span class="w">        </span><span class="k">this</span><span class="p">.</span><span class="nx">cols</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">form</span><span class="p">.</span><span class="nx">elements</span><span class="p">.</span><span class="nx">columns</span><span class="p">.</span><span class="nx">valueAsNumber</span><span class="p">;</span>
+<span class="w">        </span><span class="k">this</span><span class="p">.</span><span class="nx">cells</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[];</span>
+<span class="w">        </span><span class="k">this</span><span class="p">.</span><span class="nx">initializeCells</span><span class="p">();</span>
+<span class="w">        </span><span class="k">this</span><span class="p">.</span><span class="nx">shipPairs</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">parseShips</span><span class="p">(</span><span class="nx">form</span><span class="p">.</span><span class="nx">elements</span><span class="p">.</span><span class="nx">ships</span><span class="p">.</span><span class="nx">value</span><span class="p">);</span>
+<span class="w">        </span><span class="k">this</span><span class="p">.</span><span class="nx">failed</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">false</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">    </span><span class="nx">initializeCells</span><span class="p">(){</span>
+<span class="w">        </span><span class="k">this</span><span class="p">.</span><span class="nx">cells</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[];</span>
+<span class="w">        </span><span class="k">for</span><span class="p">(</span><span class="kd">let</span><span class="w"> </span><span class="nx">i</span><span class="o">=</span><span class="mf">0</span><span class="p">;</span><span class="nx">i</span><span class="o">&lt;</span><span class="k">this</span><span class="p">.</span><span class="nx">cols</span><span class="p">;</span><span class="nx">i</span><span class="o">++</span><span class="p">){</span>
+<span class="w">            </span><span class="k">this</span><span class="p">.</span><span class="nx">cells</span><span class="p">[</span><span class="nx">i</span><span class="p">]</span><span class="o">=</span><span class="p">[];</span>
+<span class="w">            </span><span class="k">for</span><span class="p">(</span><span class="kd">let</span><span class="w"> </span><span class="nx">j</span><span class="o">=</span><span class="mf">0</span><span class="p">;</span><span class="nx">j</span><span class="o">&lt;</span><span class="k">this</span><span class="p">.</span><span class="nx">rows</span><span class="p">;</span><span class="nx">j</span><span class="o">++</span><span class="p">){</span>
+<span class="w">                </span><span class="k">this</span><span class="p">.</span><span class="nx">cells</span><span class="p">[</span><span class="nx">i</span><span class="p">][</span><span class="nx">j</span><span class="p">]</span><span class="o">=</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">Cell</span><span class="p">();</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">    </span><span class="nx">appearance</span><span class="p">(){</span>
+<span class="w">        </span><span class="kd">let</span><span class="w"> </span><span class="nx">string</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>
+<span class="w">        </span><span class="s2">&quot;   A B C D E F G H I J K L M N O P Q R S T U V W X Y Z a b c d e f g h i j k l m n o p q r s t u v w x y z &quot;</span><span class="p">;</span>
+<span class="w">        </span><span class="nx">string</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">string</span><span class="p">.</span><span class="nx">slice</span><span class="p">(</span><span class="mf">0</span><span class="p">,</span><span class="k">this</span><span class="p">.</span><span class="nx">cols</span><span class="o">*</span><span class="mf">2</span><span class="o">+</span><span class="mf">2</span><span class="p">);</span>
+<span class="w">        </span><span class="nx">string</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">string</span><span class="p">.</span><span class="nx">concat</span><span class="p">(</span><span class="s1">&#39;\n&#39;</span><span class="p">);</span>
+<span class="w">        </span><span class="k">for</span><span class="p">(</span><span class="kd">let</span><span class="w"> </span><span class="nx">j</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">0</span><span class="p">;</span><span class="w"> </span><span class="nx">j</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">rows</span><span class="p">;</span><span class="w"> </span><span class="nx">j</span><span class="o">++</span><span class="p">){</span>
+<span class="w">            </span><span class="k">if</span><span class="p">(</span><span class="w"> </span><span class="nx">j</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="mf">9</span><span class="p">)</span><span class="w">  </span><span class="nx">string</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">string</span><span class="p">.</span><span class="nx">concat</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">);</span>
+<span class="w">            </span><span class="nx">string</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">string</span><span class="p">.</span><span class="nx">concat</span><span class="p">(</span><span class="sb">`</span><span class="si">${</span><span class="nx">j</span><span class="o">+</span><span class="mf">1</span><span class="si">}</span><span class="sb">`</span><span class="p">);</span>
+<span class="w">            </span><span class="k">for</span><span class="p">(</span><span class="kd">let</span><span class="w"> </span><span class="nx">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">0</span><span class="p">;</span><span class="w"> </span><span class="nx">i</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">cols</span><span class="p">;</span><span class="w"> </span><span class="nx">i</span><span class="o">++</span><span class="p">){</span>
+<span class="w">                </span><span class="nx">string</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">string</span><span class="p">.</span><span class="nx">concat</span><span class="p">(</span><span class="s2">&quot; &quot;</span><span class="o">+</span><span class="k">this</span><span class="p">.</span><span class="nx">cells</span><span class="p">[</span><span class="nx">i</span><span class="p">][</span><span class="nx">j</span><span class="p">].</span><span class="nx">appearance</span><span class="p">());</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">            </span><span class="nx">string</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">string</span><span class="p">.</span><span class="nx">concat</span><span class="p">(</span><span class="s1">&#39;\n&#39;</span><span class="p">);</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">        </span><span class="nx">string</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">string</span><span class="p">.</span><span class="nx">slice</span><span class="p">(</span><span class="mf">0</span><span class="p">,</span><span class="o">-</span><span class="mf">1</span><span class="p">);</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="nx">string</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">    </span><span class="nx">placeShip</span><span class="p">(</span><span class="nx">charLenPair</span><span class="p">){</span>
+<span class="w">        </span><span class="kd">let</span><span class="w"> </span><span class="nx">direction</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;v&quot;</span><span class="p">,</span><span class="s2">&quot;h&quot;</span><span class="p">][</span><span class="nb">Math</span><span class="p">.</span><span class="nx">floor</span><span class="p">(</span><span class="nb">Math</span><span class="p">.</span><span class="nx">random</span><span class="p">()</span><span class="o">*</span><span class="mf">2</span><span class="p">)];</span>
+<span class="w">        </span><span class="kd">let</span><span class="w"> </span><span class="nx">max_col</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">cols</span><span class="p">;</span>
+<span class="w">        </span><span class="kd">let</span><span class="w"> </span><span class="nx">max_row</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">rows</span><span class="p">;</span>
+<span class="w">        </span><span class="k">if</span><span class="p">(</span><span class="nx">direction</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="s2">&quot;v&quot;</span><span class="p">)</span><span class="w"> </span><span class="nx">max_row</span><span class="w"> </span><span class="o">-=</span><span class="w"> </span><span class="p">(</span><span class="nx">charLenPair</span><span class="p">[</span><span class="mf">1</span><span class="p">]</span><span class="o">-</span><span class="mf">1</span><span class="p">);</span>
+<span class="w">        </span><span class="k">if</span><span class="p">(</span><span class="nx">direction</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="s2">&quot;h&quot;</span><span class="p">)</span><span class="w"> </span><span class="nx">max_col</span><span class="w"> </span><span class="o">-=</span><span class="w"> </span><span class="p">(</span><span class="nx">charLenPair</span><span class="p">[</span><span class="mf">1</span><span class="p">]</span><span class="o">-</span><span class="mf">1</span><span class="p">);</span>
+<span class="w">        </span><span class="k">if</span><span class="p">(</span><span class="nx">max_row</span><span class="w"> </span><span class="o">&lt;</span><span class="mf">1</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="nx">max_col</span><span class="o">&lt;</span><span class="mf">1</span><span class="p">)</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="kc">false</span><span class="p">;</span>
+<span class="w">        </span><span class="kd">let</span><span class="w"> </span><span class="nx">corner</span><span class="o">=</span><span class="p">[</span><span class="nb">Math</span><span class="p">.</span><span class="nx">floor</span><span class="p">(</span><span class="nb">Math</span><span class="p">.</span><span class="nx">random</span><span class="p">()</span><span class="o">*</span><span class="nx">max_col</span><span class="p">),</span>
+<span class="w">                    </span><span class="nb">Math</span><span class="p">.</span><span class="nx">floor</span><span class="p">(</span><span class="nb">Math</span><span class="p">.</span><span class="nx">random</span><span class="p">()</span><span class="o">*</span><span class="nx">max_row</span><span class="p">)];</span>
+<span class="w">        </span><span class="kd">let</span><span class="w"> </span><span class="nx">newShip</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">Ship</span><span class="p">(</span><span class="nx">charLenPair</span><span class="p">,</span><span class="nx">direction</span><span class="p">,</span><span class="nx">corner</span><span class="p">,</span><span class="k">this</span><span class="p">);</span>
+<span class="w">        </span><span class="k">if</span><span class="p">(</span><span class="nx">newShip</span><span class="p">.</span><span class="nx">canFit</span><span class="p">()){</span>
+<span class="w">            </span><span class="nx">newShip</span><span class="p">.</span><span class="nx">insert</span><span class="p">();</span>
+<span class="w">            </span><span class="k">return</span><span class="w"> </span><span class="kc">true</span><span class="p">;</span>
+<span class="w">        </span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="kc">false</span><span class="p">;</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">    </span><span class="nx">placeShips</span><span class="p">(){</span>
+<span class="w">        </span><span class="k">for</span><span class="p">(</span><span class="kd">let</span><span class="w"> </span><span class="nx">attempt</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">0</span><span class="p">;</span><span class="w"> </span><span class="nx">attempt</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="mf">1000000</span><span class="p">;</span><span class="w"> </span><span class="nx">attempt</span><span class="o">++</span><span class="p">){</span>
+<span class="w">            </span><span class="k">this</span><span class="p">.</span><span class="nx">initializeCells</span><span class="p">();</span>
+<span class="w">            </span><span class="kd">let</span><span class="w"> </span><span class="nx">attemptSuccessful</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">true</span><span class="p">;</span>
+<span class="w">            </span><span class="k">for</span><span class="p">(</span><span class="kd">let</span><span class="w"> </span><span class="nx">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">0</span><span class="p">;</span><span class="w"> </span><span class="nx">i</span><span class="o">&lt;</span><span class="k">this</span><span class="p">.</span><span class="nx">shipPairs</span><span class="p">.</span><span class="nx">length</span><span class="p">;</span><span class="w"> </span><span class="nx">i</span><span class="o">++</span><span class="p">){</span>
+<span class="w">                </span><span class="k">if</span><span class="p">(</span><span class="o">!</span><span class="k">this</span><span class="p">.</span><span class="nx">placeShip</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">shipPairs</span><span class="p">[</span><span class="nx">i</span><span class="p">])){</span>
+<span class="w">                    </span><span class="nx">attemptSuccessful</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">false</span><span class="p">;</span>
+<span class="w">                    </span><span class="k">break</span><span class="p">;</span>
+<span class="w">                </span><span class="p">}</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">            </span><span class="k">if</span><span class="p">(</span><span class="nx">attemptSuccessful</span><span class="p">){</span>
+<span class="w">                </span><span class="k">return</span><span class="p">;</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">        </span><span class="k">this</span><span class="p">.</span><span class="nx">failed</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">true</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kd">class</span><span class="w"> </span><span class="nx">Ship</span><span class="p">{</span>
+<span class="w">    </span><span class="kr">constructor</span><span class="p">(</span><span class="nx">charLenPair</span><span class="p">,</span><span class="nx">orientation</span><span class="p">,</span><span class="nx">corner</span><span class="p">,</span><span class="nx">board</span><span class="p">){</span>
+<span class="w">        </span><span class="k">this</span><span class="p">.</span><span class="nx">appearance</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">charLenPair</span><span class="p">[</span><span class="mf">0</span><span class="p">];</span>
+<span class="w">        </span><span class="k">this</span><span class="p">.</span><span class="nx">length</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">charLenPair</span><span class="p">[</span><span class="mf">1</span><span class="p">];</span>
+<span class="w">        </span><span class="k">this</span><span class="p">.</span><span class="nx">orientation</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">orientation</span><span class="p">;</span>
+<span class="w">        </span><span class="k">this</span><span class="p">.</span><span class="nx">corner</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">corner</span><span class="p">;</span>
+<span class="w">        </span><span class="k">this</span><span class="p">.</span><span class="nx">board</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">board</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">    </span><span class="nx">cells</span><span class="p">(){</span>
+<span class="w">        </span><span class="kd">let</span><span class="w"> </span><span class="nx">cellList</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[];</span>
+<span class="w">        </span><span class="k">if</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">orientation</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="s2">&quot;h&quot;</span><span class="p">){</span>
+<span class="w">            </span><span class="k">for</span><span class="p">(</span><span class="kd">let</span><span class="w"> </span><span class="nx">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">0</span><span class="p">;</span><span class="w"> </span><span class="nx">i</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">length</span><span class="p">;</span><span class="w"> </span><span class="nx">i</span><span class="o">++</span><span class="p">){</span>
+<span class="w">                </span><span class="nx">cellList</span><span class="p">[</span><span class="nx">i</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">board</span><span class="p">.</span><span class="nx">cells</span><span class="p">[</span><span class="k">this</span><span class="p">.</span><span class="nx">corner</span><span class="p">[</span><span class="mf">0</span><span class="p">]</span><span class="o">+</span><span class="nx">i</span><span class="p">][</span><span class="k">this</span><span class="p">.</span><span class="nx">corner</span><span class="p">[</span><span class="mf">1</span><span class="p">]</span><span class="w">  </span><span class="p">];</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">        </span><span class="k">if</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">orientation</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="s2">&quot;v&quot;</span><span class="p">){</span>
+<span class="w">            </span><span class="k">for</span><span class="p">(</span><span class="kd">let</span><span class="w"> </span><span class="nx">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">0</span><span class="p">;</span><span class="w"> </span><span class="nx">i</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">length</span><span class="p">;</span><span class="w"> </span><span class="nx">i</span><span class="o">++</span><span class="p">){</span>
+<span class="w">                </span><span class="nx">cellList</span><span class="p">[</span><span class="nx">i</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">board</span><span class="p">.</span><span class="nx">cells</span><span class="p">[</span><span class="k">this</span><span class="p">.</span><span class="nx">corner</span><span class="p">[</span><span class="mf">0</span><span class="p">]</span><span class="w">  </span><span class="p">][</span><span class="k">this</span><span class="p">.</span><span class="nx">corner</span><span class="p">[</span><span class="mf">1</span><span class="p">]</span><span class="o">+</span><span class="nx">i</span><span class="p">];</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="nx">cellList</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">    </span><span class="nx">canFit</span><span class="p">(){</span>
+<span class="w">        </span><span class="kd">let</span><span class="w"> </span><span class="nx">cellList</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">cells</span><span class="p">();</span>
+<span class="w">        </span><span class="k">for</span><span class="p">(</span><span class="kd">let</span><span class="w"> </span><span class="nx">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">0</span><span class="p">;</span><span class="w"> </span><span class="nx">i</span><span class="o">&lt;</span><span class="k">this</span><span class="p">.</span><span class="nx">length</span><span class="p">;</span><span class="w"> </span><span class="nx">i</span><span class="o">++</span><span class="p">){</span>
+<span class="w">            </span><span class="k">if</span><span class="p">(</span><span class="nx">cellList</span><span class="p">[</span><span class="nx">i</span><span class="p">].</span><span class="nx">contains</span><span class="p">)</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="kc">false</span><span class="p">;</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="kc">true</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">    </span><span class="nx">insert</span><span class="p">(){</span>
+<span class="w">        </span><span class="kd">let</span><span class="w"> </span><span class="nx">cellList</span><span class="o">=</span><span class="k">this</span><span class="p">.</span><span class="nx">cells</span><span class="p">();</span>
+<span class="w">        </span><span class="k">for</span><span class="p">(</span><span class="kd">let</span><span class="w"> </span><span class="nx">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">0</span><span class="p">;</span><span class="w"> </span><span class="nx">i</span><span class="o">&lt;</span><span class="k">this</span><span class="p">.</span><span class="nx">length</span><span class="p">;</span><span class="w"> </span><span class="nx">i</span><span class="o">++</span><span class="p">){</span>
+<span class="w">            </span><span class="nx">cellList</span><span class="p">[</span><span class="nx">i</span><span class="p">].</span><span class="nx">contains</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">this</span><span class="p">;</span>
+<span class="w">        </span><span class="p">}</span><span class="w">   </span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kd">class</span><span class="w"> </span><span class="nx">Cell</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kr">constructor</span><span class="p">(){</span>
+<span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="nx">contains</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">null</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">    </span><span class="nx">appearance</span><span class="p">(){</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">contains</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">contains</span><span class="p">.</span><span class="nx">appearance</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;~&#39;</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<p>I like the functional and object-oriented qualities of this program. It makes sense to have a class for the game board and the ships, since there is a natural flow of these units going back and forth, asking each other questions. The game board is only generated in one spot, and a new object is made every time a board is generated. That makes it simple to follow the flow of the program and predict its state.</p>
+<h1>The bad</h1>
+<p>This is all done as an inline script. That's not too unwieldy for a script of this size, but it is still not the way I would do it now. For one thing, it could lead to problems down the line if the program were to grow. For another, we are filling up the global namespace. This one is not too bad due to its size, only creating 6 global objects. Still, we could get it down to none by making this its own separate module.</p>
+<p>While I like the object-oriented style, I do not like the use of Javascript classes here. For new projects I have adopted the "class free" style I learned from <a href="https://howjavascriptworks.com/">Douglas Crockford's book</a>. Essentially, we can avoid ever having to deal with <code>this</code> and all its oddities by avoiding the <code>class</code> syntax all together. There is some memory overhead in going class-free, since objects no longer share references to their methods, instead each storing their own methods. In practice this is not really a problem since we seldom have many instances of a class to begin with.</p>
+<p>This brings me to a more fundamental problem with the code above. What's that class <code>Cell</code> supposed to be doing? All it does is store a reference to an object which is either <code>null</code> or a character. I suspect that in a previous version of the code I had the cell doing more work, keeping track of its neighbors or some such. With the wisdom of more years, I can see that the class should never have been made at all. I should have used the built-in strings instead.</p>
+<h1>The janky</h1>
+<p>I don't wish to pick nits over strange formatting or missing semicolons. I won't harp on the liberal use of <code>let</code> where <code>const</code> would be more appropriate. Instead I will conclude by pointing out a few "What was I thinking?" absurdities.</p>
+<p>Why oh why is there something called a <code>charLenPair</code> floating around? That should plainly just be an object, so that you can refer to the character or length as you see fit.</p>
+<p>Why is there a function called <code>generateBoard</code> that lives outside the class <code>Board</code>? Surely this is the constructor for the class, and it should live within the class. I think I can tell what I though all those years ago, that I should separate those bits of code which interact with the DOM from those which keep to themselves. That's a good instinct, but it seems to have led to an absurd result in this case.</p>
+<p>Why does the ship parser ignore parentheses? Why does it process each string three times, with three separate regular expressions? All of these can be explained by the fact that I was not experienced with regular expressions back then. That whole function feels wrong now, as a better-made regular expression would be more explicit and fail in more obvious ways.</p>
+<p>Why do I left pad the digits in <code>Board.appearance</code> by checking if they are less than 9? That's much harder to read than <code>String.padStart</code>, for example. Of course, <code>String.padStart</code> was only introduced in 2017 after the famous <code>left-pad</code> scandal, so I may well not have heard of it yet at the time.</p>
+<h1>Conclusion</h1>
+<p>Even though I can see many ways to improve it, this is ultimately a good piece of code. It does what it set out to do, and works just about anywhere.</p>
+<p>It would be easy for me to hide my previous blunders, hastily rewrite the code here to be up to my current standards. I believe that would be a mistake. We should wear our early attempts with pride and learn from them where we can. This keeps us humble, and I hope it is instructive to those who are just beginning. It's okay to make mistakes, it's okay to do things in a poorly-thought-out way. It's better to make the mistakes and learn from them than to be paralyzed in unending revisions.</p>
+    </div><!-- /.entry-content -->
+
+  </article>
+</section>
+        <section id="extras" class="body">
+                <div class="blogroll">
+                        <h2>links</h2>
+                        <ul>
+                            <li><a href="https://github.com/AldenMB">My GitHub</a></li>
+                            <li><a href="https://nt-tl.net/">My wife</a></li>
+                            <li><a href="https://laurestine.github.io/">My sister</a></li>
+                            <li><a href="https://www.clintonbradford.com/">My brother</a></li>
+                        </ul>
+                </div><!-- /.blogroll -->
+                <div class="social">
+                        <h2>social</h2>
+                        <ul>
+                            <li><a href="https://aldenbradford.com/feeds/all.atom.xml" type="application/atom+xml" rel="alternate">atom feed</a></li>
+
+                        </ul>
+                </div><!-- /.social -->
+        </section><!-- /#extras -->
+
+        <footer id="contentinfo" class="body">
+                <address id="about" class="vcard body">
+                Proudly powered by <a href="https://getpelican.com/">Pelican</a>, which takes great advantage of <a href="https://www.python.org/">Python</a>.
+                </address><!-- /#about -->
+
+                <p>The theme is by <a href="https://www.smashingmagazine.com/2009/08/designing-a-html-5-layout-from-scratch/">Smashing Magazine</a>, thanks!</p>
+        </footer><!-- /#contentinfo -->
+
+</body>
+</html>
