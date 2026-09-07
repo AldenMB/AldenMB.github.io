@@ -13,3 +13,4 @@ jobs:
     with:
       settings: "publishconf.py"
       siteurl: "aldenbradford.com"
+      requirements: "-r requirements.txt"
