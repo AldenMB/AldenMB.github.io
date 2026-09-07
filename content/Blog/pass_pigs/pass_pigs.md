@@ -1,0 +1,31 @@
+Title: Pass the Pigs for Teaching Statistics
+Date: June 2, 2025
+Category: Blog
+Tags: Statistics, Probability, Teaching
+Summary: A useful manipulative
+
+# The problem
+
+Most people don't understand empirical probabilities. There is a common misconception: if a random event has two outcomes, then it is a 50/50 chance of each outcome. One of my goals teaching introductory probability is to replace that misconception.
+
+The simplest way would be to take something with known, obvious probabilities and use them to construct other probabilities. Take a 6-sided die, and it is obvious from symmetry that each side has a 1/6 chance of showing. From that we could compute the probability of rolling at least a 3 -- there are four atomic probabilities, so the probability is 4/6. There are two problems I see with this. First, not every probability model can be broken down into equally likely "atomic" probabilities. Take a coin weighted with $P(heads)=1/\sqrt{2}$, for example -- the probability is irrational. Second, it kicks the can down the road: students are still left with the idea that all "atomic" probabilities are equally likely, if we can only identify what those probabilities are.
+
+One way I like to deal with this is by having my students roll Hershey's Kisses as dice. From my experience, they land flat-side-down around 30% of the time. This is far enough from 50% to convince the students that it's not a 50/50, yet still big enough to use a normal approximation for the sample proportion without an enormous sample size. More importantly, it is not clear how, if indeed it is possible, we could arrive at the probability from a theoretical perspective. I can think of a few different methods which give slightly different theoretical probabilities. Perhaps in a future post I will share a couple of those methods. For now, the point is: if you want to know the probability for sure, the best way is an empirical approach. The process is clearly random, but without the symmetry which is so common in toy problems. It also has a more visceral feel than, say, a spinner problem. Those always seem a bit constructed, artificial. The candy is something students encounter in the world outside of math class.
+
+The Hershey rolling activity is great for broaching the topic of empirical probability, and it can segue nicely into inferential statistics. Natural questions arise -- how many times would we have to roll it to find the probability to the nearest percent? Does our sample show one theoretical model is better than another? Does the rolling technique or surface affect the probabilities? This is the kind of richness I want for every in-class activity. I would like to use a similar approach for teaching random processes with more than two outcomes.
+
+# Enter the Pigs
+
+Pass the Pigs is a game based on the classic press-your-luck dice game, Pig. The twist is that, instead of regular 6-sided dice, it uses dice shaped like pigs. There are six orientations a pig can land, so it is still in some way a six-sided die. From the shape of the pigs, it is obvious that some sides will fall more easily than others. There is no symmetry in the pig -- not even bilateral symmetry. And perhaps best of all, [the pigs are available in bulk from Math 'n' Stuff](https://mathnificent.com/product/109750/Piglet%2C-Probability-%287-way%29/). My college ordered a class set of 100 to use.
+
+I am not the first math teacher to use these dice in this way. Back in the late 1990s and early 2000s, [Dean Ballard](https://deanbal.net/) was an instructor at Lakeside School in Seattle. He put his student to rolling pigs in search of an empirical probability, and [his rolls were published online](https://web.archive.org/web/20240423104957/https://passpigs.tripod.com/prob.html). This gives us a baseline for what to expect. Incidentally, that website says it was written by Freddie W. Could this be the same [Freddie Wong](https://en.wikipedia.org/wiki/Freddie_Wong) who is now an internet celebrity? He attended Lakeside School at around the right time! Ballard's numbers are cited in an interesting paper from 2004, [Optimal Play of the Dice Game Pig.](https://cupola.gettysburg.edu/csfac/4/)
+
+I wanted to give my students some practice with Chi Squared tests, so I set them to rolling pigs to get some new data. The first task was to decide as a class on a sample size. Using the estimate that Leaning Jowlers show up 1% of the time, we conclude that we need 500 rolls all together to be able to apply the goodness-of-fit test. Too many for one person, but with the whole class working together each pig only needs to be rolled and counted 5 times.
+
+I recommend dividing students into groups of 2-4 students to do the rolling. It is much more engaging when you can count together, and it produces better discussions about how to keep track of the work. I project a [QR code]({attach}qr-code.pdf) to [a survey](https://forms.gle/XootMHtgraXygGC47) where each group can upload their totals. Then it is a simple matter to copy the results from [an online spreadsheet](https://docs.google.com/spreadsheets/d/15gnhBVvOTXxyt0DorLQTxRZCdNE1wwdlHSrpTwKDtTM/), which students can also get to with [a QR code]({attach}qr-code-results.pdf). If you teach this lesson, you could build your own form, or use the same one. By sharing the same spreadsheet we can have a pretty big sample size.
+
+I was surprised to find my students got significantly different results from Ballard. They found around 2% each of the snouters and leaning jowlers, about 30% razorbacks, and only 6% trotters. I can't explain why there is such a difference, but it does seem to be real.
+
+# Additional exploration
+
+Why the discrepancy? It could be that the razorbacks were preferred because I had my students rolling several pigs at once. Rolling next to other pigs may have caused them to naturally align. Could the results be different if we rolled fewer at a time? What if we drop them from a greater height? What if we roll them out of a dice cup, rather than from the hand? This activity has some room for exploration, at a level which is accessible to first-time statistics students. I hope to use it for more inquiry-based learning in the future. For now though, it is a refreshing way to get hands-on in what would otherwise be a relatively theory-heavy part of the quarter.
