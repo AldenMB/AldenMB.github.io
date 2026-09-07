@@ -12,5 +12,5 @@ jobs:
       id-token: "write"
     with:
       settings: "publishconf.py"
-      siteurl: "aldenbradford.com"
+#      siteurl: "aldenbradford.com"
       requirements: "-r requirements.txt"
